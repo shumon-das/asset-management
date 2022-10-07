@@ -33711,7 +33711,6 @@ a.close.disabled, a.disabled.mailbox-attachment-close {
   display: block;
   margin-bottom: 20px;
   position: relative;
-  height: 185px;
 }
 
 .small-box > .inner {
@@ -33727,7 +33726,6 @@ a.close.disabled, a.disabled.mailbox-attachment-close {
   text-align: center;
   text-decoration: none;
   z-index: 10;
-  bottom: -60px;
 }
 
 .small-box > .small-box-footer:hover {
