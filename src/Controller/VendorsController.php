@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Vendors;
+use App\Repository\VendorsRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -13,10 +14,12 @@ use Symfony\Component\Routing\Annotation\Route;
 class VendorsController extends AbstractController
 {
     #[Route('/vendors', name: 'app_vendors')]
-    public function vendors(): Response
+    public function vendors(VendorsRepository $repository): Response
     {
+        $vendors = $repository->findAll();
+
         return $this->render('vendors/vendors.html.twig', [
-            'controller_name' => 'VendorsController',
+            'vendors' => $vendors,
         ]);
     }
 
@@ -35,9 +38,22 @@ class VendorsController extends AbstractController
         $vendor = new Vendors();
         $vendor
             ->setVendorName($request->get('vendor-name'))
-            ->setContactPerson($request->get('contact-person'))
             ->setEmail($request->get('vendor-email'))
+            ->setPhone($request->get('phone'))
+            ->setContactPerson($request->get('contact-person'))
+            ->setDesignation($request->get('designation'))
+            ->setCountry($request->get('country'))
+            ->setState($request->get('state'))
+            ->setCity($request->get('city'))
+            ->setZipCode($request->get('zip-code'))
+            ->setGstinNo($request->get('gstin-no'))
+            ->setAddress($request->get('address'))
+            ->setDescription($request->get('description'))
+            ->setStatus(false)
+            ->setIsDeleted(false)
             ->setCreatedAt(new \DateTimeImmutable())
+            ->setDeletedBy(null)
+            ->setCreatedBy(1)
         ;
 
         $entityManager->persist($vendor);
