@@ -14,104 +14,82 @@
     </nav>
     <!-- /.navbar -->
 
-  {% include 'aside.html.twig' %}
+    {% include 'aside.html.twig' %}
 
-  <!-- Content Wrapper. Contains page content -->
-  <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
-    <section class="content-header">
-      <div class="container-fluid">
-        <div class="row mb-2">
-          <div class="col-sm-6">
-            <h1>Products</h1>
-          </div>
-          <div class="col-sm-6">
-            <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="{{ path('app_home') }}">Home</a></li>
-              <li class="breadcrumb-item active">Products</li>
-            </ol>
-          </div>
-        </div>
-      </div><!-- /.container-fluid -->
-    </section>
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1>Products</h1>
+                    </div>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="{{ path('app_home') }}">Home</a></li>
+                            <li class="breadcrumb-item active">Products</li>
+                        </ol>
+                    </div>
+                </div>
+            </div><!-- /.container-fluid -->
+        </section>
 
-    <!-- Main content -->
-    <section class="content">
-      <div class="container-fluid">
-        <div class="row">
-          <div class="col-12">
-            <div class="card">
-              <div class="card-header">
-                <a href="{{ path('app_add_product') }}" class="btn btn-primary btn-sm">add new product</a>
-              </div>
-              <div class="card-body">
-                <table id="example1" class="table table-bordered table-striped">
-                  <thead>
-                  <tr>
-                    <th>S.No</th>
-                    <th>Product Name</th>
-                    <th>Product Type</th>
-                    <th>Product Category</th>
-                    <th>Status</th>
-                    <th>Action</th>
-                  </tr>
-                  </thead>
-                  <tbody>
-                  <tr>
-                    <td>Trident</td>
-                    <td>Internet Explorer 4.0 </td>
-                    <td>Win 95+</td>
-                    <td> 4</td>
-                    <td>X</td>
-                    <td>
-                      <div class="row d-sm-flex justify-content-sm-around">
-                        <a href="#" class="btn btn-info btn-sm"><i class="fas fa-edit"></i></a>
-                        <a href="#" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></a>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>Trident</td>
-                    <td>Internet Explorer 4.0 </td>
-                    <td>Win 95+</td>
-                    <td> 4</td>
-                    <td>X</td>
-                    <td>
-                      <div class="row d-sm-flex justify-content-sm-around">
-                        <a href="#" class="btn btn-info btn-sm"><i class="fas fa-edit"></i></a>
-                        <a href="#" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></a>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>Trident</td>
-                    <td>Internet Explorer 4.0 </td>
-                    <td>Win 95+</td>
-                    <td> 4</td>
-                    <td>X</td>
-                    <td>
-                      <div class="row d-sm-flex justify-content-sm-around">
-                        <a href="#" class="btn btn-info btn-sm"><i class="fas fa-edit"></i></a>
-                        <a href="#" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></a>
-                      </div>
-                    </td>
-                  </tr>
-                  </tbody>
-                </table>
-              </div>
-              <!-- /.card-body -->
+        <!-- Main content -->
+        <section class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <a href="{{ path('app_add_product') }}" class="btn btn-primary btn-sm">add new
+                                    product</a>
+                            </div>
+                            <div class="card-body">
+                                <table id="example1" class="table table-bordered table-striped">
+                                    <thead>
+                                    <tr>
+                                        <th>S.No</th>
+                                        <th>Product Name</th>
+                                        <th>Product Type</th>
+                                        <th>Product Category</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for product in products %}
+                                        <tr>
+                                            <td>1</td>
+                                            <td>{{ product.name }}</td>
+                                            <td>{{ product.type }}</td>
+                                            <td>{{ product.category }}</td>
+                                            <td>{{ product.status }}</td>
+                                            <td>
+                                                <div class="row d-sm-flex justify-content-sm-around">
+                                                    <a href="#" class="btn btn-info btn-sm"><i class="fas fa-edit"></i></a>
+                                                    <a href="#" class="btn btn-danger btn-sm"><i
+                                                                class="fas fa-trash"></i></a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- /.card-body -->
+                        </div>
+                        <!-- /.card -->
+                    </div>
+                    <!-- /.col -->
+                </div>
+                <!-- /.row -->
             </div>
-            <!-- /.card -->
-          </div>
-          <!-- /.col -->
-        </div>
-        <!-- /.row -->
-      </div>
-      <!-- /.container-fluid -->
-    </section>
-    <!-- /.content -->
-  </div>
-  <!-- /.control-sidebar -->
+            <!-- /.container-fluid -->
+        </section>
+        <!-- /.content -->
+    </div>
+    <!-- /.control-sidebar -->
 
     {% include 'footer.html.twig' %}
 
