@@ -45,184 +45,201 @@
                                 <a href="{{ path('app_assets') }}" class="btn btn-primary btn-sm">back to asset list</a>
                             </div>
                             <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label>Product Category</label>
-                                            <select class="form-control select2" style="width: 100%;">
-                                                <option selected="selected">Alabama</option>
-                                                <option>Alaska</option>
-                                                <option>California</option>
-                                                <option>Delaware</option>
-                                                <option>Tennessee</option>
-                                                <option>Texas</option>
-                                                <option>Washington</option>
-                                            </select>
+                                <form action="{{ path('app_save_assets') }}" method="post">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label>Product Category</label>
+                                                <select class="form-control select2" name="product-category"
+                                                        id="product-category" style="width: 100%;">
+                                                    <option selected="selected">Alabama</option>
+                                                    <option>Alaska</option>
+                                                    <option>California</option>
+                                                    <option>Delaware</option>
+                                                    <option>Tennessee</option>
+                                                    <option>Texas</option>
+                                                    <option>Washington</option>
+                                                </select>
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label>Product Type</label>
-                                            <select class="form-control select2" style="width: 100%;">
-                                                <option selected="selected">Alabama</option>
-                                                <option>Alaska</option>
-                                                <option>California</option>
-                                                <option>Delaware</option>
-                                                <option>Tennessee</option>
-                                                <option>Texas</option>
-                                                <option>Washington</option>
-                                            </select>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label>Product Type</label>
+                                                <select class="form-control select2" name="product-type"
+                                                        id="product-type" style="width: 100%;">
+                                                    <option selected="selected">Alabama</option>
+                                                    <option>Alaska</option>
+                                                    <option>California</option>
+                                                    <option>Delaware</option>
+                                                    <option>Tennessee</option>
+                                                    <option>Texas</option>
+                                                    <option>Washington</option>
+                                                </select>
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label>Product</label>
-                                            <select class="form-control select2" style="width: 100%;">
-                                                <option selected="selected">Alabama</option>
-                                                <option>Alaska</option>
-                                                <option>California</option>
-                                                <option>Delaware</option>
-                                                <option>Tennessee</option>
-                                                <option>Texas</option>
-                                                <option>Washington</option>
-                                            </select>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label>Product</label>
+                                                <select class="form-control select2" name="product" id="product"
+                                                        style="width: 100%;">
+                                                    <option selected="selected">Alabama</option>
+                                                    <option>Alaska</option>
+                                                    <option>California</option>
+                                                    <option>Delaware</option>
+                                                    <option>Tennessee</option>
+                                                    <option>Texas</option>
+                                                    <option>Washington</option>
+                                                </select>
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label>Vendor</label>
-                                            <select class="form-control select2" style="width: 100%;">
-                                                <option selected="selected">Alabama</option>
-                                                <option>Alaska</option>
-                                                <option>California</option>
-                                                <option>Delaware</option>
-                                                <option>Tennessee</option>
-                                                <option>Texas</option>
-                                                <option>Washington</option>
-                                            </select>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label>Vendor</label>
+                                                <select class="form-control select2" name="vendor" id="vendor"
+                                                        style="width: 100%;">
+                                                    <option selected="selected">Alabama</option>
+                                                    <option>Alaska</option>
+                                                    <option>California</option>
+                                                    <option>Delaware</option>
+                                                    <option>Tennessee</option>
+                                                    <option>Texas</option>
+                                                    <option>Washington</option>
+                                                </select>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <!-- row end -->
+                                    <!-- row end -->
 
-                                <div class="row mt-3">
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label for="exampleInputEmail1">Asset Name</label>
-                                            <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+                                    <div class="row mt-3">
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label for="asset-name">Asset Name</label>
+                                                <input type="text" class="form-control" name="asset-name"
+                                                       id="asset-name" placeholder="Enter asset name">
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label for="exampleInputEmail1">Serial Number</label>
-                                            <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label for="serial-number">Serial Number</label>
+                                                <input type="text" class="form-control" name="serial-number"
+                                                       id="serial-number" placeholder="Enter serial number">
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label for="exampleInputEmail1">Price</label>
-                                            <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label for="price">Price</label>
+                                                <input type="text" class="form-control" name="price" id="price"
+                                                       placeholder="Enter price">
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label>Depreciation Type</label>
-                                            <select class="form-control select2" style="width: 100%;">
-                                                <option selected="selected">Alabama</option>
-                                                <option>Alaska</option>
-                                                <option>California</option>
-                                                <option>Delaware</option>
-                                                <option>Tennessee</option>
-                                                <option>Texas</option>
-                                                <option>Washington</option>
-                                            </select>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label>Depreciation Type</label>
+                                                <select class="form-control select2" name="description-type"
+                                                        id="description-type" style="width: 100%;">
+                                                    <option selected="selected">Alabama</option>
+                                                    <option>Alaska</option>
+                                                    <option>California</option>
+                                                    <option>Delaware</option>
+                                                    <option>Tennessee</option>
+                                                    <option>Texas</option>
+                                                    <option>Washington</option>
+                                                </select>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <!-- row end -->
+                                    <!-- row end -->
 
-                                <div class="row mt-3">
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label>Location</label>
-                                            <select class="form-control select2" style="width: 100%;">
-                                                <option selected="selected">Alabama</option>
-                                                <option>Alaska</option>
-                                                <option>California</option>
-                                                <option>Delaware</option>
-                                                <option>Tennessee</option>
-                                                <option>Texas</option>
-                                                <option>Washington</option>
-                                            </select>
+                                    <div class="row mt-3">
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label>Location</label>
+                                                <select class="form-control select2" name="location" id="location"
+                                                        style="width: 100%;">
+                                                    <option selected="selected">Alabama</option>
+                                                    <option>Alaska</option>
+                                                    <option>California</option>
+                                                    <option>Delaware</option>
+                                                    <option>Tennessee</option>
+                                                    <option>Texas</option>
+                                                    <option>Washington</option>
+                                                </select>
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label for="exampleInputEmail1">Purchase Date</label>
-                                            <input type="date" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label for="purchase-date">Purchase Date</label>
+                                                <input type="date" class="form-control" name="purchase-date"
+                                                       id="purchase-date">
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label for="exampleInputEmail1">Warranty Expiry Date</label>
-                                            <input type="date" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label for="warranty-expiry-date">Warranty Expiry Date</label>
+                                                <input type="date" class="form-control" name="warranty-expiry-date"
+                                                       id="warranty-expiry-date">
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label>Purchase Type</label>
-                                            <select class="form-control select2" style="width: 100%;">
-                                                <option selected="selected">Alabama</option>
-                                                <option>Alaska</option>
-                                                <option>California</option>
-                                                <option>Delaware</option>
-                                                <option>Tennessee</option>
-                                                <option>Texas</option>
-                                                <option>Washington</option>
-                                            </select>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label>Purchase Type</label>
+                                                <select class="form-control select2" name="purchase-type"
+                                                        id="purchase-type" style="width: 100%;">
+                                                    <option selected="selected">Alabama</option>
+                                                    <option>Alaska</option>
+                                                    <option>California</option>
+                                                    <option>Delaware</option>
+                                                    <option>Tennessee</option>
+                                                    <option>Texas</option>
+                                                    <option>Washington</option>
+                                                </select>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <!-- row end -->
-                                <div class="row mt-3">
-                                    <div class="col-md-3" style="height: 250px">
-                                        <div class="form-group">
-                                            <label>Description</label>
-                                            <textarea name="" id="" class="w-100" style="height: 200px"></textarea>
+                                    <!-- row end -->
+                                    <div class="row mt-3">
+                                        <div class="col-md-3" style="height: 250px">
+                                            <div class="form-group">
+                                                <label>Description</label>
+                                                <textarea name="description" id="description" class="w-100"
+                                                          style="height: 200px"></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label for="useful-life">Useful life</label>
+                                                <input type="text" class="form-control" name="useful-life"
+                                                       id="useful-life" placeholder="Enter useful life value">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label for="residual-value">Residual Value</label>
+                                                <input type="text" class="form-control" name="residual-value"
+                                                       id="residual-value" placeholder="Enter residual value">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3 text-right">
+                                            <div class="form-group text-left mb-5">
+                                                <label for="rate">Rate(%)</label>
+                                                <input type="text" class="form-control" name="rate" id="rate"
+                                                       placeholder="Enter rate%">
+                                            </div>
+                                            <br>
+                                            <button type="submit" class="btn btn-primary mt-5">Submit</button>
                                         </div>
                                     </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label for="exampleInputEmail1">Useful life</label>
-                                            <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label for="exampleInputEmail1">Residual Value</label>
-                                            <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3 text-right">
-                                        <div class="form-group text-left mb-5">
-                                            <label for="exampleInputEmail1">Rate(%)</label>
-                                            <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
-                                        </div>
-                                        <br>
-                                        <button type="submit" class="btn btn-primary mt-5">Submit</button>
-                                    </div>
-                                </div>
-                                <!-- row end -->
-
+                                    <!-- row end -->
+                                </form>
                             </div>
                             <!-- /.card-body -->
                         </div>
