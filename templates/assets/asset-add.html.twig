@@ -52,13 +52,10 @@
                                                 <label>Product Category</label>
                                                 <select class="form-control select2" name="product-category"
                                                         id="product-category" style="width: 100%;">
-                                                    <option selected="selected">Alabama</option>
-                                                    <option>Alaska</option>
-                                                    <option>California</option>
-                                                    <option>Delaware</option>
-                                                    <option>Tennessee</option>
-                                                    <option>Texas</option>
-                                                    <option>Washington</option>
+                                                    <option selected="selected">Select Category</option>
+                                                    {% for product in data.products %}
+                                                        <option value="{{ product.category }}">{{ product.category }}</option>
+                                                    {% endfor %}
                                                 </select>
                                             </div>
                                         </div>
@@ -68,13 +65,10 @@
                                                 <label>Product Type</label>
                                                 <select class="form-control select2" name="product-type"
                                                         id="product-type" style="width: 100%;">
-                                                    <option selected="selected">Alabama</option>
-                                                    <option>Alaska</option>
-                                                    <option>California</option>
-                                                    <option>Delaware</option>
-                                                    <option>Tennessee</option>
-                                                    <option>Texas</option>
-                                                    <option>Washington</option>
+                                                    <option selected="selected">Select Type</option>
+                                                    {% for product in data.products %}
+                                                        <option value="{{ product.type }}">{{ product.type }}</option>
+                                                    {% endfor %}
                                                 </select>
                                             </div>
                                         </div>
@@ -84,13 +78,10 @@
                                                 <label>Product</label>
                                                 <select class="form-control select2" name="product" id="product"
                                                         style="width: 100%;">
-                                                    <option selected="selected">Alabama</option>
-                                                    <option>Alaska</option>
-                                                    <option>California</option>
-                                                    <option>Delaware</option>
-                                                    <option>Tennessee</option>
-                                                    <option>Texas</option>
-                                                    <option>Washington</option>
+                                                    <option selected="selected">Select product</option>
+                                                    {% for product in data.products %}
+                                                        <option value="{{ product.name }}">{{ product.name }}</option>
+                                                    {% endfor %}
                                                 </select>
                                             </div>
                                         </div>
@@ -100,13 +91,10 @@
                                                 <label>Vendor</label>
                                                 <select class="form-control select2" name="vendor" id="vendor"
                                                         style="width: 100%;">
-                                                    <option selected="selected">Alabama</option>
-                                                    <option>Alaska</option>
-                                                    <option>California</option>
-                                                    <option>Delaware</option>
-                                                    <option>Tennessee</option>
-                                                    <option>Texas</option>
-                                                    <option>Washington</option>
+                                                    <option selected="selected">Select Vendor</option>
+                                                    {% for vendor in data.vendors %}
+                                                        <option value="{{ vendor.id }}">{{ vendor.vendorName }}</option>
+                                                    {% endfor %}
                                                 </select>
                                             </div>
                                         </div>
