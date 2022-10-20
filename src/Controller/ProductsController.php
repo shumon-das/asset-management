@@ -13,10 +13,17 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ProductsController extends AbstractController
 {
-    #[Route('/products', name: 'app_products')]
-    public function products(ProductsRepository $productsRepository): Response
+    private ProductsRepository $productsRepository;
+
+    public function __construct(ProductsRepository $productsRepository)
     {
-        $products = $productsRepository->findAll();
+        $this->productsRepository = $productsRepository;
+    }
+
+    #[Route('/products', name: 'app_products')]
+    public function products(): Response
+    {
+        $products = $this->productsRepository->findAll();
 
         return $this->render('products/products.html.twig', [
             'products' => $products,
@@ -24,7 +31,7 @@ class ProductsController extends AbstractController
     }
 
     #[Route('/add-product', name: 'app_add_product')]
-    public function addProducts(): Response
+    public function addProduct(): Response
     {
         return $this->render('products/add-product.html.twig', [
             'controller_name' => 'ProductsController',
@@ -55,5 +62,30 @@ class ProductsController extends AbstractController
         $entityManager->flush();
 
         return new RedirectResponse('products');
+    }
+
+    #[Route('/view-product/{id}', name: 'view_product')]
+    public function viewProduct(int $id): Response
+    {
+        $product = $this->productsRepository->find($id);
+
+        return $this->render('products/view-product.html.twig', [
+            'product' => $this->productData($product),
+        ]);
+    }
+
+    private function productData(?Products $product): array
+    {
+        return [
+            'id' => $product->getId(),
+            'category' => $product->getCategory(),
+            'type' => $product->getType(),
+            'name' => $product->getName(),
+            'manufacturer' => $product->getManufacturer(),
+            'description' => $product->getDescription(),
+            'status' => true === $product->isStatus() ? 'active' : 'not active',
+            'createdAt' => $product->getCreatedAt()->format('Y-M-d'),
+            'createdBy' => $product->getCreatedBy(),
+        ];
     }
 }

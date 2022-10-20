@@ -1,6 +1,6 @@
 {% extends 'view-base.html.twig' %}
 
-{% block title %} asset {% endblock %}
+{% block title %} vendor {% endblock %}
 
 {% block body %}
     <!-- Navbar -->
@@ -23,7 +23,7 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1>{{ asset.assetName }}</h1>
+                        <h1>{{ vendor.vendorName }}</h1>
                     </div>
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
@@ -50,10 +50,10 @@
                                     <div class="col-md-5">
                                         <div class="row">
                                             <div class="col-4">
-                                                <label>Product Category: </label>
+                                                <label>Vendor Name: </label>
                                             </div>
                                             <div class="col-8">
-                                                {{ asset.productCategory }}
+                                                {{ vendor.vendorName }}
                                             </div>
                                         </div>
                                     </div>
@@ -61,10 +61,10 @@
                                     <div class="col-md-5">
                                         <div class="row">
                                             <div class="col-4">
-                                                <label>Product Type: </label>
+                                                <label>Vendor Email: </label>
                                             </div>
                                             <div class="col-8">
-                                                {{ asset.productType }}
+                                                {{ vendor.email }}
                                             </div>
                                         </div>
                                     </div>
@@ -76,10 +76,10 @@
                                     <div class="col-md-5">
                                         <div class="row">
                                             <div class="col-4">
-                                                <label>Product: </label>
+                                                <label>Phone: </label>
                                             </div>
                                             <div class="col-8">
-                                                {{ asset.product }}
+                                                {{ vendor.phone }}
                                             </div>
                                         </div>
                                     </div>
@@ -87,10 +87,10 @@
                                     <div class="col-md-5">
                                         <div class="row">
                                             <div class="col-4">
-                                                <label>Vendor: </label>
+                                                <label>Contact Person: </label>
                                             </div>
                                             <div class="col-8">
-                                                {{ asset.vendor }}
+                                                {{ vendor.contactPerson }}
                                             </div>
                                         </div>
                                     </div>
@@ -102,10 +102,10 @@
                                     <div class="col-md-5">
                                         <div class="row">
                                             <div class="col-4">
-                                                <label>Asset Name: </label>
+                                                <label>Designation: </label>
                                             </div>
                                             <div class="col-8">
-                                                {{ asset.assetName }}
+                                                {{ vendor.designation }}
                                             </div>
                                         </div>
                                     </div>
@@ -113,10 +113,10 @@
                                     <div class="col-md-5">
                                         <div class="row">
                                             <div class="col-4">
-                                                <label>Serial Number: </label>
+                                                <label>Country: </label>
                                             </div>
                                             <div class="col-8">
-                                                {{ asset.seriulNumber }}
+                                                {{ vendor.country }}
                                             </div>
                                         </div>
                                     </div>
@@ -128,10 +128,10 @@
                                     <div class="col-md-5">
                                         <div class="row">
                                             <div class="col-4">
-                                                <label>Price: </label>
+                                                <label>State: </label>
                                             </div>
                                             <div class="col-8">
-                                                {{ asset.price }}
+                                                {{ vendor.state }}
                                             </div>
                                         </div>
                                     </div>
@@ -139,10 +139,10 @@
                                     <div class="col-md-5">
                                         <div class="row">
                                             <div class="col-4">
-                                                <label>Description Type: </label>
+                                                <label>City: </label>
                                             </div>
                                             <div class="col-8">
-                                                {{ asset.descriptionType }}
+                                                {{ vendor.city }}
                                             </div>
                                         </div>
                                     </div>
@@ -154,10 +154,10 @@
                                     <div class="col-md-5">
                                         <div class="row">
                                             <div class="col-4">
-                                                <label>Location: </label>
+                                                <label>Zip Code: </label>
                                             </div>
                                             <div class="col-8">
-                                                {{ asset.location }}
+                                                {{ vendor.zipCode }}
                                             </div>
                                         </div>
                                     </div>
@@ -165,10 +165,10 @@
                                     <div class="col-md-5">
                                         <div class="row">
                                             <div class="col-4">
-                                                <label>Purchase Date: </label>
+                                                <label>GSTIN No: </label>
                                             </div>
                                             <div class="col-8">
-                                                {{ asset.purchaseDate }}
+                                                {{ vendor.gstinNo }}
                                             </div>
                                         </div>
                                     </div>
@@ -180,78 +180,28 @@
                                     <div class="col-md-5">
                                         <div class="row">
                                             <div class="col-4">
-                                                <label>Warranty Expiry Date: </label>
+                                                <label>Address: </label>
                                             </div>
                                             <div class="col-8">
-                                                {{ asset.warrantyExpiryDate }}
+                                                {{ vendor.address }}
                                             </div>
                                         </div>
                                     </div>
 
-                                    <div class="col-md-5">
-                                        <div class="row">
-                                            <div class="col-4">
-                                                <label>Purchase Type: </label>
-                                            </div>
-                                            <div class="col-8">
-                                                {{ asset.purchaseType }}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- row end -->
-
-                                <div class="row mb-3">
-                                    <div class="col-md-1"></div>
                                     <div class="col-md-5">
                                         <div class="row">
                                             <div class="col-4">
                                                 <label>Description: </label>
                                             </div>
                                             <div class="col-8">
-                                                {{ asset.description }}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-5">
-                                        <div class="row">
-                                            <div class="col-4">
-                                                <label>Useful Life: </label>
-                                            </div>
-                                            <div class="col-8">
-                                                {{ asset.usefulLife }}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- end row -->
-
-                                <div class="row">
-                                    <div class="col-md-1"></div>
-                                    <div class="col-md-5">
-                                        <div class="row">
-                                            <div class="col-4">
-                                                <label>Residual Value: </label>
-                                            </div>
-                                            <div class="col-8">
-                                                {{ asset.residualValue }}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-5">
-                                        <div class="row">
-                                            <div class="col-4">
-                                                <label>Rate: </label>
-                                            </div>
-                                            <div class="col-8">
-                                                {{ asset.rate }}
+                                                {{ vendor.description }}
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <!-- row end -->
                                 <div class="row mt-5 mb-5">
-                                    <div class="col-md-10 text-center">Created By {#{{ asset.createdBy }}#} Username at {{ asset.createdAt }}</div>
+                                    <div class="col-md-10 text-center"><span class="border-bottom p-1">Created By {#{{ asset.createdBy }}#} Username at {{ vendor.createdAt }}</span></div>
                                 </div>
                             </div>
                             <!-- /.card-body -->

@@ -45,127 +45,130 @@
                                 <a href="{{ path('app_assets') }}" class="btn btn-primary btn-sm">back to asset list</a>
                             </div>
                             <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label>Product Category</label>
-                                            <select class="form-control select2" style="width: 100%;">
-                                                <option selected="selected">Alabama</option>
-                                                <option>Alaska</option>
-                                                <option>California</option>
-                                                <option>Delaware</option>
-                                                <option>Tennessee</option>
-                                                <option>Texas</option>
-                                                <option>Washington</option>
-                                            </select>
+                                <form action="{{ path('save_assign_asset') }}" method="post">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label>Product Category</label>
+                                                <select class="form-control select2" name="product-category"
+                                                        id="product-category" style="width: 100%;">
+                                                    <option selected="selected">Select Product Category</option>
+                                                    {% for product in products %}
+                                                        <option>{{ product.category }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label>Product Type</label>
-                                            <select class="form-control select2" style="width: 100%;">
-                                                <option selected="selected">Alabama</option>
-                                                <option>Alaska</option>
-                                                <option>California</option>
-                                                <option>Delaware</option>
-                                                <option>Tennessee</option>
-                                                <option>Texas</option>
-                                                <option>Washington</option>
-                                            </select>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label>Product Type</label>
+                                                <select class="form-control select2" name="product-type"
+                                                        id="product-type" style="width: 100%;">
+                                                    <option selected="selected">Select Product Type</option>
+                                                    {% for product in products %}
+                                                        <option>{{ product.type }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label>Product</label>
-                                            <select class="form-control select2" style="width: 100%;">
-                                                <option selected="selected">Alabama</option>
-                                                <option>Alaska</option>
-                                                <option>California</option>
-                                                <option>Delaware</option>
-                                                <option>Tennessee</option>
-                                                <option>Texas</option>
-                                                <option>Washington</option>
-                                            </select>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label>Product</label>
+                                                <select class="form-control select2" name="product-name"
+                                                        id="product-name" style="width: 100%;">
+                                                    <option selected="selected">Select Product</option>
+                                                    {% for product in products %}
+                                                        <option>{{ product.name }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label>Vendor</label>
-                                            <select class="form-control select2" style="width: 100%;">
-                                                <option selected="selected">Alabama</option>
-                                                <option>Alaska</option>
-                                                <option>California</option>
-                                                <option>Delaware</option>
-                                                <option>Tennessee</option>
-                                                <option>Texas</option>
-                                                <option>Washington</option>
-                                            </select>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label>Vendor</label>
+                                                <select class="form-control select2" name="vendor" id="vendor"
+                                                        style="width: 100%;">
+                                                    <option selected="selected">Select Vendor</option>
+                                                    {% for vendor in vendors %}
+                                                        <option value="{{ vendor.id }}">{{ vendor.vendorName }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <!-- row end -->
+                                    <!-- row end -->
 
-                                <div class="row mt-3">
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label for="exampleInputEmail1">Location</label>
-                                            <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+                                    <div class="row mt-3">
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label for="location">Location</label>
+                                                <input type="text" class="form-control" name="location" id="location"
+                                                       placeholder="Enter location">
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label for="exampleInputEmail1">Asset Name</label>
-                                            <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label for="asset-name">Asset Name</label>
+                                                <input type="text" class="form-control" name="asset-name"
+                                                       id="asset-name" placeholder="Enter asset name">
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label for="exampleInputEmail1">Department</label>
-                                            <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label for="department">Department</label>
+                                                <input type="text" class="form-control" name="department"
+                                                       id="department" placeholder="Enter department">
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label>Assign to</label>
-                                            <select class="form-control select2" style="width: 100%;">
-                                                <option selected="selected">Alabama</option>
-                                                <option>Alaska</option>
-                                                <option>California</option>
-                                                <option>Delaware</option>
-                                                <option>Tennessee</option>
-                                                <option>Texas</option>
-                                                <option>Washington</option>
-                                            </select>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label>Assign to</label>
+                                                <select class="form-control select2" name="assign-to" id="assign-to"
+                                                        style="width: 100%;">
+                                                    <option selected="selected">Select User</option>
+                                                    {% for user in users %}
+                                                        <option value="{{ user.id }}">{{ user.name }} {{ user.id }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <!-- row end -->
-                                <div class="row mt-3">
-                                    <div class="col-md-4" style="height: 250px">
-                                        <div class="form-group">
-                                            <label>Description</label>
-                                            <textarea name="" id="" class="w-100" style="height: 200px"></textarea>
+                                    <!-- row end -->
+
+                                    <div class="row mt-3">
+                                        <div class="col-md-4" style="height: 250px">
+                                            <div class="form-group">
+                                                <label>Description</label>
+                                                <textarea name="description" id="description" class="w-100"
+                                                          style="height: 200px"></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 text-center">
+                                            <div class="form-group">
+                                                <label for="exampleInputEmail1" class="ml-5" style="padding-left: 30px">Assign
+                                                    Component</label>
+                                                <br>
+                                                <label for="assign-component" class="ml-5 text-center"
+                                                       style="width: 300px;height: 175px;line-height: 175px;border: 1px dashed;cursor: pointer">Select
+                                                    File</label>
+                                                <input type="file" class="form-control" id="assign-component"
+                                                       style="display: none">
+                                                <a href="#" class="btn btn-sm btn-success ml-5" style="width: 300px">Upload</a>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 text-right">
+                                            <button type="submit" class="btn btn-primary" style="margin-top: 200px">
+                                                Submit
+                                            </button>
                                         </div>
                                     </div>
-                                    <div class="col-md-4 text-center">
-                                        <div class="form-group">
-                                            <label for="exampleInputEmail1" class="ml-5" style="padding-left: 30px">Assign Component</label>
-                                            <br>
-                                            <label for="assign-component" class="ml-5 text-center" style="width: 300px;height: 175px;line-height: 175px;border: 1px dashed;cursor: pointer">Select File</label>
-                                            <input type="file" class="form-control" id="assign-component" style="display: none">
-                                            <a href="#" class="btn btn-sm btn-success ml-5" style="width: 300px">Upload</a>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4 text-right">
-                                        <button type="submit" class="btn btn-primary" style="margin-top: 200px">Submit</button>
-                                    </div>
-                                </div>
+                                </form>
                             </div>
                             <!-- /.card-body -->
                         </div>

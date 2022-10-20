@@ -13,10 +13,17 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class VendorsController extends AbstractController
 {
-    #[Route('/vendors', name: 'app_vendors')]
-    public function vendors(VendorsRepository $repository): Response
+    private VendorsRepository $vendorsRepository;
+
+    public function __construct(VendorsRepository $vendorsRepository)
     {
-        $vendors = $repository->findAll();
+        $this->vendorsRepository = $vendorsRepository;
+    }
+
+    #[Route('/vendors', name: 'app_vendors')]
+    public function vendors(): Response
+    {
+        $vendors = $this->vendorsRepository->findAll();
 
         return $this->render('vendors/vendors.html.twig', [
             'vendors' => $vendors,
@@ -60,5 +67,37 @@ class VendorsController extends AbstractController
         $entityManager->flush();
 
         return new RedirectResponse('vendors');
+    }
+
+    #[Route('/view-vendor/{id}', name: 'view_vendor')]
+    public function viewVendor(int $id): Response
+    {
+        $vendor = $this->vendorsRepository->find($id);
+
+        return $this->render('vendors/view-vendor.html.twig', [
+            'vendor' => $this->vendorData($vendor),
+        ]);
+    }
+
+    private function vendorData(?Vendors $vendor): array
+    {
+        return [
+            'id' => $vendor->getId(),
+            'vendorName' => $vendor->getVendorName(),
+            'contactPerson' => $vendor->getContactPerson(),
+            'email' => $vendor->getEmail(),
+            'gstinNo' => $vendor->getGstinNo(),
+            'phone' => $vendor->getPhone(),
+            'status' => $vendor->isStatus(),
+            'createdAt' => $vendor->getCreatedAt()->format('Y-M-d'),
+            'createdBy' => $vendor->getCreatedBy(),
+            'designation' => $vendor->getDescription(),
+            'country' => $vendor->getCountry(),
+            'state' => $vendor->getState(),
+            'city' => $vendor->getCity(),
+            'zipCode' => $vendor->getZipCode(),
+            'address' => $vendor->getAddress(),
+            'description' => $vendor->getDescription(),
+        ];
     }
 }

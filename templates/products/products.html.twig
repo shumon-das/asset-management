@@ -67,6 +67,7 @@
                                             <td>{{ product.status }}</td>
                                             <td>
                                                 <div class="row d-sm-flex justify-content-sm-around">
+                                                    <a href="{{ path('view_product', {id: product.id}) }}" class="btn btn-success btn-sm"><i class="fas fa-eye"></i></a>
                                                     <a href="#" class="btn btn-info btn-sm"><i class="fas fa-edit"></i></a>
                                                     <a href="#" class="btn btn-danger btn-sm"><i
                                                                 class="fas fa-trash"></i></a>

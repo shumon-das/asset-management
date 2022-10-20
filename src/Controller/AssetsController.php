@@ -3,7 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\Assets;
+use App\Entity\AssigningAssets;
 use App\Repository\AssetsRepository;
+use App\Repository\AssigningAssetsRepository;
 use App\Repository\ProductsRepository;
 use App\Repository\VendorsRepository;
 use DateTimeImmutable;
@@ -19,11 +21,19 @@ class AssetsController extends AbstractController
 {
     private AssetsRepository $assetsRepository;
     private VendorsRepository $vendorsRepository;
+    private ProductsRepository $productsRepository;
+    private EntityManagerInterface $entityManager;
 
-    public function __construct(AssetsRepository $assetsRepository, VendorsRepository $vendorsRepository)
-    {
+    public function __construct(
+        AssetsRepository $assetsRepository,
+        VendorsRepository $vendorsRepository,
+        ProductsRepository $productsRepository,
+        EntityManagerInterface $entityManager
+    ){
         $this->assetsRepository = $assetsRepository;
         $this->vendorsRepository = $vendorsRepository;
+        $this->productsRepository = $productsRepository;
+        $this->entityManager = $entityManager;
     }
 
     #[Route('/assets', name: 'app_assets')]
@@ -41,10 +51,10 @@ class AssetsController extends AbstractController
     }
 
     #[Route('/asset', name: 'add_assets')]
-    public function addAsset(ProductsRepository $productsRepository, VendorsRepository $vendorsRepository): Response
+    public function addAsset(): Response
     {
-        $products = $productsRepository->findAll();
-        $vendors = $vendorsRepository->findAll();
+        $products = $this->productsRepository->findAll();
+        $vendors = $this->vendorsRepository->findAll();
 
         return $this->render('assets/asset-add.html.twig', [
             'data' => [
@@ -55,26 +65,73 @@ class AssetsController extends AbstractController
     }
 
     #[Route('/assigned', name: 'assigned_assets')]
-    public function assignedAsset(): Response
+    public function assignedAsset(AssigningAssetsRepository $assigningAssetsRepository): Response
     {
+        $assignedProduct = $assigningAssetsRepository->findAll();
+        $data = [];
+        foreach ($assignedProduct as  $product) {
+            $data[$product->getId()] = $this->assignedData($product);
+        }
+        
         return $this->render('assets/assigned-asset-list.html.twig', [
-            'controller_name' => 'AssetsController',
+            'assets' => $data
         ]);
     }
 
     #[Route('/assigning', name: 'assigning_assets')]
     public function assigningAsset(): Response
     {
+        $products = $this->productsRepository->findAll();
+        $vendors = $this->vendorsRepository->findAll();
+        $users = [
+            0 => ['id' => 1, 'name' => 'mono ranjan'],
+            1 => ['id' => 2, 'name' => 'shumon babu'],
+            2 => ['id' => 3, 'name' => 'mauro sebastianelli'],
+            3 => ['id' => 4, 'name' => 'MR Mauro'],
+        ];
         return $this->render('assets/assigning-asset.html.twig', [
-            'controller_name' => 'AssetsController',
+                'products' => $products,
+                'vendors' => $vendors,
+                'users' => $users,
         ]);
+    }
+
+    #[Route('/save-assign-asset', name: 'save_assign_asset')]
+    public function saveAssignAsset(Request $request): RedirectResponse
+    {
+//        dd($request);
+        $request = $request->request;
+        $assignAsset = new AssigningAssets();
+        $assignAsset
+            ->setProductCategory($request->get('product-category'))
+            ->setProductType($request->get('product-type'))
+            ->setProduct($request->get('product-name'))
+            ->setVendor($request->get('vendor'))
+            ->setLocation($request->get('location'))
+            ->setAssetName($request->get('asset-name'))
+            ->setDepartment($request->get('department'))
+            ->setAssignTo($request->get('assign-to'))
+            ->setDescription($request->get('description'))
+//            ->setAssignComponent($request->get(''))
+            ->setCreatedBy(1)
+            ->setUpdatedBy(null)
+            ->setDeletedBy(null)
+            ->setCreatedAt(new DateTimeImmutable())
+            ->setUpdatedAt(null)
+            ->setDeletedAt(null)
+            ->setStatus(true)
+        ;
+        $this->entityManager->persist($assignAsset);
+        $this->entityManager->flush();
+
+        return new RedirectResponse('assigning');
     }
 
     /**
      * @throws Exception
      */
     #[Route('/save-assets', name: 'app_save_assets')]
-    public function saveAssets(Request $request, EntityManagerInterface $entityManager): RedirectResponse
+    public function saveAssets(Request $request, ): RedirectResponse
     {
         $request = $request->request;
         $asset = new Assets();
@@ -102,8 +159,8 @@ class AssetsController extends AbstractController
             ->setCreatedAt(new DateTimeImmutable())
             ->setUpdatedAt(null)
             ->setDeletedAt(null);
-        $entityManager->persist($asset);
-        $entityManager->flush();
+        $this->entityManager->persist($asset);
+        $this->entityManager->flush();
 
         return new RedirectResponse('assets');
     }
@@ -157,6 +214,19 @@ class AssetsController extends AbstractController
             'createdAt' => $asset->getCreatedAt()->format('Y-M-d'),
             'createdBy' => $asset->getCreatedBy(),
             'status' => $asset->isStatus()
+        ];
+    }
+
+    private function assignedData(?AssigningAssets $assignedProduct): array
+    {
+        return [
+            'id' => $assignedProduct->getId(),
+            'assetName' => $assignedProduct->getAssetName(),
+            'department' => $assignedProduct->getDepartment(),
+            'location' => $assignedProduct->getLocation(),
+            'assigned' => $assignedProduct->getAssignTo(),
+            'currentState' => 'current state',
+            'status' => $assignedProduct->isStatus(),
         ];
     }
 }
