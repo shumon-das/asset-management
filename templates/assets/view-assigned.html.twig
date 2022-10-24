@@ -1,6 +1,6 @@
 {% extends 'view-base.html.twig' %}
 
-{% block title %} product {% endblock %}
+{% block title %} asset {% endblock %}
 
 {% block body %}
     <!-- Navbar -->
@@ -23,7 +23,7 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1>{{ product.name }}</h1>
+                        <h1>{{ asset.assetName }}</h1>
                     </div>
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
@@ -42,7 +42,7 @@
                     <div class="col-12">
                         <div class="card">
                             <div class="card-header">
-                                <a href="{{ path('app_products') }}" class="btn btn-primary btn-sm">back to product list</a>
+                                <a href="{{ path('assigned_assets') }}" class="btn btn-primary btn-sm">back to assigned assets list</a>
                             </div>
                             <div class="card-body">
                                 <div class="row mb-3">
@@ -53,22 +53,44 @@
                                                 <label>Product Category: </label>
                                             </div>
                                             <div class="col-8">
-                                                {{ product.category }}
+                                                {{ asset.productCategory }}
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <!-- end row -->
 
-                                <div class="row mb-3">
-                                    <div class="col-md-1"></div>
                                     <div class="col-md-5">
                                         <div class="row">
                                             <div class="col-4">
                                                 <label>Product Type: </label>
                                             </div>
                                             <div class="col-8">
-                                                {{ product.type }}
+                                                {{ asset.productType }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- end row -->
+
+                                <div class="row mb-3">
+                                    <div class="col-md-1"></div>
+                                    <div class="col-md-5">
+                                        <div class="row">
+                                            <div class="col-4">
+                                                <label>Product: </label>
+                                            </div>
+                                            <div class="col-8">
+                                                {{ asset.product }}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-5">
+                                        <div class="row">
+                                            <div class="col-4">
+                                                <label>Vendor: </label>
+                                            </div>
+                                            <div class="col-8">
+                                                {{ asset.vendor }}
                                             </div>
                                         </div>
                                     </div>
@@ -80,10 +102,21 @@
                                     <div class="col-md-5">
                                         <div class="row">
                                             <div class="col-4">
-                                                <label>ProductName: </label>
+                                                <label>Asset Name: </label>
                                             </div>
                                             <div class="col-8">
-                                                {{ product.name }}
+                                                {{ asset.assetName }}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-5">
+                                        <div class="row">
+                                            <div class="col-4">
+                                                <label>Location: </label>
+                                            </div>
+                                            <div class="col-8">
+                                                {{ asset.location }}
                                             </div>
                                         </div>
                                     </div>
@@ -95,48 +128,28 @@
                                     <div class="col-md-5">
                                         <div class="row">
                                             <div class="col-4">
-                                                <label>Manufacturer: </label>
+                                                <label>Department: </label>
                                             </div>
                                             <div class="col-8">
-                                                {{ product.manufacturer }}
+                                                {{ asset.department }}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-5">
+                                        <div class="row">
+                                            <div class="col-4">
+                                                <label>Assigned to: </label>
+                                            </div>
+                                            <div class="col-8">
+                                                {{ asset.assigned }}
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <!-- row end -->
-
-                                <div class="row mb-3">
-                                    <div class="col-md-1"></div>
-                                    <div class="col-md-5">
-                                        <div class="row">
-                                            <div class="col-4">
-                                                <label>Description: </label>
-                                            </div>
-                                            <div class="col-8">
-                                                {{ product.description }}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- end row -->
-
-                                <div class="row mb-3">
-                                    <div class="col-md-1"></div>
-                                    <div class="col-md-5">
-                                        <div class="row">
-                                            <div class="col-4">
-                                                <label>Status: </label>
-                                            </div>
-                                            <div class="col-8">
-                                                {{ product.status }}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- end row -->
-
                                 <div class="row mt-5 mb-5">
-                                    <div class="col-md-10 text-center"><span class="border-bottom p-1">Created By {#{{ product.createdBy }}#} Username at {{ product.createdAt }}</span></div>
+                                    <div class="col-md-10 text-center">Created By {#{{ asset.createdBy }}#} Username at {{ asset.createdAt }}</div>
                                 </div>
                             </div>
                             <!-- /.card-body -->

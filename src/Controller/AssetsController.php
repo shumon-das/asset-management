@@ -23,17 +23,20 @@ class AssetsController extends AbstractController
     private VendorsRepository $vendorsRepository;
     private ProductsRepository $productsRepository;
     private EntityManagerInterface $entityManager;
+    private AssigningAssetsRepository $assigningAssetsRepository;
 
     public function __construct(
         AssetsRepository $assetsRepository,
         VendorsRepository $vendorsRepository,
         ProductsRepository $productsRepository,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        AssigningAssetsRepository $assigningAssetsRepository,
     ){
         $this->assetsRepository = $assetsRepository;
         $this->vendorsRepository = $vendorsRepository;
         $this->productsRepository = $productsRepository;
         $this->entityManager = $entityManager;
+        $this->assigningAssetsRepository = $assigningAssetsRepository;
     }
 
     #[Route('/assets', name: 'app_assets')]
@@ -96,10 +99,26 @@ class AssetsController extends AbstractController
         ]);
     }
 
+    #[Route('/view-assigned/{id}', name: 'view_assigned_asset')]
+    public function viewAssignedAsset(int $id): Response
+    {
+//        $products = $this->productsRepository->findAll();
+//        $vendors = $this->vendorsRepository->findAll();
+//        $users = [
+//            0 => ['id' => 1, 'name' => 'mono ranjan'],
+//            1 => ['id' => 2, 'name' => 'shumon babu'],
+//            2 => ['id' => 3, 'name' => 'mauro sebastianelli'],
+//            3 => ['id' => 4, 'name' => 'MR Mauro'],
+//        ];
+        $asset = $this->assigningAssetsRepository->find($id);
+        return $this->render('assets/view-assigned.html.twig', [
+                'asset' => $this->assignedAssetData($asset)
+        ]);
+    }
+
     #[Route('/save-assign-asset', name: 'save_assign_asset')]
     public function saveAssignAsset(Request $request): RedirectResponse
     {
-//        dd($request);
         $request = $request->request;
         $assignAsset = new AssigningAssets();
         $assignAsset
@@ -124,7 +143,7 @@ class AssetsController extends AbstractController
         $this->entityManager->persist($assignAsset);
         $this->entityManager->flush();
 
-        return new RedirectResponse('assigning');
+        return new RedirectResponse('assigned');
     }
 
     /**
@@ -229,4 +248,51 @@ class AssetsController extends AbstractController
             'status' => $assignedProduct->isStatus(),
         ];
     }
+
+    private function assignedAssetData(?AssigningAssets $asset): array
+    {
+        $vendor = $this->vendorsRepository->find($asset->getVendor());
+        return [
+            'id' => $asset->getId(),
+            'productCategory' => $asset->getProductCategory(),
+            'productType' => $asset->getProductType(),
+            'product' => $asset->getProduct(),
+            'vendor' => $vendor->getVendorName(),
+            'location' => $asset->getLocation(),
+            'assetName' => $asset->getAssetName(),
+            'department' => $asset->getDepartment(),
+            'assigned' => $asset->getAssignTo(),
+            'description' => $asset->getDescription(),
+            'createdBy' => $asset->getCreatedBy(),
+            'status' => $asset->isStatus(),
+            'currentState' => 'current state',
+            'createdAt' => $asset->getCreatedAt()->format('Y-M-d'),
+        ];
+    }
+
+
+/**
+     * @Route("/upload-excel", name="xlsx")
+     * @param Request $request
+     * @throws \Exception
+     */
+public function xslx(Request $request)
+{
+   $file = $request->files->get('file'); // get the file from the sent request
+
+   $fileFolder = __DIR__ . '/../../public/uploads/';  //choose the folder in which the uploaded file will be stored
+
+   $filePathName = md5(uniqid()) . $file->getClientOriginalName();
+      // apply md5 function to generate an unique identifier for the file and concat it with the file extension
+            try {
+                $file->move($fileFolder, $filePathName);
+            } catch (FileException $e) {
+                dd($e);
+            }
+    $spreadsheet = IOFactory::load($fileFolder . $filePathName); // Here we are able to read from the excel file
+    $row = $spreadsheet->getActiveSheet()->removeRow(1); // I added this to be able to remove the first file line
+    $sheetData = $spreadsheet->getActiveSheet()->toArray(null, true, true, true); // here, the read data is turned into an array
+ dd($sheetData);
+
+}
 }
