@@ -1,0 +1,77 @@
+{% extends 'datatable-base.html.twig' %}
+
+{% block title %}upload csv file{% endblock %}
+
+{% block body %}
+    <!-- Navbar -->
+    <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+        <!-- Left navbar links -->
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+            </li>
+        </ul>
+    </nav>
+    <!-- /.navbar -->
+
+    {% include 'aside.html.twig' %}
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1>Upload CSV File</h1>
+                    </div>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="{{ path('app_home') }}">Home</a></li>
+                            <li class="breadcrumb-item active">Upload CSV File</li>
+                        </ol>
+                    </div>
+                </div>
+            </div><!-- /.container-fluid -->
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-between">
+                                <a href="{{ path('app_products') }}" class="btn btn-primary"> back to products</a>
+                            </div>
+                            <div class="card-body">
+                                <div class="card">
+                                    <div class="card-header text-center bg-dark">
+                                        <h3 class="text-center">Import CSV File</h3>
+                                    </div>
+
+                                    <h5 class="p-3">Please <a href="files/example-products-csv.xlsx" download="">click here</a> to download your csv file Format to import</h5>
+                                    <form action="{{ path('app_upload_products_files') }}" method="post" enctype="multipart/form-data" class="pb-5">
+                                        <label for="products-csv" class="ml-5 text-center d-block" style="width: 300px;height: 175px;line-height: 175px;border: 1px dashed;cursor: pointer">Upload Your CSV File</label>
+                                        <input type="file" name="products-csv" id="products-csv" style="display: none">
+                                        <button type="submit" class="btn btn-sm btn-success ml-5" style="width: 300px">Upload</button>
+                                    </form>
+                                </div>
+                            </div>
+                            <!-- /.card-body -->
+                        </div>
+                        <!-- /.card -->
+                    </div>
+                    <!-- /.col -->
+                </div>
+                <!-- /.row -->
+            </div>
+            <!-- /.container-fluid -->
+        </section>
+        <!-- /.content -->
+    </div>
+    <!-- /.control-sidebar -->
+
+    {% include 'footer.html.twig' %}
+
+{% endblock %}

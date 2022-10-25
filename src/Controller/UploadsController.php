@@ -2,9 +2,11 @@
 
 namespace App\Controller;
 
-use App\Entity\Vendors;
+use App\Common\Uploads\UploadAssetsTrait;
+use App\Common\Uploads\UploadAssignedAssetsTrait;
+use App\Common\Uploads\UploadProductsTrait;
+use App\Common\Uploads\UploadVendorsTrait;
 use Doctrine\ORM\EntityManagerInterface;
-use PhpOffice\PhpSpreadsheet\IOFactory;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,6 +15,11 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class UploadsController extends AbstractController
 {
+    use UploadVendorsTrait;
+    use UploadProductsTrait;
+    use UploadAssetsTrait;
+    use UploadAssignedAssetsTrait;
+
     private EntityManagerInterface $entityManager;
 
     public function __construct(EntityManagerInterface $entityManager)
@@ -31,35 +38,67 @@ class UploadsController extends AbstractController
     #[Route('/upload-files', name: 'app_upload_files')]
     public function uploadFiles(Request $request): RedirectResponse
     {
-        $vendorFile = $request->files->get('vendors-csv');
-        $spreadsheet = IOFactory::load($vendorFile);
-        $data = $spreadsheet->getActiveSheet()->toArray();
+        $this->importVendors($request, $this->entityManager);
+        return new RedirectResponse('vendors');
+    }
 
-        foreach ($data as $key => $row) {
-            if (0 !== $key) {
-                $vendor = new Vendors();
-                $vendor
-                    ->setVendorName($row[0])
-                    ->setEmail($row[1])
-                    ->setPhone($row[2])
-                    ->setContactPerson($row[3])
-                    ->setCountry($row[4])
-                    ->setState($row[5])
-                    ->setCity($row[6])
-                    ->setZipCode($row[7])
-                    ->setAddress($row[8])
-                    ->setDesignation($row[9])
-                    ->setGstinNo($row[10])
-                    ->setStatus(false)
-                    ->setIsDeleted(false)
-                    ->setCreatedAt(new \DateTimeImmutable())
-                    ->setDeletedBy(null)
-                    ->setCreatedBy(1)
-                ;
-                $this->entityManager->persist($vendor);
-            }
-        }
-        $this->entityManager->flush();
-        return new RedirectResponse('upload-vendors');
+    #[Route('/upload-products-file', name: 'app_upload_products_file')]
+    public function uploadProducts(): Response
+    {
+        return $this->render('uploads/upload-products-file.html.twig', [
+            'controller_name' => 'UploadsController',
+        ]);
+    }
+
+    #[Route('/upload-products-files', name: 'app_upload_products_files')]
+    public function uploadProductsFiles(Request $request): RedirectResponse
+    {
+        $this->importProducts($request, $this->entityManager);
+        return new RedirectResponse('products');
+    }
+
+    #[Route('/upload-assets-file', name: 'app_upload_assets_files', methods: 'GET')]
+    public function uploadAssets(): Response
+    {
+        return $this->render('uploads/upload-assets-file.html.twig', [
+            'controller_name' => 'UploadsController',
+        ]);
+    }
+
+    #[Route('/upload-assets', name: 'app_upload_assets', methods: 'POST')]
+    public function uploadAssetsFiles(Request $request): RedirectResponse
+    {
+        $this->importAssets($request, $this->entityManager);
+        return new RedirectResponse('assets');
+    }
+
+//    #[Route('/upload-assets-file', name: 'app_upload_assets_files')]
+//    public function uploadEmployees(): Response
+//    {
+//        return $this->render('uploads/upload-assets-file.html.twig', [
+//            'controller_name' => 'UploadsController',
+//        ]);
+//    }
+//
+//    #[Route('/upload-assets', name: 'app_upload_assets')]
+//    public function uploadEmployeesFiles(Request $request): RedirectResponse
+//    {
+//        $this->importAssets($request, $this->entityManager);
+//        return new RedirectResponse('assets');
+//    }
+
+    #[Route('/upload-assigned-assets-file', name: 'app_upload_assigned_assets_files', methods: 'GET')]
+    public function uploadAssignedAssets(): Response
+    {
+        return $this->render('uploads/upload-assigned-assets-file.html.twig', [
+            'controller_name' => 'UploadsController',
+        ]);
+    }
+
+    #[Route('/upload-assigned-assets', name: 'app_upload_assigned_assets', methods: 'POST')]
+    public function uploadAssignedAssetsFiles(Request $request): RedirectResponse
+    {
+        $this->importAssignedAssets($request, $this->entityManager);
+        return new RedirectResponse('assigned');
     }
 }
