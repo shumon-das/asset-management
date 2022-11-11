@@ -20,7 +20,7 @@ class VendorsController extends AbstractController
         $this->vendorsRepository = $vendorsRepository;
     }
 
-    #[Route('/vendors', name: 'app_vendors')]
+    #[Route('/ams/vendors', name: 'app_vendors')]
     public function vendors(): Response
     {
         $vendors = $this->vendorsRepository->findAll();

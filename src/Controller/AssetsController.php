@@ -39,7 +39,7 @@ class AssetsController extends AbstractController
         $this->assigningAssetsRepository = $assigningAssetsRepository;
     }
 
-    #[Route('/assets', name: 'app_assets')]
+    #[Route('/ams/assets', name: 'app_assets')]
     public function assets(): Response
     {
         $assets = $this->assetsRepository->findAll();
@@ -67,7 +67,7 @@ class AssetsController extends AbstractController
         ]);
     }
 
-    #[Route('/assigned', name: 'assigned_assets')]
+    #[Route('/ams/assigned', name: 'assigned_assets')]
     public function assignedAsset(AssigningAssetsRepository $assigningAssetsRepository): Response
     {
         $assignedProduct = $assigningAssetsRepository->findAll();

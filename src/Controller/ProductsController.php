@@ -20,7 +20,7 @@ class ProductsController extends AbstractController
         $this->productsRepository = $productsRepository;
     }
 
-    #[Route('/products', name: 'app_products')]
+    #[Route('/ams/products', name: 'app_products')]
     public function products(): Response
     {
         $products = $this->productsRepository->findAll();

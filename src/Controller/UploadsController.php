@@ -27,7 +27,7 @@ class UploadsController extends AbstractController
         $this->entityManager = $entityManager;
     }
 
-    #[Route('/upload-vendors-file', name: 'app_upload_vendors_file')]
+    #[Route('/ams/upload-vendors-file', name: 'app_upload_vendors_file')]
     public function uploadVendorsFile(): Response
     {
         return $this->render('uploads/upload-vendors-file.html.twig', [
@@ -42,7 +42,7 @@ class UploadsController extends AbstractController
         return new RedirectResponse('vendors');
     }
 
-    #[Route('/upload-products-file', name: 'app_upload_products_file')]
+    #[Route('/ams/upload-products-file', name: 'app_upload_products_file')]
     public function uploadProducts(): Response
     {
         return $this->render('uploads/upload-products-file.html.twig', [
@@ -57,7 +57,7 @@ class UploadsController extends AbstractController
         return new RedirectResponse('products');
     }
 
-    #[Route('/upload-assets-file', name: 'app_upload_assets_files', methods: 'GET')]
+    #[Route('/ams/upload-assets-file', name: 'app_upload_assets_files', methods: 'GET')]
     public function uploadAssets(): Response
     {
         return $this->render('uploads/upload-assets-file.html.twig', [
@@ -87,7 +87,7 @@ class UploadsController extends AbstractController
 //        return new RedirectResponse('assets');
 //    }
 
-    #[Route('/upload-assigned-assets-file', name: 'app_upload_assigned_assets_files', methods: 'GET')]
+    #[Route('/ams/upload-assigned-assets-file', name: 'app_upload_assigned_assets_files', methods: 'GET')]
     public function uploadAssignedAssets(): Response
     {
         return $this->render('uploads/upload-assigned-assets-file.html.twig', [
