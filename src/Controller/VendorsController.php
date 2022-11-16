@@ -30,7 +30,7 @@ class VendorsController extends AbstractController
         ]);
     }
 
-    #[Route('/add-vendor', name: 'app_add_vendor')]
+    #[Route('/ams/add-vendor', name: 'app_add_vendor')]
     public function addVendor(): Response
     {
         return $this->render('vendors/add-vendor.html.twig', [
@@ -38,7 +38,7 @@ class VendorsController extends AbstractController
         ]);
     }
 
-    #[Route('/save-vendor', name: 'app_save_vendor')]
+    #[Route('/ams/save-vendor', name: 'app_save_vendor')]
     public function saveVendor(Request $request, EntityManagerInterface $entityManager): RedirectResponse
     {
         $request = $request->request;
@@ -69,7 +69,7 @@ class VendorsController extends AbstractController
         return new RedirectResponse('vendors');
     }
 
-    #[Route('/view-vendor/{id}', name: 'view_vendor')]
+    #[Route('/ams/view-vendor/{id}', name: 'view_vendor')]
     public function viewVendor(int $id): Response
     {
         $vendor = $this->vendorsRepository->find($id);

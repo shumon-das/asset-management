@@ -8,7 +8,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ExportsController extends AbstractController
 {
-    #[Route('/exports', name: 'app_exports')]
+    #[Route('/ams/exports', name: 'app_exports')]
     public function index(): Response
     {
         return $this->render('exports/exports.html.twig', [

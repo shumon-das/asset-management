@@ -30,7 +30,7 @@ class ProductsController extends AbstractController
         ]);
     }
 
-    #[Route('/add-product', name: 'app_add_product')]
+    #[Route('/ams/add-product', name: 'app_add_product')]
     public function addProduct(): Response
     {
         return $this->render('products/add-product.html.twig', [
@@ -38,7 +38,7 @@ class ProductsController extends AbstractController
         ]);
     }
 
-    #[Route('/save-products', name: 'app_save_products')]
+    #[Route('/ams/save-products', name: 'app_save_products')]
     public function saveProducts(Request $request, EntityManagerInterface $entityManager): RedirectResponse
     {
         $request = $request->request;
@@ -64,7 +64,7 @@ class ProductsController extends AbstractController
         return new RedirectResponse('products');
     }
 
-    #[Route('/view-product/{id}', name: 'view_product')]
+    #[Route('/ams/view-product/{id}', name: 'view_product')]
     public function viewProduct(int $id): Response
     {
         $product = $this->productsRepository->find($id);

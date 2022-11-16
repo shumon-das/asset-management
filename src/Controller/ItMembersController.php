@@ -8,7 +8,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ItMembersController extends AbstractController
 {
-    #[Route('/members', name: 'app_it_members')]
+    #[Route('/ams/members', name: 'app_it_members')]
     public function members(): Response
     {
         return $this->render('it_members/members.html.twig', [
@@ -16,7 +16,7 @@ class ItMembersController extends AbstractController
         ]);
     }
 
-    #[Route('/add-members', name: 'app_add_it_member')]
+    #[Route('/ams/add-members', name: 'app_add_it_member')]
     public function addMembers(): Response
     {
         return $this->render('it_members/add-member.html.twig', [

@@ -35,7 +35,7 @@ class UploadsController extends AbstractController
         ]);
     }
 
-    #[Route('/upload-files', name: 'app_upload_files')]
+    #[Route('/ams/upload-files', name: 'app_upload_files')]
     public function uploadFiles(Request $request): RedirectResponse
     {
         $this->importVendors($request, $this->entityManager);
@@ -50,7 +50,7 @@ class UploadsController extends AbstractController
         ]);
     }
 
-    #[Route('/upload-products-files', name: 'app_upload_products_files')]
+    #[Route('/ams/upload-products-files', name: 'app_upload_products_files')]
     public function uploadProductsFiles(Request $request): RedirectResponse
     {
         $this->importProducts($request, $this->entityManager);
@@ -65,7 +65,7 @@ class UploadsController extends AbstractController
         ]);
     }
 
-    #[Route('/upload-assets', name: 'app_upload_assets', methods: 'POST')]
+    #[Route('/ams/upload-assets', name: 'app_upload_assets', methods: 'POST')]
     public function uploadAssetsFiles(Request $request): RedirectResponse
     {
         $this->importAssets($request, $this->entityManager);
@@ -95,7 +95,7 @@ class UploadsController extends AbstractController
         ]);
     }
 
-    #[Route('/upload-assigned-assets', name: 'app_upload_assigned_assets', methods: 'POST')]
+    #[Route('/ams/upload-assigned-assets', name: 'app_upload_assigned_assets', methods: 'POST')]
     public function uploadAssignedAssetsFiles(Request $request): RedirectResponse
     {
         $this->importAssignedAssets($request, $this->entityManager);

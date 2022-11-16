@@ -8,7 +8,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class DepartmentsController extends AbstractController
 {
-    #[Route('/departments', name: 'app_departments')]
+    #[Route('/ams/departments', name: 'app_departments')]
     public function departments(): Response
     {
         return $this->render('departments/departments.html.twig', [
@@ -16,7 +16,7 @@ class DepartmentsController extends AbstractController
         ]);
     }
 
-    #[Route('/add-department', name: 'app_add_department')]
+    #[Route('/ams/add-department', name: 'app_add_department')]
     public function addDepartment(): Response
     {
         return $this->render('departments/add-department.html.twig', [

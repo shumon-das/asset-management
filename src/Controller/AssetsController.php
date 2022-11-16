@@ -53,7 +53,7 @@ class AssetsController extends AbstractController
         ]);
     }
 
-    #[Route('/asset', name: 'add_assets')]
+    #[Route('/ams/asset', name: 'add_assets')]
     public function addAsset(): Response
     {
         $products = $this->productsRepository->findAll();
@@ -81,7 +81,7 @@ class AssetsController extends AbstractController
         ]);
     }
 
-    #[Route('/assigning', name: 'assigning_assets')]
+    #[Route('/ams/assigning', name: 'assigning_assets')]
     public function assigningAsset(): Response
     {
         $products = $this->productsRepository->findAll();
@@ -99,7 +99,7 @@ class AssetsController extends AbstractController
         ]);
     }
 
-    #[Route('/view-assigned/{id}', name: 'view_assigned_asset')]
+    #[Route('/ams/view-assigned/{id}', name: 'view_assigned_asset')]
     public function viewAssignedAsset(int $id): Response
     {
 //        $products = $this->productsRepository->findAll();
@@ -116,7 +116,7 @@ class AssetsController extends AbstractController
         ]);
     }
 
-    #[Route('/save-assign-asset', name: 'save_assign_asset')]
+    #[Route('/ams/save-assign-asset', name: 'save_assign_asset')]
     public function saveAssignAsset(Request $request): RedirectResponse
     {
         $request = $request->request;
@@ -149,7 +149,7 @@ class AssetsController extends AbstractController
     /**
      * @throws Exception
      */
-    #[Route('/save-assets', name: 'app_save_assets')]
+    #[Route('/ams/save-assets', name: 'app_save_assets')]
     public function saveAssets(Request $request, ): RedirectResponse
     {
         $request = $request->request;
@@ -184,7 +184,7 @@ class AssetsController extends AbstractController
         return new RedirectResponse('assets');
     }
 
-    #[Route('/view-asset/{id}', name: 'view_asset')]
+    #[Route('/ams/view-asset/{id}', name: 'view_asset')]
     public function viewAsset(int $id, AssetsRepository $assetsRepository): Response
     {
         $asset = $assetsRepository->find($id);
