@@ -6,6 +6,7 @@ use App\Entity\Assets;
 use App\Entity\AssigningAssets;
 use App\Repository\AssetsRepository;
 use App\Repository\AssigningAssetsRepository;
+use App\Repository\EmployeeRepository;
 use App\Repository\ProductsRepository;
 use App\Repository\VendorsRepository;
 use DateTimeImmutable;
@@ -24,6 +25,7 @@ class AssetsController extends AbstractController
     private ProductsRepository $productsRepository;
     private EntityManagerInterface $entityManager;
     private AssigningAssetsRepository $assigningAssetsRepository;
+    private EmployeeRepository $employeeRepository;
 
     public function __construct(
         AssetsRepository $assetsRepository,
@@ -31,12 +33,14 @@ class AssetsController extends AbstractController
         ProductsRepository $productsRepository,
         EntityManagerInterface $entityManager,
         AssigningAssetsRepository $assigningAssetsRepository,
+        EmployeeRepository $employeeRepository
     ){
         $this->assetsRepository = $assetsRepository;
         $this->vendorsRepository = $vendorsRepository;
         $this->productsRepository = $productsRepository;
         $this->entityManager = $entityManager;
         $this->assigningAssetsRepository = $assigningAssetsRepository;
+        $this->employeeRepository = $employeeRepository;
     }
 
     #[Route('/ams/assets', name: 'app_assets')]
@@ -86,30 +90,18 @@ class AssetsController extends AbstractController
     {
         $products = $this->productsRepository->findAll();
         $vendors = $this->vendorsRepository->findAll();
-        $users = [
-            0 => ['id' => 1, 'name' => 'mono ranjan'],
-            1 => ['id' => 2, 'name' => 'shumon babu'],
-            2 => ['id' => 3, 'name' => 'mauro sebastianelli'],
-            3 => ['id' => 4, 'name' => 'MR Mauro'],
-        ];
+        $employee = $this->employeeRepository->findAll();
+
         return $this->render('assets/assigning-asset.html.twig', [
                 'products' => $products,
                 'vendors' => $vendors,
-                'users' => $users,
+                'users' => $employee,
         ]);
     }
 
     #[Route('/ams/view-assigned/{id}', name: 'view_assigned_asset')]
     public function viewAssignedAsset(int $id): Response
     {
-//        $products = $this->productsRepository->findAll();
-//        $vendors = $this->vendorsRepository->findAll();
-//        $users = [
-//            0 => ['id' => 1, 'name' => 'mono ranjan'],
-//            1 => ['id' => 2, 'name' => 'shumon babu'],
-//            2 => ['id' => 3, 'name' => 'mauro sebastianelli'],
-//            3 => ['id' => 4, 'name' => 'MR Mauro'],
-//        ];
         $asset = $this->assigningAssetsRepository->find($id);
         return $this->render('assets/view-assigned.html.twig', [
                 'asset' => $this->assignedAssetData($asset)
