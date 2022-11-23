@@ -3,12 +3,13 @@
 namespace App\Controller;
 
 use App\Common\Exports\DownloadExcelFileHeaderTrait;
-use App\Common\Exports\DrawAssetsSheetHeadTrait;
+use App\Common\Exports\DrawDepartmentsSheetHeadTrait;
 use App\Common\Exports\DrawProductsSheetHeadTrait;
 use App\Common\Exports\DrawAssignedAssetsSheetHeadTrait;
 use App\Common\Exports\DrawVendorsSheetHeadTrait;
 use App\Repository\AssetsRepository;
 use App\Repository\AssigningAssetsRepository;
+use App\Repository\DepartmentRepository;
 use App\Repository\EmployeeRepository;
 use App\Repository\ProductsRepository;
 use App\Repository\VendorsRepository;
@@ -27,18 +28,21 @@ class ExportsController extends AbstractController
     private AssigningAssetsRepository $assigningAssetsRepository;
     private ProductsRepository $productsRepository;
     private EmployeeRepository $employeeRepository;
+    private DepartmentRepository $departmentRepository;
     use DownloadExcelFileHeaderTrait;
-    use DrawAssetsSheetHeadTrait;
+    use DrawDepartmentsSheetHeadTrait;
     use DrawVendorsSheetHeadTrait;
     use DrawAssignedAssetsSheetHeadTrait;
     use DrawProductsSheetHeadTrait;
+
 
     public function __construct(
         AssetsRepository $assetsRepository,
         VendorsRepository $vendorsRepository,
         AssigningAssetsRepository $assigningAssetsRepository,
         ProductsRepository $productsRepository,
-        EmployeeRepository $employeeRepository
+        EmployeeRepository $employeeRepository,
+        DepartmentRepository $departmentRepository
     ){
         $this->excel = new Spreadsheet();
         $this->assetsRepository = $assetsRepository;
@@ -46,6 +50,7 @@ class ExportsController extends AbstractController
         $this->assigningAssetsRepository = $assigningAssetsRepository;
         $this->productsRepository = $productsRepository;
         $this->employeeRepository = $employeeRepository;
+        $this->departmentRepository = $departmentRepository;
     }
 
     #[Route('/ams/exports', name: 'app_exports')]
@@ -120,6 +125,23 @@ class ExportsController extends AbstractController
         $this->drawProductsSheetHead($sheet);
 
         $this->downloadExcelFile('product_exports', $this->excel);
+
+        return new RedirectResponse('/ams/exports');
+    }
+
+    /**
+     * @throws Exception
+     * @throws \Exception
+     */
+    #[Route('/ams/exports/departments', name: 'app_exports_departments')]
+    public function exportDepartments(): RedirectResponse
+    {
+        $sheet = $this->excel->getActiveSheet();
+
+        $sheet->setTitle('Products List');
+        $this->drawDepartmentsSheetHead($sheet);
+
+        $this->downloadExcelFile('department_exports', $this->excel);
 
         return new RedirectResponse('/ams/exports');
     }
