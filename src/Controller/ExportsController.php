@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Common\Exports\DownloadExcelFileHeaderTrait;
 use App\Common\Exports\DrawAssetsSheetHeadTrait;
 use App\Common\Exports\DrawEmployeesSheetHeadTrait;
+use App\Common\Exports\DrawLocationsSheetHeadTrait;
 use App\Common\Exports\DrawDepartmentsSheetHeadTrait;
 use App\Common\Exports\DrawManufacturesSheetHeadTrait;
 use App\Common\Exports\DrawProductsSheetHeadTrait;
@@ -14,6 +15,7 @@ use App\Repository\AssetsRepository;
 use App\Repository\AssigningAssetsRepository;
 use App\Repository\DepartmentRepository;
 use App\Repository\EmployeeRepository;
+use App\Repository\LocationRepository;
 use App\Repository\ProductsRepository;
 use App\Repository\VendorsRepository;
 use PhpOffice\PhpSpreadsheet\Exception;
@@ -32,14 +34,16 @@ class ExportsController extends AbstractController
     private ProductsRepository $productsRepository;
     private EmployeeRepository $employeeRepository;
     private DepartmentRepository $departmentRepository;
+    private LocationRepository $locationRepository;
     use DrawAssetsSheetHeadTrait;
-    use DrawEmployeesSheetHeadTrait;
+    use DrawLocationsSheetHeadTrait;
     use DownloadExcelFileHeaderTrait;
     use DrawDepartmentsSheetHeadTrait;
     use DrawVendorsSheetHeadTrait;
     use DrawAssignedAssetsSheetHeadTrait;
     use DrawProductsSheetHeadTrait;
     use DrawManufacturesSheetHeadTrait;
+    use DrawEmployeesSheetHeadTrait;
 
 
     public function __construct(
@@ -48,7 +52,8 @@ class ExportsController extends AbstractController
         AssigningAssetsRepository $assigningAssetsRepository,
         ProductsRepository $productsRepository,
         EmployeeRepository $employeeRepository,
-        DepartmentRepository $departmentRepository
+        DepartmentRepository $departmentRepository,
+        LocationRepository $locationRepository
     ){
         $this->excel = new Spreadsheet();
         $this->assetsRepository = $assetsRepository;
@@ -57,6 +62,7 @@ class ExportsController extends AbstractController
         $this->productsRepository = $productsRepository;
         $this->employeeRepository = $employeeRepository;
         $this->departmentRepository = $departmentRepository;
+        $this->locationRepository = $locationRepository;
     }
 
     #[Route('/ams/exports', name: 'app_exports')]
@@ -182,6 +188,23 @@ class ExportsController extends AbstractController
         $this->drawEmployeesSheetHead($sheet);
 
         $this->downloadExcelFile('employee_exports', $this->excel);
+
+        return new RedirectResponse('/ams/exports');
+    }
+
+    /**
+     * @throws Exception
+     * @throws \Exception
+     */
+    #[Route('/ams/exports/locations', name: 'app_exports_locations')]
+    public function exportLocations(): RedirectResponse
+    {
+        $sheet = $this->excel->getActiveSheet();
+
+        $sheet->setTitle('location List');
+        $this->drawLocationsSheetHead($sheet);
+
+        $this->downloadExcelFile('location_exports', $this->excel);
 
         return new RedirectResponse('/ams/exports');
     }
