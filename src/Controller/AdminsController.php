@@ -8,7 +8,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class AdminsController extends AbstractController
 {
-    #[Route('/ams/admins', name: 'app_admins_location')]
+    #[Route('/ams/location', name: 'app_admins_location')]
     public function index(): Response
     {
         return $this->render('admins/locations.html.twig', [
@@ -16,7 +16,7 @@ class AdminsController extends AbstractController
         ]);
     }
 
-    #[Route('/ams/add', name: 'admins_add_location')]
+    #[Route('/ams/add-location', name: 'admins_add_location')]
     public function addLocation(): Response
     {
         return $this->render('admins/add-locations.html.twig', [

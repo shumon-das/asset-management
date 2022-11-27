@@ -3,7 +3,10 @@
 namespace App\Controller;
 
 use App\Common\Exports\DownloadExcelFileHeaderTrait;
+use App\Common\Exports\DrawAssetsSheetHeadTrait;
+use App\Common\Exports\DrawEmployeesSheetHeadTrait;
 use App\Common\Exports\DrawDepartmentsSheetHeadTrait;
+use App\Common\Exports\DrawManufacturesSheetHeadTrait;
 use App\Common\Exports\DrawProductsSheetHeadTrait;
 use App\Common\Exports\DrawAssignedAssetsSheetHeadTrait;
 use App\Common\Exports\DrawVendorsSheetHeadTrait;
@@ -29,11 +32,14 @@ class ExportsController extends AbstractController
     private ProductsRepository $productsRepository;
     private EmployeeRepository $employeeRepository;
     private DepartmentRepository $departmentRepository;
+    use DrawAssetsSheetHeadTrait;
+    use DrawEmployeesSheetHeadTrait;
     use DownloadExcelFileHeaderTrait;
     use DrawDepartmentsSheetHeadTrait;
     use DrawVendorsSheetHeadTrait;
     use DrawAssignedAssetsSheetHeadTrait;
     use DrawProductsSheetHeadTrait;
+    use DrawManufacturesSheetHeadTrait;
 
 
     public function __construct(
@@ -138,10 +144,44 @@ class ExportsController extends AbstractController
     {
         $sheet = $this->excel->getActiveSheet();
 
-        $sheet->setTitle('Products List');
+        $sheet->setTitle('Department List');
         $this->drawDepartmentsSheetHead($sheet);
 
         $this->downloadExcelFile('department_exports', $this->excel);
+
+        return new RedirectResponse('/ams/exports');
+    }
+
+    /**
+     * @throws Exception
+     * @throws \Exception
+     */
+    #[Route('/ams/exports/manufacturers', name: 'app_exports_manufacturers')]
+    public function exportManufactures(): RedirectResponse
+    {
+        $sheet = $this->excel->getActiveSheet();
+
+        $sheet->setTitle('manufacturer List');
+        $this->drawManufacturesSheetHead($sheet);
+
+        $this->downloadExcelFile('manufacturer_exports', $this->excel);
+
+        return new RedirectResponse('/ams/exports');
+    }
+
+    /**
+     * @throws Exception
+     * @throws \Exception
+     */
+    #[Route('/ams/exports/employees', name: 'app_exports_employees')]
+    public function exportEmployees(): RedirectResponse
+    {
+        $sheet = $this->excel->getActiveSheet();
+
+        $sheet->setTitle('employee List');
+        $this->drawEmployeesSheetHead($sheet);
+
+        $this->downloadExcelFile('employee_exports', $this->excel);
 
         return new RedirectResponse('/ams/exports');
     }

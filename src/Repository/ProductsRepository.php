@@ -63,4 +63,16 @@ class ProductsRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+
+    public function getUniqueManufacturer(): ?array
+    {
+        return $this->createQueryBuilder('p')
+            ->select('p.manufacturer')->distinct()
+            ->andWhere('p.isDeleted = false')
+            ->orWhere('p.isDeleted IS null')
+            ->groupBy('p.manufacturer')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 }
