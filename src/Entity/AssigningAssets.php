@@ -65,6 +65,9 @@ class AssigningAssets
     #[ORM\Column(nullable: true)]
     private ?bool $status = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?bool $isDeleted = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -270,6 +273,18 @@ class AssigningAssets
     public function setStatus(?bool $status): self
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    public function isIsDeleted(): ?bool
+    {
+        return $this->isDeleted;
+    }
+
+    public function setIsDeleted(?bool $isDeleted): self
+    {
+        $this->isDeleted = $isDeleted;
 
         return $this;
     }

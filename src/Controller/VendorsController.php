@@ -14,16 +14,18 @@ use Symfony\Component\Routing\Annotation\Route;
 class VendorsController extends AbstractController
 {
     private VendorsRepository $vendorsRepository;
+    private EntityManagerInterface $entityManager;
 
-    public function __construct(VendorsRepository $vendorsRepository)
+    public function __construct(VendorsRepository $vendorsRepository, EntityManagerInterface $entityManager)
     {
         $this->vendorsRepository = $vendorsRepository;
+        $this->entityManager = $entityManager;
     }
 
     #[Route('/ams/vendors', name: 'app_vendors')]
     public function vendors(): Response
     {
-        $vendors = $this->vendorsRepository->findAll();
+        $vendors = $this->vendorsRepository->findBy(['isDeleted' => 0]);
 
         return $this->render('vendors/vendors.html.twig', [
             'vendors' => $vendors,
@@ -39,7 +41,7 @@ class VendorsController extends AbstractController
     }
 
     #[Route('/ams/save-vendor', name: 'app_save_vendor')]
-    public function saveVendor(Request $request, EntityManagerInterface $entityManager): RedirectResponse
+    public function saveVendor(Request $request): RedirectResponse
     {
         $request = $request->request;
         $vendor = new Vendors();
@@ -63,8 +65,8 @@ class VendorsController extends AbstractController
             ->setCreatedBy(1)
         ;
 
-        $entityManager->persist($vendor);
-        $entityManager->flush();
+        $this->entityManager->persist($vendor);
+        $this->entityManager->flush();
 
         return new RedirectResponse('vendors');
     }
@@ -77,6 +79,19 @@ class VendorsController extends AbstractController
         return $this->render('vendors/view-vendor.html.twig', [
             'vendor' => $this->vendorData($vendor),
         ]);
+    }
+
+    #[Route('/ams/delete-vendor/{id}', name: 'delete_vendor')]
+    public function deleteVendor($id, Request $request): Response
+    {
+        $vendor = $this->vendorsRepository->find($id);
+        if(false === empty($vendor)) {
+            $vendor->setIsDeleted(1);
+            $this->entityManager->persist($vendor);
+            $this->entityManager->flush();
+        }
+        $route = $request->headers->get('referer');
+        return $this->redirect($route);
     }
 
     private function vendorData(?Vendors $vendor): array

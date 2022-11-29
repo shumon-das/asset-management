@@ -7,16 +7,26 @@ use App\Repository\LocationRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class AdminsController extends AbstractController
 {
-    #[Route('/ams/location', name: 'app_admins_location')]
-    public function index(LocationRepository $locationRepository): Response
+    private LocationRepository $locationRepository;
+    private EntityManagerInterface $entityManager;
+
+    public function __construct(LocationRepository $locationRepository, EntityManagerInterface $entityManager)
     {
-        $data = $locationRepository->findAll();
+        $this->locationRepository = $locationRepository;
+        $this->entityManager = $entityManager;
+    }
+
+    #[Route('/ams/location', name: 'app_admins_location')]
+    public function index(): Response
+    {
+        $data = $this->locationRepository->findBy(['isDeleted' => 0]);
 
         return $this->render('admins/locations.html.twig', [
             'locations' => $data,
@@ -32,7 +42,7 @@ class AdminsController extends AbstractController
     }
 
     #[Route('/ams/save-location', name: 'admins_save_location')]
-    public function saveLocation(Request $request, EntityManagerInterface $entityManager): Response
+    public function saveLocation(Request $request): Response|RedirectResponse
     {
         $request = $request->request;
         if (false === empty($request->get('office-name'))
@@ -53,16 +63,25 @@ class AdminsController extends AbstractController
                 ->setCreatedBy(1)
                 ->setUpdatedBy(null)
                 ->setDeletedBy(null);
-            $entityManager->persist($location);
-            $entityManager->flush();
-            return $this->render('admins/locations.html.twig', [
-                'controller_name' => 'AdminsController',
-            ]);
+            $this->entityManager->persist($location);
+            $this->entityManager->flush();
+            return new RedirectResponse('location');
         }
 
         $this->addFlash('error', 'Sorry, you must have to provide Office Name & Country');
         return $this->render('admins/add-locations.html.twig', [
             'controller_name' => 'AdminsController',
         ]);
+    }
+
+    #[Route('/ams/delete-location/{id}', name: 'delete_location')]
+    public function deleteAsset(int $id, Request $request): Response
+    {
+        $location = $this->locationRepository->find($id);
+        $location->setIsDeleted(1);
+        $this->entityManager->persist($location);
+        $this->entityManager->flush();
+
+        return $this->redirect($request->headers->get('referer'));
     }
 }

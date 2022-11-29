@@ -46,7 +46,7 @@ class AssetsController extends AbstractController
     #[Route('/ams/assets', name: 'app_assets')]
     public function assets(): Response
     {
-        $assets = $this->assetsRepository->findAll();
+        $assets = $this->assetsRepository->findBy(['isDeleted' => 0]);
         $data = [];
         foreach ($assets as $asset) {
             $data[$asset->getId()] = $this->assetsListData($asset);
@@ -74,7 +74,7 @@ class AssetsController extends AbstractController
     #[Route('/ams/assigned', name: 'assigned_assets')]
     public function assignedAsset(AssigningAssetsRepository $assigningAssetsRepository): Response
     {
-        $assignedProduct = $assigningAssetsRepository->findAll();
+        $assignedProduct = $assigningAssetsRepository->findBy(['isDeleted' => 0]);
         $data = [];
         foreach ($assignedProduct as  $product) {
             $data[$product->getId()] = $this->assignedData($product);
@@ -108,6 +108,17 @@ class AssetsController extends AbstractController
         ]);
     }
 
+    #[Route('/ams/delete-assigned/{id}', name: 'delete_assigned')]
+    public function deleteAssigned(int $id, Request $request): Response
+    {
+        $assignedAsset = $this->assigningAssetsRepository->find($id);
+        $assignedAsset->setIsDeleted(1);
+        $this->entityManager->persist($assignedAsset);
+        $this->entityManager->flush();
+
+        return $this->redirect($request->headers->get('referer'));
+    }
+
     #[Route('/ams/save-assign-asset', name: 'save_assign_asset')]
     public function saveAssignAsset(Request $request): RedirectResponse
     {
@@ -124,6 +135,7 @@ class AssetsController extends AbstractController
             ->setAssignTo($request->get('assign-to'))
             ->setDescription($request->get('description'))
 //            ->setAssignComponent($request->get(''))
+            ->setIsDeleted(0)
             ->setCreatedBy(1)
             ->setUpdatedBy(null)
             ->setDeletedBy(null)
@@ -185,6 +197,17 @@ class AssetsController extends AbstractController
             'asset' => $this->singleAsset($asset),
             'title' => $asset->getAssetName(),
         ]);
+    }
+
+    #[Route('/ams/delete-asset/{id}', name: 'delete_asset')]
+    public function deleteAsset(int $id, Request $request): Response
+    {
+        $product = $this->assetsRepository->find($id);
+        $product->setIsDeleted(1);
+        $this->entityManager->persist($product);
+        $this->entityManager->flush();
+
+        return $this->redirect($request->headers->get('referer'));
     }
 
     private function assetsListData(Assets $asset): array

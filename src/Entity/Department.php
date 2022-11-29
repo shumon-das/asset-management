@@ -25,6 +25,9 @@ class Department
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $contactPersonPhone = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?bool $isDeleted = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -74,6 +77,18 @@ class Department
     public function setContactPersonPhone(?string $contactPersonPhone): self
     {
         $this->contactPersonPhone = $contactPersonPhone;
+
+        return $this;
+    }
+
+    public function isIsDeleted(): ?bool
+    {
+        return $this->isDeleted;
+    }
+
+    public function setIsDeleted(?bool $isDeleted): self
+    {
+        $this->isDeleted = $isDeleted;
 
         return $this;
     }

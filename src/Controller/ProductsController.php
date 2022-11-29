@@ -14,16 +14,18 @@ use Symfony\Component\Routing\Annotation\Route;
 class ProductsController extends AbstractController
 {
     private ProductsRepository $productsRepository;
+    private EntityManagerInterface $entityManager;
 
-    public function __construct(ProductsRepository $productsRepository)
+    public function __construct(ProductsRepository $productsRepository, EntityManagerInterface $entityManager)
     {
         $this->productsRepository = $productsRepository;
+        $this->entityManager = $entityManager;
     }
 
     #[Route('/ams/products', name: 'app_products')]
     public function products(): Response
     {
-        $products = $this->productsRepository->findAll();
+        $products = $this->productsRepository->findBy(['isDeleted' => 0]);
 
         return $this->render('products/products.html.twig', [
             'products' => $products,
@@ -39,7 +41,7 @@ class ProductsController extends AbstractController
     }
 
     #[Route('/ams/save-products', name: 'app_save_products')]
-    public function saveProducts(Request $request, EntityManagerInterface $entityManager): RedirectResponse
+    public function saveProducts(Request $request): RedirectResponse
     {
         $request = $request->request;
         $product = new Products();
@@ -58,8 +60,8 @@ class ProductsController extends AbstractController
             ->setUpdatedBy(null)
             ->setDeletedBy(null)
         ;
-        $entityManager->persist($product);
-        $entityManager->flush();
+        $this->entityManager->persist($product);
+        $this->entityManager->flush();
 
         return new RedirectResponse('products');
     }
@@ -72,6 +74,17 @@ class ProductsController extends AbstractController
         return $this->render('products/view-product.html.twig', [
             'product' => $this->productData($product),
         ]);
+    }
+
+    #[Route('/ams/delete-product/{id}', name: 'delete_product')]
+    public function deleteProduct(int $id, Request $request): Response
+    {
+        $product = $this->productsRepository->find($id);
+        $product->setIsDeleted(1);
+        $this->entityManager->persist($product);
+        $this->entityManager->flush();
+
+        return $this->redirect($request->headers->get('referer'));
     }
 
     private function productData(?Products $product): array
