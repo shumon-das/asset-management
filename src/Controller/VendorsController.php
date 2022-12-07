@@ -71,13 +71,54 @@ class VendorsController extends AbstractController
         return new RedirectResponse('vendors');
     }
 
+    #[Route('/ams/update-vendor', name: 'app_update_vendor')]
+    public function updateVendor(Request $request): RedirectResponse
+    {
+        $request = $request->request;
+        $vendor = $this->vendorsRepository->find($request->get('id'));
+        $vendor
+            ->setVendorName($request->get('vendor-name'))
+            ->setEmail($request->get('vendor-email'))
+            ->setPhone($request->get('phone'))
+            ->setContactPerson($request->get('contact-person'))
+            ->setDesignation($request->get('designation'))
+            ->setCountry($request->get('country'))
+            ->setState($request->get('state'))
+            ->setCity($request->get('city'))
+            ->setZipCode($request->get('zip-code'))
+            ->setGstinNo($request->get('gstin-no'))
+            ->setAddress($request->get('address'))
+            ->setDescription($request->get('description'))
+            ->setStatus(false)
+            ->setUpdatedAt(new \DateTimeImmutable())
+            ->setDeletedBy(null)
+            ->setCreatedBy(1)
+        ;
+
+        $this->entityManager->persist($vendor);
+        $this->entityManager->flush();
+
+        return new RedirectResponse('vendors');
+    }
+
     #[Route('/ams/view-vendor/{id}', name: 'view_vendor')]
     public function viewVendor(int $id): Response
     {
         $vendor = $this->vendorsRepository->find($id);
 
         return $this->render('vendors/view-vendor.html.twig', [
-            'vendor' => $this->vendorData($vendor),
+            'vendor' => $vendor,
+            'createdAt' => $vendor->getCreatedAt()->format('Y-M-d')
+        ]);
+    }
+
+    #[Route('/ams/edit-vendor/{id}', name: 'edit_vendor')]
+    public function editVendor(int $id): Response
+    {
+        $vendor = $this->vendorsRepository->find($id);
+
+        return $this->render('vendors/add-vendor.html.twig', [
+            'vendor' => $vendor,
         ]);
     }
 

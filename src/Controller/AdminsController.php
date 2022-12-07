@@ -58,6 +58,7 @@ class AdminsController extends AbstractController
                 ->setAddress1($request->get('address1'))
                 ->setAddress2($request->get('address2'))
                 ->setCreatedAt(new DateTimeImmutable())
+                ->setIsDeleted(0)
                 ->setUpdatedAt(null)
                 ->setDeletedAt(null)
                 ->setCreatedBy(1)
@@ -72,6 +73,36 @@ class AdminsController extends AbstractController
         return $this->render('admins/add-locations.html.twig', [
             'controller_name' => 'AdminsController',
         ]);
+    }
+
+    #[Route('/ams/edit-location/{id}', name: 'admin_edit_location')]
+    public function editLocation(int $id): Response
+    {
+        return $this->render('admins/add-locations.html.twig', [
+            'location' => $this->locationRepository->find($id),
+        ]);
+    }
+
+    #[Route('/ams/update-location', name: 'admin_update_location')]
+    public function updateLocation(Request $request): Response|RedirectResponse
+    {
+        $request = $request->request;
+        $location = $this->locationRepository->find($request->get('id'));
+        $location
+            ->setOfficName($request->get('office-name'))
+            ->setCountry($request->get('country'))
+            ->setState($request->get('state'))
+            ->setCity($request->get('city'))
+            ->setZipCode($request->get('zip-code'))
+            ->setContactPersonName($request->get('contact-person-name'))
+            ->setAddress1($request->get('address1'))
+            ->setAddress2($request->get('address2'))
+            ->setUpdatedAt(new DateTimeImmutable())
+            ->setUpdatedBy(1)
+        ;
+        $this->entityManager->persist($location);
+        $this->entityManager->flush();
+        return new RedirectResponse('location');
     }
 
     #[Route('/ams/delete-location/{id}', name: 'delete_location')]

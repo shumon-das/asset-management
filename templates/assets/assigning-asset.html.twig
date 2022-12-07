@@ -45,14 +45,14 @@
                                 <a href="{{ path('app_assets') }}" class="btn btn-primary btn-sm">back to asset list</a>
                             </div>
                             <div class="card-body">
-                                <form action="{{ path('save_assign_asset') }}" method="post">
+                                <form action="{{ path(assignedAsset is defined ? 'update_assigned_asset' : 'save_assign_asset') }}" method="post">
                                     <div class="row">
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label>Product Category</label>
                                                 <select class="form-control select2" name="product-category"
                                                         id="product-category" style="width: 100%;">
-                                                    <option selected="selected">Select Product Category</option>
+                                                    <option selected="selected">{{ assignedAsset.productCategory ?? 'Select Product Category' }}</option>
                                                     {% for product in products %}
                                                         <option>{{ product.category }}</option>
                                                     {% endfor %}
@@ -65,7 +65,7 @@
                                                 <label>Product Type</label>
                                                 <select class="form-control select2" name="product-type"
                                                         id="product-type" style="width: 100%;">
-                                                    <option selected="selected">Select Product Type</option>
+                                                    <option selected="selected">{{ assignedAsset.productType ?? 'Select Product Type' }}</option>
                                                     {% for product in products %}
                                                         <option>{{ product.type }}</option>
                                                     {% endfor %}
@@ -78,7 +78,7 @@
                                                 <label>Product</label>
                                                 <select class="form-control select2" name="product-name"
                                                         id="product-name" style="width: 100%;">
-                                                    <option selected="selected">Select Product</option>
+                                                    <option selected="selected">{{ assignedAsset.product ?? 'Select Product' }}</option>
                                                     {% for product in products %}
                                                         <option>{{ product.name }}</option>
                                                     {% endfor %}
@@ -91,7 +91,7 @@
                                                 <label>Vendor</label>
                                                 <select class="form-control select2" name="vendor" id="vendor"
                                                         style="width: 100%;">
-                                                    <option selected="selected">Select Vendor</option>
+                                                    <option selected="selected">{{ assignedAsset.vendor ?? 'Select Vendor' }}</option>
                                                     {% for vendor in vendors %}
                                                         <option value="{{ vendor.id }}">{{ vendor.vendorName }}</option>
                                                     {% endfor %}
@@ -106,6 +106,7 @@
                                             <div class="form-group">
                                                 <label for="location">Location</label>
                                                 <input type="text" class="form-control" name="location" id="location"
+                                                       value="{{ assignedAsset.location ?? '' }}"
                                                        placeholder="Enter location">
                                             </div>
                                         </div>
@@ -114,6 +115,7 @@
                                             <div class="form-group">
                                                 <label for="asset-name">Asset Name</label>
                                                 <input type="text" class="form-control" name="asset-name"
+                                                       value="{{ assignedAsset.assetName ?? '' }}"
                                                        id="asset-name" placeholder="Enter asset name">
                                             </div>
                                         </div>
@@ -122,6 +124,7 @@
                                             <div class="form-group">
                                                 <label for="department">Department</label>
                                                 <input type="text" class="form-control" name="department"
+                                                       value="{{ assignedAsset.department ?? '' }}"
                                                        id="department" placeholder="Enter department">
                                             </div>
                                         </div>
@@ -131,9 +134,9 @@
                                                 <label>Assign to</label>
                                                 <select class="form-control select2" name="assign-to" id="assign-to"
                                                         style="width: 100%;">
-                                                    <option selected="selected">Select User</option>
+                                                    <option selected="selected" value="{{ assignedAsset.assignTo ?? '' }}">{{ assignedAsset.assignTo ?? 'Select User' }}</option>
                                                     {% for user in users %}
-                                                        <option value="{{ user.id }}">{{ user.name }} {{ user.id }}</option>
+                                                        <option value="{{ user.id }}">{{ user.name }}</option>
                                                     {% endfor %}
                                                 </select>
                                             </div>
@@ -146,21 +149,26 @@
                                             <div class="form-group">
                                                 <label>Description</label>
                                                 <textarea name="description" id="description" class="w-100"
-                                                          style="height: 200px"></textarea>
+                                                          style="height: 200px">
+                                                    {{ assignedAsset.description ?? '' }}
+                                                </textarea>
                                             </div>
                                         </div>
-                                        <div class="col-md-4 text-center">
-                                            <div class="form-group">
-                                                <label for="exampleInputEmail1" class="ml-5" style="padding-left: 30px">Assign
-                                                    Component</label>
-                                                <br>
-                                                <label for="assign-component" class="ml-5 text-center"
-                                                       style="width: 300px;height: 175px;line-height: 175px;border: 1px dashed;cursor: pointer">Select
-                                                    File</label>
-                                                <input type="file" class="form-control" id="assign-component"
-                                                       style="display: none">
-                                                <a href="#" class="btn btn-sm btn-success ml-5" style="width: 300px">Upload</a>
-                                            </div>
+{#                                        <div class="col-md-4 text-center">#}
+{#                                            <div class="form-group">#}
+{#                                                <label for="exampleInputEmail1" class="ml-5" style="padding-left: 30px">Assign#}
+{#                                                    Component</label>#}
+{#                                                <br>#}
+{#                                                <label for="assign-component" class="ml-5 text-center"#}
+{#                                                       style="width: 300px;height: 175px;line-height: 175px;border: 1px dashed;cursor: pointer">Select#}
+{#                                                    File</label>#}
+{#                                                <input type="file" class="form-control" id="assign-component"#}
+{#                                                       style="display: none">#}
+{#                                                <a href="#" class="btn btn-sm btn-success ml-5" style="width: 300px">Upload</a>#}
+{#                                            </div>#}
+{#                                        </div>#}
+                                        <div>
+                                            <input type="hidden" name="id" id="" value="{{ assignedAsset.id ?? '' }}">
                                         </div>
                                         <div class="col-md-4 text-right">
                                             <button type="submit" class="btn btn-primary" style="margin-top: 200px">

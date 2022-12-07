@@ -46,7 +46,7 @@
                                     locations</a>
                             </div>
                             <div class="card-body">
-                                <form action="{{ path('admins_save_location') }}" method="post">
+                                <form action="{{ path(location is defined ? 'admin_update_location' : 'admins_save_location') }}" method="post">
                                     <div class="row mb-5">
                                         <div class="col-md-7 text-center">
                                             {% for error in app.flashes('error') %}
@@ -62,8 +62,8 @@
                                                     <div class="form-group">
                                                         <label>Office Name</label>
                                                         <input type="text" class="form-control" id="office-name"
-                                                               name="office-name"
-                                                               placeholder="Enter office name">
+                                                               value="{{ location.officName ?? '' }}"
+                                                               name="office-name" placeholder="Enter office name">
                                                     </div>
                                                 </div>
 
@@ -71,8 +71,8 @@
                                                     <div class="form-group">
                                                         <label>Country</label>
                                                         <input type="text" class="form-control" id="country"
-                                                               name="country"
-                                                               placeholder="Enter country">
+                                                               value="{{ location.country ?? '' }}"
+                                                               name="country" placeholder="Enter country">
                                                     </div>
                                                 </div>
                                             </div>
@@ -82,16 +82,18 @@
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <label for="exampleInputEmail1">State</label>
-                                                        <input type="text" class="form-control" id="state" name="state"
-                                                               placeholder="Enter state">
+                                                        <input type="text" class="form-control" id="state"
+                                                               value="{{ location.state ?? '' }}"
+                                                               name="state" placeholder="Enter state">
                                                     </div>
                                                 </div>
 
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <label for="exampleInputEmail1">City</label>
-                                                        <input type="text" class="form-control" id="city" name="city"
-                                                               placeholder="Enter city">
+                                                        <input type="text" class="form-control" id="city"
+                                                               value="{{ location.city ?? '' }}"
+                                                               name="city" placeholder="Enter city">
                                                     </div>
                                                 </div>
                                             </div>
@@ -101,16 +103,16 @@
                                                     <div class="form-group">
                                                         <label>Zip Code</label>
                                                         <input type="text" class="form-control" id="zip-code"
-                                                               name="zip-code"
-                                                               placeholder="Enter zip code">
+                                                               value="{{ location.zipCode ?? '' }}"
+                                                               name="zip-code" placeholder="Enter zip code">
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <label>Contact Person Name</label>
                                                         <input type="text" class="form-control" id="contact-person-name"
-                                                               name="contact-person-name"
-                                                               placeholder="Enter contact person name">
+                                                               value="{{ location.contactPersonName ?? '' }}"
+                                                               name="contact-person-name" placeholder="Enter contact person name">
                                                     </div>
                                                 </div>
                                             </div>
@@ -121,17 +123,20 @@
                                                     <div class="form-group">
                                                         <label>Address Line 1</label>
                                                         <input type="text" class="form-control" id="address1"
-                                                               name="address1"
-                                                               placeholder="Enter address">
+                                                               value="{{ location.address1 ?? '' }}"
+                                                               name="address1" placeholder="Enter address">
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <label>Address Line 2</label>
                                                         <input type="text" class="form-control" id="address2"
-                                                               name="address2"
-                                                               placeholder="Enter address">
+                                                               value="{{ location.address2 ?? '' }}"
+                                                               name="address2" placeholder="Enter address">
                                                     </div>
+                                                </div>
+                                                <div>
+                                                    <input type="hidden" name="id" id="" value="{{ location.id ?? '' }}">
                                                 </div>
 
                                                 <div class="col-md-12 mt-3 text-right">

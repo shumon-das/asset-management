@@ -46,7 +46,8 @@
                                     Products</a>
                             </div>
                             <div class="card-body">
-                                <form action="{{ path('app_save_products') }}" method="post">
+                                <form action="{{ path(product is defined ? 'app_product_update' : 'app_save_products') }}"
+                                      method="post">
                                     <div class="row">
                                         <div class="col-md-1"></div>
                                         <div class="col-md-6">
@@ -56,7 +57,7 @@
                                                         <label>Product Category</label>
                                                         <select class="form-control select2" style="width: 100%;"
                                                                 id="product-category" name="product-category">
-                                                            <option selected="selected">Ghana</option>
+                                                            <option selected="selected">{{ product.category ?? 'Ghana' }}</option>
                                                             <option>Burkina Faso</option>
                                                             <option>Ivory Coast</option>
                                                             <option>Togo</option>
@@ -69,7 +70,7 @@
                                                         <label>Product Type</label>
                                                         <select class="form-control select2" style="width: 100%;"
                                                                 id="product-type" name="product-type">
-                                                            <option selected="selected">Ghana</option>
+                                                            <option selected="selected">{{ product.type ?? 'Ghana' }}</option>
                                                             <option>Burkina Faso</option>
                                                             <option>Ivory Coast</option>
                                                             <option>Togo</option>
@@ -81,7 +82,7 @@
                                                     <div class="form-group">
                                                         <label>Product Name</label>
                                                         <input type="text" class="form-control" id="product-name"
-                                                               name="product-name"
+                                                               name="product-name" value="{{ product.name ?? '' }}"
                                                                placeholder="Enter product name">
                                                     </div>
                                                 </div>
@@ -91,19 +92,27 @@
                                                         <label>Manufacturer</label>
                                                         <input type="text" class="form-control" id="manufacturer"
                                                                name="manufacturer"
+                                                               value="{{ product.manufacturer ?? '' }}"
                                                                placeholder="Enter manufacturer name">
                                                     </div>
                                                 </div>
 
                                                 <div class="col-md-12">
                                                     <div class="form-group">
-                                                        <label for="exampleInputEmail1" class="d-block">Description</label>
+                                                        <label for="exampleInputEmail1"
+                                                               class="d-block">Description</label>
                                                         <textarea name="description" id="description" cols="50"
-                                                                  rows="5"></textarea>
+                                                                  rows="5">
+                                                            {{ product.description ?? '' }}
+                                                        </textarea>
                                                     </div>
                                                 </div>
                                             </div>
                                             <!-- row end -->
+
+                                            <div class="row">
+                                                <input type="hidden" name="id" id="" value="{{ product.id ?? '' }}">
+                                            </div>
 
                                             <hr>
                                             <div class="row mt-3">

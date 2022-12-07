@@ -45,14 +45,14 @@
                                 <a href="{{ path('app_assets') }}" class="btn btn-primary btn-sm">back to asset list</a>
                             </div>
                             <div class="card-body">
-                                <form action="{{ path('app_save_assets') }}" method="post">
+                                <form action="{{ path(data.asset is defined ? 'app_update_assets' : 'app_save_assets') }}" method="post">
                                     <div class="row">
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label>Product Category</label>
                                                 <select class="form-control select2" name="product-category"
                                                         id="product-category" style="width: 100%;">
-                                                    <option selected="selected">Select Category</option>
+                                                    <option selected="selected">{{ data.asset.productCategory ?? 'Select Category' }}</option>
                                                     {% for product in data.products %}
                                                         <option value="{{ product.category }}">{{ product.category }}</option>
                                                     {% endfor %}
@@ -65,7 +65,7 @@
                                                 <label>Product Type</label>
                                                 <select class="form-control select2" name="product-type"
                                                         id="product-type" style="width: 100%;">
-                                                    <option selected="selected">Select Type</option>
+                                                    <option selected="selected">{{ data.asset.productType ?? 'Select Type' }}</option>
                                                     {% for product in data.products %}
                                                         <option value="{{ product.type }}">{{ product.type }}</option>
                                                     {% endfor %}
@@ -78,7 +78,7 @@
                                                 <label>Product</label>
                                                 <select class="form-control select2" name="product" id="product"
                                                         style="width: 100%;">
-                                                    <option selected="selected">Select product</option>
+                                                    <option selected="selected">{{ data.asset.product ?? 'Select product' }}</option>
                                                     {% for product in data.products %}
                                                         <option value="{{ product.name }}">{{ product.name }}</option>
                                                     {% endfor %}
@@ -91,7 +91,7 @@
                                                 <label>Vendor</label>
                                                 <select class="form-control select2" name="vendor" id="vendor"
                                                         style="width: 100%;">
-                                                    <option selected="selected">Select Vendor</option>
+                                                    <option selected="selected">{{ data.asset.vendor ?? 'Select Vendor' }}</option>
                                                     {% for vendor in data.vendors %}
                                                         <option value="{{ vendor.id }}">{{ vendor.vendorName }}</option>
                                                     {% endfor %}
@@ -106,6 +106,7 @@
                                             <div class="form-group">
                                                 <label for="asset-name">Asset Name</label>
                                                 <input type="text" class="form-control" name="asset-name"
+                                                       value="{{ data.asset.assetName ?? '' }}"
                                                        id="asset-name" placeholder="Enter asset name">
                                             </div>
                                         </div>
@@ -114,6 +115,7 @@
                                             <div class="form-group">
                                                 <label for="serial-number">Serial Number</label>
                                                 <input type="text" class="form-control" name="serial-number"
+                                                       value="{{ data.asset.seriulNumber ?? '' }}"
                                                        id="serial-number" placeholder="Enter serial number">
                                             </div>
                                         </div>
@@ -122,6 +124,7 @@
                                             <div class="form-group">
                                                 <label for="price">Price</label>
                                                 <input type="text" class="form-control" name="price" id="price"
+                                                       value="{{ data.asset.price ?? '' }}"
                                                        placeholder="Enter price">
                                             </div>
                                         </div>
@@ -131,7 +134,7 @@
                                                 <label>Depreciation Type</label>
                                                 <select class="form-control select2" name="description-type"
                                                         id="description-type" style="width: 100%;">
-                                                    <option selected="selected">Alabama</option>
+                                                    <option selected="selected">{{ data.asset.descriptionType ?? 'Alabama' }}</option>
                                                     <option>Alaska</option>
                                                     <option>California</option>
                                                     <option>Delaware</option>
@@ -150,7 +153,7 @@
                                                 <label>Location</label>
                                                 <select class="form-control select2" name="location" id="location"
                                                         style="width: 100%;">
-                                                    <option selected="selected">Alabama</option>
+                                                    <option selected="selected">{{ data.asset.location ?? 'Alabama' }}</option>
                                                     <option>Alaska</option>
                                                     <option>California</option>
                                                     <option>Delaware</option>
@@ -165,6 +168,7 @@
                                             <div class="form-group">
                                                 <label for="purchase-date">Purchase Date</label>
                                                 <input type="date" class="form-control" name="purchase-date"
+                                                       value="{{ data.asset.purchaseDate ?? '' }}"
                                                        id="purchase-date">
                                             </div>
                                         </div>
@@ -173,6 +177,7 @@
                                             <div class="form-group">
                                                 <label for="warranty-expiry-date">Warranty Expiry Date</label>
                                                 <input type="date" class="form-control" name="warranty-expiry-date"
+                                                       value="{{ data.asset.warrantyExpiryDate ?? '' }}"
                                                        id="warranty-expiry-date">
                                             </div>
                                         </div>
@@ -182,7 +187,7 @@
                                                 <label>Purchase Type</label>
                                                 <select class="form-control select2" name="purchase-type"
                                                         id="purchase-type" style="width: 100%;">
-                                                    <option selected="selected">Alabama</option>
+                                                    <option selected="selected">{{ data.asset.purchaseType ?? 'Alabama' }}</option>
                                                     <option>Alaska</option>
                                                     <option>California</option>
                                                     <option>Delaware</option>
@@ -199,13 +204,16 @@
                                             <div class="form-group">
                                                 <label>Description</label>
                                                 <textarea name="description" id="description" class="w-100"
-                                                          style="height: 200px"></textarea>
+                                                          style="height: 200px">
+                                                    {{ data.asset.description ?? '' }}
+                                                </textarea>
                                             </div>
                                         </div>
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="useful-life">Useful life</label>
                                                 <input type="text" class="form-control" name="useful-life"
+                                                       value="{{ data.asset.usefulLife ?? '' }}"
                                                        id="useful-life" placeholder="Enter useful life value">
                                             </div>
                                         </div>
@@ -213,6 +221,7 @@
                                             <div class="form-group">
                                                 <label for="residual-value">Residual Value</label>
                                                 <input type="text" class="form-control" name="residual-value"
+                                                       value="{{ data.asset.residualValue ?? '' }}"
                                                        id="residual-value" placeholder="Enter residual value">
                                             </div>
                                         </div>
@@ -220,7 +229,11 @@
                                             <div class="form-group text-left mb-5">
                                                 <label for="rate">Rate(%)</label>
                                                 <input type="text" class="form-control" name="rate" id="rate"
+                                                       value="{{ data.asset.rate ?? '' }}"
                                                        placeholder="Enter rate%">
+                                            </div>
+                                            <div>
+                                                <input type="hidden" name="id" id="" value="{{ data.asset.id ?? '' }}">
                                             </div>
                                             <br>
                                             <button type="submit" class="btn btn-primary mt-5">Submit</button>

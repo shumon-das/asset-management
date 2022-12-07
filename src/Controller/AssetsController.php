@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\Assets;
-use App\Entity\AssigningAssets;
 use App\Repository\AssetsRepository;
 use App\Repository\AssigningAssetsRepository;
 use App\Repository\EmployeeRepository;
@@ -24,23 +23,17 @@ class AssetsController extends AbstractController
     private VendorsRepository $vendorsRepository;
     private ProductsRepository $productsRepository;
     private EntityManagerInterface $entityManager;
-    private AssigningAssetsRepository $assigningAssetsRepository;
-    private EmployeeRepository $employeeRepository;
 
     public function __construct(
         AssetsRepository $assetsRepository,
         VendorsRepository $vendorsRepository,
         ProductsRepository $productsRepository,
-        EntityManagerInterface $entityManager,
-        AssigningAssetsRepository $assigningAssetsRepository,
-        EmployeeRepository $employeeRepository
+        EntityManagerInterface $entityManager
     ){
         $this->assetsRepository = $assetsRepository;
         $this->vendorsRepository = $vendorsRepository;
         $this->productsRepository = $productsRepository;
         $this->entityManager = $entityManager;
-        $this->assigningAssetsRepository = $assigningAssetsRepository;
-        $this->employeeRepository = $employeeRepository;
     }
 
     #[Route('/ams/assets', name: 'app_assets')]
@@ -71,85 +64,6 @@ class AssetsController extends AbstractController
         ]);
     }
 
-    #[Route('/ams/assigned', name: 'assigned_assets')]
-    public function assignedAsset(AssigningAssetsRepository $assigningAssetsRepository): Response
-    {
-        $assignedProduct = $assigningAssetsRepository->findBy(['isDeleted' => 0]);
-        $data = [];
-        foreach ($assignedProduct as  $product) {
-            $data[$product->getId()] = $this->assignedData($product);
-        }
-        
-        return $this->render('assets/assigned-asset-list.html.twig', [
-            'assets' => $data
-        ]);
-    }
-
-    #[Route('/ams/assigning', name: 'assigning_assets')]
-    public function assigningAsset(): Response
-    {
-        $products = $this->productsRepository->findAll();
-        $vendors = $this->vendorsRepository->findAll();
-        $employee = $this->employeeRepository->findAll();
-
-        return $this->render('assets/assigning-asset.html.twig', [
-                'products' => $products,
-                'vendors' => $vendors,
-                'users' => $employee,
-        ]);
-    }
-
-    #[Route('/ams/view-assigned/{id}', name: 'view_assigned_asset')]
-    public function viewAssignedAsset(int $id): Response
-    {
-        $asset = $this->assigningAssetsRepository->find($id);
-        return $this->render('assets/view-assigned.html.twig', [
-                'asset' => $this->assignedAssetData($asset)
-        ]);
-    }
-
-    #[Route('/ams/delete-assigned/{id}', name: 'delete_assigned')]
-    public function deleteAssigned(int $id, Request $request): Response
-    {
-        $assignedAsset = $this->assigningAssetsRepository->find($id);
-        $assignedAsset->setIsDeleted(1);
-        $this->entityManager->persist($assignedAsset);
-        $this->entityManager->flush();
-
-        return $this->redirect($request->headers->get('referer'));
-    }
-
-    #[Route('/ams/save-assign-asset', name: 'save_assign_asset')]
-    public function saveAssignAsset(Request $request): RedirectResponse
-    {
-        $request = $request->request;
-        $assignAsset = new AssigningAssets();
-        $assignAsset
-            ->setProductCategory($request->get('product-category'))
-            ->setProductType($request->get('product-type'))
-            ->setProduct($request->get('product-name'))
-            ->setVendor($request->get('vendor'))
-            ->setLocation($request->get('location'))
-            ->setAssetName($request->get('asset-name'))
-            ->setDepartment($request->get('department'))
-            ->setAssignTo($request->get('assign-to'))
-            ->setDescription($request->get('description'))
-//            ->setAssignComponent($request->get(''))
-            ->setIsDeleted(0)
-            ->setCreatedBy(1)
-            ->setUpdatedBy(null)
-            ->setDeletedBy(null)
-            ->setCreatedAt(new DateTimeImmutable())
-            ->setUpdatedAt(null)
-            ->setDeletedAt(null)
-            ->setStatus(true)
-        ;
-        $this->entityManager->persist($assignAsset);
-        $this->entityManager->flush();
-
-        return new RedirectResponse('assigned');
-    }
-
     /**
      * @throws Exception
      */
@@ -175,6 +89,7 @@ class AssetsController extends AbstractController
             ->setUsefulLife($request->get('useful-life'))
             ->setResidualValue($request->get('residual-value'))
             ->setRate($request->get('rate'))
+            ->setIsDeleted(0)
             ->setStatus(true)
             ->setCreatedBy(1)
             ->setUpdatedBy(null)
@@ -182,6 +97,55 @@ class AssetsController extends AbstractController
             ->setCreatedAt(new DateTimeImmutable())
             ->setUpdatedAt(null)
             ->setDeletedAt(null);
+        $this->entityManager->persist($asset);
+        $this->entityManager->flush();
+
+        return new RedirectResponse('assets');
+    }
+
+    #[Route('/ams/edit-asset/{id}', name: 'edit_asset')]
+    public function editAsset(int $id, AssetsRepository $assetsRepository): Response
+    {
+        $asset = $assetsRepository->find($id);
+        $products = $this->productsRepository->findAll();
+        $vendors = $this->vendorsRepository->findAll();
+
+        return $this->render('assets/asset-add.html.twig', [
+            'data' => [
+                'asset' => $this->singleAsset($asset),
+                'products' => $products,
+                'vendors' => $vendors,
+            ],
+        ]);
+    }
+
+    /**
+     * @throws Exception
+     */
+    #[Route('/ams/update-assets', name: 'app_update_assets')]
+    public function updateAssets(Request $request): RedirectResponse
+    {
+        $request = $request->request;
+        $asset = $this->assetsRepository->find($request->get('id'));
+        $asset
+            ->setProductCategory($request->get('product-category'))
+            ->setProductType($request->get('product-type'))
+            ->setProduct($request->get('product'))
+            ->setVendor($request->get('vendor'))
+            ->setAssetName($request->get('asset-name'))
+            ->setSeriulNumber($request->get('serial-number'))
+            ->setPrice($request->get('price'))
+            ->setDescriptionType($request->get('description-type'))
+            ->setLocation($request->get('location'))
+            ->setPurchaseDate(new DateTimeImmutable($request->get('purchase-date')))
+            ->setWarrantyExpiryDate(new DateTimeImmutable($request->get('warranty-expiry-date')))
+            ->setPurchaseType($request->get('purchase-type'))
+            ->setDescription($request->get('description'))
+            ->setUsefulLife($request->get('useful-life'))
+            ->setResidualValue($request->get('residual-value'))
+            ->setRate($request->get('rate'))
+            ->setUpdatedBy(1)
+            ->setUpdatedAt(new DateTimeImmutable());
         $this->entityManager->persist($asset);
         $this->entityManager->flush();
 
@@ -238,8 +202,8 @@ class AssetsController extends AbstractController
             'price' => $asset->getPrice(),
             'descriptionType' => $asset->getDescriptionType(),
             'location' => $asset->getLocation(),
-            'purchaseDate' => $asset->getPurchaseDate()->format('Y-M-d'),
-            'warrantyExpiryDate' => $asset->getWarrantyExpiryDate()->format('Y-M-d'),
+            'purchaseDate' => $asset->getPurchaseDate()->format('d-m-Y'),
+            'warrantyExpiryDate' => $asset->getWarrantyExpiryDate()->format('d-m-Y'),
             'purchaseType' => $asset->getPurchaseType(),
             'description' => $asset->getDescription(),
             'usefulLife' => $asset->getUsefulLife(),
@@ -248,40 +212,6 @@ class AssetsController extends AbstractController
             'createdAt' => $asset->getCreatedAt()->format('Y-M-d'),
             'createdBy' => $asset->getCreatedBy(),
             'status' => $asset->isStatus()
-        ];
-    }
-
-    private function assignedData(?AssigningAssets $assignedProduct): array
-    {
-        return [
-            'id' => $assignedProduct->getId(),
-            'assetName' => $assignedProduct->getAssetName(),
-            'department' => $assignedProduct->getDepartment(),
-            'location' => $assignedProduct->getLocation(),
-            'assigned' => $assignedProduct->getAssignTo(),
-            'currentState' => 'current state',
-            'status' => $assignedProduct->isStatus(),
-        ];
-    }
-
-    private function assignedAssetData(?AssigningAssets $asset): array
-    {
-        $vendor = $this->vendorsRepository->find($asset->getVendor());
-        return [
-            'id' => $asset->getId(),
-            'productCategory' => $asset->getProductCategory(),
-            'productType' => $asset->getProductType(),
-            'product' => $asset->getProduct(),
-            'vendor' => $vendor->getVendorName(),
-            'location' => $asset->getLocation(),
-            'assetName' => $asset->getAssetName(),
-            'department' => $asset->getDepartment(),
-            'assigned' => $asset->getAssignTo(),
-            'description' => $asset->getDescription(),
-            'createdBy' => $asset->getCreatedBy(),
-            'status' => $asset->isStatus(),
-            'currentState' => 'current state',
-            'createdAt' => $asset->getCreatedAt()->format('Y-M-d'),
         ];
     }
 }

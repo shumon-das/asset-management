@@ -52,14 +52,42 @@ class ProductsController extends AbstractController
             ->setManufacturer($request->get('manufacturer'))
             ->setDescription($request->get('description'))
             ->setStatus(true)
-            ->setIsDeleted(null)
+            ->setIsDeleted(0)
             ->setCreatedAt(new \DateTimeImmutable())
             ->setUpdatedAt(null)
             ->setDeletedAt(null)
             ->setCreatedBy(1)
             ->setUpdatedBy(null)
-            ->setDeletedBy(null)
-        ;
+            ->setDeletedBy(null);
+        $this->entityManager->persist($product);
+        $this->entityManager->flush();
+
+        return new RedirectResponse('products');
+    }
+
+    #[Route('/ams/edit-product/{id}', name: 'edit_product')]
+    public function editProduct(int $id): Response
+    {
+        $product = $this->productsRepository->find($id);
+
+        return $this->render('products/add-product.html.twig', [
+            'product' => $this->productData($product),
+        ]);
+    }
+
+    #[Route('/ams/update-product', name: 'app_product_update')]
+    public function updateVendor(Request $request): RedirectResponse
+    {
+        $request = $request->request;
+        $product = $this->productsRepository->find($request->get('id'));
+        $product
+            ->setCategory($request->get('product-category'))
+            ->setType($request->get('product-type'))
+            ->setName($request->get('product-name'))
+            ->setManufacturer($request->get('manufacturer'))
+            ->setDescription($request->get('description'))
+            ->setUpdatedAt(new \DateTimeImmutable())
+            ->setUpdatedBy(1);
         $this->entityManager->persist($product);
         $this->entityManager->flush();
 
