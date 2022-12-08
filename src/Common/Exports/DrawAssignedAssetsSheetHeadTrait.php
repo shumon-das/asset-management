@@ -3,18 +3,31 @@
 namespace App\Common\Exports;
 
 use App\Common\GetVendorNameTrait;
+use App\Repository\AssetsRepository;
 use App\Repository\AssigningAssetsRepository;
+use App\Repository\DepartmentRepository;
+use App\Repository\LocationRepository;
 use Exception;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 trait DrawAssignedAssetsSheetHeadTrait
 {
     private AssigningAssetsRepository $assigningAssetsRepository;
+    private DepartmentRepository $departmentRepository;
+    private LocationRepository $locationRepository;
+    private AssetsRepository $assetsRepository;
     use GetVendorNameTrait;
 
-    public function __construct(AssigningAssetsRepository $assigningAssetsRepository)
-    {
+    public function __construct(
+        AssigningAssetsRepository $assigningAssetsRepository,
+        DepartmentRepository $departmentRepository,
+        LocationRepository $locationRepository,
+        AssetsRepository $assetsRepository,
+    ){
         $this->assigningAssetsRepository = $assigningAssetsRepository;
+        $this->departmentRepository = $departmentRepository;
+        $this->locationRepository = $locationRepository;
+        $this->assetsRepository = $assetsRepository;
     }
 
     /**
@@ -51,9 +64,9 @@ trait DrawAssignedAssetsSheetHeadTrait
             $sheet->getCell('C'.$rowAct)->setValue($row->getProductType());
             $sheet->getCell('D'.$rowAct)->setValue($row->getProduct());
             $sheet->getCell('E'.$rowAct)->setValue($this->getVendorNameById($row->getVendor()));
-            $sheet->getCell('F'.$rowAct)->setValue($row->getLocation());
-            $sheet->getCell('G'.$rowAct)->setValue($row->getAssetName());
-            $sheet->getCell('H'.$rowAct)->setValue($row->getDepartment());
+            $sheet->getCell('F'.$rowAct)->setValue($this->locationRepository->findOneBy(['id' => $row->getLocation()])->getOfficName());
+            $sheet->getCell('G'.$rowAct)->setValue($this->assetsRepository->findOneBy(['id' => $row->getAssetName()])->getAssetName());
+            $sheet->getCell('H'.$rowAct)->setValue($this->departmentRepository->findOneBy(['id' => $row->getDepartment()])->getDepartmentName());
             $sheet->getCell('I'.$rowAct)->setValue($this->getEmployeeNameById($row->getAssignTo()));
             $sheet->getCell('J'.$rowAct)->setValue($row->getDescription());
 

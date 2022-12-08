@@ -65,16 +65,18 @@
                     <tr>
                       <td>#ams-{{ asset.id }}</td>
                       <td>{{ asset.assetName }}</td>
-                      <td>{{ asset.department }}</td>
+                      <td>{{ asset.departmentName }}</td>
                       <td>{{ asset.location }}</td>
                       <td>{{ asset.assigned }}</td>
                       <td>{{ asset.currentState }}</td>
                       <td>{{ asset.status }}</td>
-                      <td><a href="#" class="btn btn-primary btn-sm">Re Assign</a></td>
+                      <td class="text-center">
+{#                        <a href="#" class="btn btn-primary btn-sm">Re Assign</a>#}
+                        <a href="{{ path('edit_assigned_asset', {id: asset.id}) }}" class="btn btn-info btn-sm">Re Assign</a>
+                      </td>
                       <td>
                         <div class="row d-sm-flex justify-content-sm-around">
                           <a href="{{ path('view_assigned_asset', {id: asset.id}) }}" class="btn btn-success btn-sm"><i class="fas fa-eye"></i></a>
-                          <a href="{{ path('edit_assigned_asset', {id: asset.id}) }}" class="btn btn-info btn-sm"><i class="fas fa-edit"></i></a>
                           <a href="{{ path('delete_assigned', {id: asset.id}) }}" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></a>
                         </div>
                       </td>

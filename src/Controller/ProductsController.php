@@ -2,30 +2,47 @@
 
 namespace App\Controller;
 
+use App\Common\Product\ProductDataTrait;
+use App\Entity\Employee;
 use App\Entity\Products;
+use App\Repository\EmployeeRepository;
 use App\Repository\ProductsRepository;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Security;
 
 class ProductsController extends AbstractController
 {
     private ProductsRepository $productsRepository;
     private EntityManagerInterface $entityManager;
+    private EmployeeRepository $employeeRepository;
+    private Security $security;
+    use ProductDataTrait;
 
-    public function __construct(ProductsRepository $productsRepository, EntityManagerInterface $entityManager)
-    {
+    public function __construct(
+        ProductsRepository $productsRepository,
+        EntityManagerInterface $entityManager,
+        EmployeeRepository $employeeRepository,
+        Security $security
+    ){
         $this->productsRepository = $productsRepository;
         $this->entityManager = $entityManager;
+        $this->employeeRepository = $employeeRepository;
+        $this->security = $security;
     }
 
     #[Route('/ams/products', name: 'app_products')]
     public function products(): Response
     {
         $products = $this->productsRepository->findBy(['isDeleted' => 0]);
+        foreach ($products as $key => $row) {
+            $products[$key] = $this->productData($row, $this->employeeRepository);
+        }
 
         return $this->render('products/products.html.twig', [
             'products' => $products,
@@ -43,6 +60,8 @@ class ProductsController extends AbstractController
     #[Route('/ams/save-products', name: 'app_save_products')]
     public function saveProducts(Request $request): RedirectResponse
     {
+        /** @var Employee $user */
+        $user = $this->security->getUser();
         $request = $request->request;
         $product = new Products();
         $product
@@ -53,10 +72,10 @@ class ProductsController extends AbstractController
             ->setDescription($request->get('description'))
             ->setStatus(true)
             ->setIsDeleted(0)
-            ->setCreatedAt(new \DateTimeImmutable())
+            ->setCreatedAt(new DateTimeImmutable())
             ->setUpdatedAt(null)
             ->setDeletedAt(null)
-            ->setCreatedBy(1)
+            ->setCreatedBy($user->getId())
             ->setUpdatedBy(null)
             ->setDeletedBy(null);
         $this->entityManager->persist($product);
@@ -71,13 +90,15 @@ class ProductsController extends AbstractController
         $product = $this->productsRepository->find($id);
 
         return $this->render('products/add-product.html.twig', [
-            'product' => $this->productData($product),
+            'product' => $this->productData($product, $this->employeeRepository),
         ]);
     }
 
     #[Route('/ams/update-product', name: 'app_product_update')]
     public function updateVendor(Request $request): RedirectResponse
     {
+        /** @var Employee $user */
+        $user = $this->security->getUser();
         $request = $request->request;
         $product = $this->productsRepository->find($request->get('id'));
         $product
@@ -86,8 +107,8 @@ class ProductsController extends AbstractController
             ->setName($request->get('product-name'))
             ->setManufacturer($request->get('manufacturer'))
             ->setDescription($request->get('description'))
-            ->setUpdatedAt(new \DateTimeImmutable())
-            ->setUpdatedBy(1);
+            ->setUpdatedAt(new DateTimeImmutable())
+            ->setUpdatedBy($user->getId());
         $this->entityManager->persist($product);
         $this->entityManager->flush();
 
@@ -100,33 +121,24 @@ class ProductsController extends AbstractController
         $product = $this->productsRepository->find($id);
 
         return $this->render('products/view-product.html.twig', [
-            'product' => $this->productData($product),
+            'product' => $this->productData($product, $this->employeeRepository),
+            'createdBy' => ucwords($this->employeeRepository->find($product->getCreatedBy())->getName()),
         ]);
     }
 
     #[Route('/ams/delete-product/{id}', name: 'delete_product')]
     public function deleteProduct(int $id, Request $request): Response
     {
+        /** @var Employee $user */
+        $user = $this->security->getUser();
         $product = $this->productsRepository->find($id);
-        $product->setIsDeleted(1);
+        $product->setIsDeleted(1)
+                ->setDeletedBy($user->getId())
+                ->setDeletedAt(new DateTimeImmutable())
+        ;
         $this->entityManager->persist($product);
         $this->entityManager->flush();
 
         return $this->redirect($request->headers->get('referer'));
-    }
-
-    private function productData(?Products $product): array
-    {
-        return [
-            'id' => $product->getId(),
-            'category' => $product->getCategory(),
-            'type' => $product->getType(),
-            'name' => $product->getName(),
-            'manufacturer' => $product->getManufacturer(),
-            'description' => $product->getDescription(),
-            'status' => true === $product->isStatus() ? 'active' : 'not active',
-            'createdAt' => $product->getCreatedAt()->format('Y-M-d'),
-            'createdBy' => $product->getCreatedBy(),
-        ];
     }
 }

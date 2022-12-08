@@ -11,16 +11,19 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Security;
 
 class AdminsController extends AbstractController
 {
     private LocationRepository $locationRepository;
     private EntityManagerInterface $entityManager;
+    private Security $security;
 
-    public function __construct(LocationRepository $locationRepository, EntityManagerInterface $entityManager)
+    public function __construct(LocationRepository $locationRepository, EntityManagerInterface $entityManager, Security $security)
     {
         $this->locationRepository = $locationRepository;
         $this->entityManager = $entityManager;
+        $this->security = $security;
     }
 
     #[Route('/ams/location', name: 'app_admins_location')]
@@ -44,6 +47,7 @@ class AdminsController extends AbstractController
     #[Route('/ams/save-location', name: 'admins_save_location')]
     public function saveLocation(Request $request): Response|RedirectResponse
     {
+        $user = $this->security->getUser();
         $request = $request->request;
         if (false === empty($request->get('office-name'))
             && false === empty($request->get('country'))) {
@@ -61,7 +65,7 @@ class AdminsController extends AbstractController
                 ->setIsDeleted(0)
                 ->setUpdatedAt(null)
                 ->setDeletedAt(null)
-                ->setCreatedBy(1)
+                ->setCreatedBy($user->getId())
                 ->setUpdatedBy(null)
                 ->setDeletedBy(null);
             $this->entityManager->persist($location);

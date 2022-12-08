@@ -91,7 +91,7 @@
                                                 <label>Vendor</label>
                                                 <select class="form-control select2" name="vendor" id="vendor"
                                                         style="width: 100%;">
-                                                    <option selected="selected">{{ assignedAsset.vendor ?? 'Select Vendor' }}</option>
+                                                    <option selected="selected" value="{{ assignedAsset.vendorId ?? '' }}">{{ assignedAsset.vendor ?? 'Select Vendor' }}</option>
                                                     {% for vendor in vendors %}
                                                         <option value="{{ vendor.id }}">{{ vendor.vendorName }}</option>
                                                     {% endfor %}
@@ -105,27 +105,39 @@
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="location">Location</label>
-                                                <input type="text" class="form-control" name="location" id="location"
-                                                       value="{{ assignedAsset.location ?? '' }}"
-                                                       placeholder="Enter location">
+                                                <select class="form-control select2" name="location" id="location"
+                                                        style="width: 100%;">
+                                                    <option selected="selected" value="{{ assignedAsset.locationId ?? '' }}">{{ assignedAsset.location ?? 'Select Location' }}</option>
+                                                    {% for location in locations %}
+                                                        <option value="{{ location.id }}">{{ location.officName }}</option>
+                                                    {% endfor %}
+                                                </select>
                                             </div>
                                         </div>
 
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="asset-name">Asset Name</label>
-                                                <input type="text" class="form-control" name="asset-name"
-                                                       value="{{ assignedAsset.assetName ?? '' }}"
-                                                       id="asset-name" placeholder="Enter asset name">
+                                                <select class="form-control select2" name="asset-name" id="asset-name"
+                                                        style="width: 100%;">
+                                                    <option selected="selected" value="{{ assignedAsset.assetId ?? '' }}">{{ assignedAsset.assetName ?? 'Select Asset' }}</option>
+                                                    {% for asset in assets %}
+                                                        <option value="{{ asset.id }}">{{ asset.assetName }}</option>
+                                                    {% endfor %}
+                                                </select>
                                             </div>
                                         </div>
 
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="department">Department</label>
-                                                <input type="text" class="form-control" name="department"
-                                                       value="{{ assignedAsset.department ?? '' }}"
-                                                       id="department" placeholder="Enter department">
+                                                <select class="form-control select2" name="department" id="department"
+                                                        style="width: 100%;">
+                                                    <option selected="selected" value="{{ assignedAsset.department ?? '' }}">{{ assignedAsset.departmentName ?? 'Select Department' }}</option>
+                                                    {% for department in departments %}
+                                                        <option value="{{ department.id }}">{{ department.departmentName }}</option>
+                                                    {% endfor %}
+                                                </select>
                                             </div>
                                         </div>
 
@@ -134,7 +146,7 @@
                                                 <label>Assign to</label>
                                                 <select class="form-control select2" name="assign-to" id="assign-to"
                                                         style="width: 100%;">
-                                                    <option selected="selected" value="{{ assignedAsset.assignTo ?? '' }}">{{ assignedAsset.assignTo ?? 'Select User' }}</option>
+                                                    <option selected="selected" value="{{ assignedAsset.assignedId ?? '' }}">{{ assignedAsset.assigned ?? 'Select User' }}</option>
                                                     {% for user in users %}
                                                         <option value="{{ user.id }}">{{ user.name }}</option>
                                                     {% endfor %}

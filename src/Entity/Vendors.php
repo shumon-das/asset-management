@@ -74,6 +74,9 @@ class Vendors
     #[ORM\Column(nullable: true)]
     private ?int $deletedBy = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?int $updatedBy = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -315,6 +318,18 @@ class Vendors
     public function setDeletedBy(?int $deletedBy): self
     {
         $this->deletedBy = $deletedBy;
+
+        return $this;
+    }
+
+    public function getUpdatedBy(): ?int
+    {
+        return $this->updatedBy;
+    }
+
+    public function setUpdatedBy(?int $updatedBy): self
+    {
+        $this->updatedBy = $updatedBy;
 
         return $this;
     }

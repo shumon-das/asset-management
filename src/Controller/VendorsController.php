@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\Employee;
 use App\Entity\Vendors;
+use App\Repository\EmployeeRepository;
 use App\Repository\VendorsRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -10,16 +12,25 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Security;
 
 class VendorsController extends AbstractController
 {
     private VendorsRepository $vendorsRepository;
     private EntityManagerInterface $entityManager;
+    private Security $security;
+    private EmployeeRepository $employeeRepository;
 
-    public function __construct(VendorsRepository $vendorsRepository, EntityManagerInterface $entityManager)
-    {
+    public function __construct(
+        VendorsRepository $vendorsRepository,
+        EntityManagerInterface $entityManager,
+        Security $security,
+        EmployeeRepository $employeeRepository
+    ){
         $this->vendorsRepository = $vendorsRepository;
         $this->entityManager = $entityManager;
+        $this->security = $security;
+        $this->employeeRepository = $employeeRepository;
     }
 
     #[Route('/ams/vendors', name: 'app_vendors')]
@@ -43,6 +54,8 @@ class VendorsController extends AbstractController
     #[Route('/ams/save-vendor', name: 'app_save_vendor')]
     public function saveVendor(Request $request): RedirectResponse
     {
+        /** @var Employee $user */
+        $user = $this->security->getUser();
         $request = $request->request;
         $vendor = new Vendors();
         $vendor
@@ -62,7 +75,7 @@ class VendorsController extends AbstractController
             ->setIsDeleted(false)
             ->setCreatedAt(new \DateTimeImmutable())
             ->setDeletedBy(null)
-            ->setCreatedBy(1)
+            ->setCreatedBy($user->getId())
         ;
 
         $this->entityManager->persist($vendor);
@@ -74,6 +87,8 @@ class VendorsController extends AbstractController
     #[Route('/ams/update-vendor', name: 'app_update_vendor')]
     public function updateVendor(Request $request): RedirectResponse
     {
+        /** @var Employee $user */
+        $user = $this->security->getUser();
         $request = $request->request;
         $vendor = $this->vendorsRepository->find($request->get('id'));
         $vendor
@@ -89,10 +104,8 @@ class VendorsController extends AbstractController
             ->setGstinNo($request->get('gstin-no'))
             ->setAddress($request->get('address'))
             ->setDescription($request->get('description'))
-            ->setStatus(false)
             ->setUpdatedAt(new \DateTimeImmutable())
-            ->setDeletedBy(null)
-            ->setCreatedBy(1)
+            ->setUpdatedBy($user->getId())
         ;
 
         $this->entityManager->persist($vendor);
@@ -108,7 +121,8 @@ class VendorsController extends AbstractController
 
         return $this->render('vendors/view-vendor.html.twig', [
             'vendor' => $vendor,
-            'createdAt' => $vendor->getCreatedAt()->format('Y-M-d')
+            'createdAt' => $vendor->getCreatedAt()->format('Y-M-d'),
+            'createdBy' => ucwords($this->employeeRepository->find($vendor->getCreatedBy())->getName()),
         ]);
     }
 
@@ -125,9 +139,14 @@ class VendorsController extends AbstractController
     #[Route('/ams/delete-vendor/{id}', name: 'delete_vendor')]
     public function deleteVendor($id, Request $request): Response
     {
+        /** @var Employee $user */
+        $user = $this->security->getUser();
         $vendor = $this->vendorsRepository->find($id);
         if(false === empty($vendor)) {
-            $vendor->setIsDeleted(1);
+            $vendor->setIsDeleted(1)
+                ->setDeletedAt(new \DateTimeImmutable())
+                ->setDeletedBy($user->getId())
+            ;
             $this->entityManager->persist($vendor);
             $this->entityManager->flush();
         }

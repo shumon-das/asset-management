@@ -91,7 +91,7 @@
                                                 <label>Vendor</label>
                                                 <select class="form-control select2" name="vendor" id="vendor"
                                                         style="width: 100%;">
-                                                    <option selected="selected">{{ data.asset.vendor ?? 'Select Vendor' }}</option>
+                                                    <option selected="selected" value="{{ data.asset.vendorId ?? '' }}">{{ data.asset.vendor ?? 'Select Vendor' }}</option>
                                                     {% for vendor in data.vendors %}
                                                         <option value="{{ vendor.id }}">{{ vendor.vendorName }}</option>
                                                     {% endfor %}
