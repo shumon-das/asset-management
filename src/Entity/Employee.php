@@ -33,6 +33,36 @@ class Employee implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(nullable: true)]
     private ?bool $isDeleted = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $contactNo = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $location = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $reportingManager = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $department = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $deletedAt = null;
+
+    #[ORM\Column]
+    private ?\DateTimeImmutable $createdAt = null;
+
+    #[ORM\Column]
+    private ?int $createdBy = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $deletedBy = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $updatedBy = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $updatedAt = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -123,6 +153,126 @@ class Employee implements UserInterface, PasswordAuthenticatedUserInterface
     public function setIsDeleted(?bool $isDeleted): self
     {
         $this->isDeleted = $isDeleted;
+
+        return $this;
+    }
+
+    public function getContactNo(): ?string
+    {
+        return $this->contactNo;
+    }
+
+    public function setContactNo(?string $contactNo): self
+    {
+        $this->contactNo = $contactNo;
+
+        return $this;
+    }
+
+    public function getLocation(): ?int
+    {
+        return $this->location;
+    }
+
+    public function setLocation(?int $location): self
+    {
+        $this->location = $location;
+
+        return $this;
+    }
+
+    public function getReportingManager(): ?int
+    {
+        return $this->reportingManager;
+    }
+
+    public function setReportingManager(?int $reportingManager): self
+    {
+        $this->reportingManager = $reportingManager;
+
+        return $this;
+    }
+
+    public function getDepartment(): ?int
+    {
+        return $this->department;
+    }
+
+    public function setDepartment(?int $department): self
+    {
+        $this->department = $department;
+
+        return $this;
+    }
+
+    public function getDeletedAt(): ?\DateTimeImmutable
+    {
+        return $this->deletedAt;
+    }
+
+    public function setDeletedAt(?\DateTimeImmutable $deletedAt): self
+    {
+        $this->deletedAt = $deletedAt;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $createdAt): self
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getCreatedBy(): ?int
+    {
+        return $this->createdBy;
+    }
+
+    public function setCreatedBy(int $createdBy): self
+    {
+        $this->createdBy = $createdBy;
+
+        return $this;
+    }
+
+    public function getDeletedBy(): ?int
+    {
+        return $this->deletedBy;
+    }
+
+    public function setDeletedBy(?int $deletedBy): self
+    {
+        $this->deletedBy = $deletedBy;
+
+        return $this;
+    }
+
+    public function getUpdatedBy(): ?int
+    {
+        return $this->updatedBy;
+    }
+
+    public function setUpdatedBy(?int $updatedBy): self
+    {
+        $this->updatedBy = $updatedBy;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): self
+    {
+        $this->updatedAt = $updatedAt;
 
         return $this;
     }

@@ -46,108 +46,119 @@
                                     Employees</a>
                             </div>
                             <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-1"></div>
-                                    <div class="col-md-6">
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label>Name</label>
-                                                    <input type="text" class="form-control" id="exampleInputEmail1"
-                                                           placeholder="Enter email">
-                                                </div>
+                                <form action="{{ path('app_save_employee') }}" method="post">
+                                    <div class="row">
+                                        <div class="col-md-1"></div>
+                                        <div class="col-md-6">
+                                            <div class="row">
+                                                {% for error in app.flashes('error') %}
+                                                    <span class="alert alert-danger"> {{ error }} </span>
+                                                {% endfor %}
                                             </div>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label>Employee Name</label>
+                                                        <input type="text" class="form-control" id="name" name="name"
+                                                               placeholder="Enter employee name">
+                                                    </div>
+                                                </div>
 
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label>Email</label>
-                                                    <input type="text" class="form-control" id="exampleInputEmail1"
-                                                           placeholder="Enter email">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label>Employee Email</label>
+                                                        <input type="text" class="form-control" id="email" name="email"
+                                                               placeholder="Enter employee email">
+                                                    </div>
                                                 </div>
                                             </div>
+                                            <!-- row end -->
+
+                                            <div class="row mt-3">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label>Contact No</label>
+                                                        <input type="text" class="form-control" id="contact-no"
+                                                               name="contact-no"
+                                                               placeholder="Enter contact no">
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label>Department</label>
+                                                        <select class="form-control select2" style="width: 100%;"
+                                                                name="department" id="department">
+                                                            <option selected="selected" value="0">select Department
+                                                            </option>
+                                                            {% if departments is defined %}
+                                                                {% for department in departments %}
+                                                                    <option value="{{ department.id }}">{{ department.departmentName }}</option>
+                                                                {% endfor %}
+                                                            {% endif %}
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- row end -->
+
+                                            <div class="row mt-3">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="location">Location</label>
+                                                        <select class="form-control select2" style="width: 100%;"
+                                                                id="location" name="location">
+                                                            <option selected="selected" value="0">Select Location
+                                                            </option>
+                                                            {% if locations is defined %}
+                                                                {% for location in locations %}
+                                                                    <option value="{{ location.id }}">{{ location.officName }}</option>
+                                                                {% endfor %}
+                                                            {% endif %}
+                                                        </select>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label>Reporting Manager</label>
+                                                        <select class="form-control select2" style="width: 100%;"
+                                                                id="reporting-manager" name="reporting-manager">
+                                                            <option selected="selected" value="0">Select Manager From
+                                                                Employees
+                                                            </option>
+                                                            {% if employees is defined %}
+                                                                {% for employee in employees %}
+                                                                    <option value="{{ employee.id }}">{{ employee.name }}</option>
+                                                                {% endfor %}
+                                                            {% endif %}
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- row end -->
+                                            <div class="row mt-3">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label>Default password for this employee</label>
+                                                        <input type="password" class="form-control" id="password"
+                                                               name="password"
+                                                               placeholder="Enter default password">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <hr>
+                                            <div class="row mt-3">
+                                                <div class="col-md-12 mt-3 text-right">
+                                                    <button type="submit" class="btn btn-primary">
+                                                        Submit
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <!-- row end -->
                                         </div>
-                                        <!-- row end -->
-
-                                        <div class="row mt-3">
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label for="exampleInputEmail1">EmployeeId</label>
-                                                    <input type="email" class="form-control" id="exampleInputEmail1"
-                                                           placeholder="Enter email">
-                                                </div>
-                                            </div>
-
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label>Contact No</label>
-                                                    <input type="text" class="form-control" id="exampleInputEmail1"
-                                                           placeholder="Enter password">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- row end -->
-
-                                        <div class="row mt-3">
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label for="exampleInputEmail1">Location</label>
-                                                    <select class="form-control select2" style="width: 100%;">
-                                                        <option selected="selected">Alabama</option>
-                                                        <option>Alaska</option>
-                                                        <option>California</option>
-                                                        <option>Delaware</option>
-                                                        <option>Tennessee</option>
-                                                        <option>Texas</option>
-                                                        <option>Washington</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label>Reporting Manager</label>
-                                                    <select class="form-control select2" style="width: 100%;">
-                                                        <option selected="selected">Alabama</option>
-                                                        <option>Alaska</option>
-                                                        <option>California</option>
-                                                        <option>Delaware</option>
-                                                        <option>Tennessee</option>
-                                                        <option>Texas</option>
-                                                        <option>Washington</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- row end -->
-
-                                        <div class="row mt-3">
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label>Department</label>
-                                                    <select class="form-control select2" style="width: 100%;">
-                                                        <option selected="selected">select location</option>
-                                                        <option>Alaska</option>
-                                                        <option>California</option>
-                                                        <option>Delaware</option>
-                                                        <option>Tennessee</option>
-                                                        <option>Texas</option>
-                                                        <option>Washington</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- row end -->
-                                        <hr>
-                                        <div class="row mt-3">
-                                            <div class="col-md-12 mt-3 text-right">
-                                                <button type="submit" class="btn btn-primary">
-                                                    Submit
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <!-- row end -->
                                     </div>
-                                </div>
+                                </form>
                             </div>
                             <!-- /.card-body -->
                         </div>
