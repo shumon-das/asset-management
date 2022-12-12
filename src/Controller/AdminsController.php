@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Employee;
 use App\Entity\Location;
 use App\Repository\LocationRepository;
 use DateTimeImmutable;
@@ -47,6 +48,7 @@ class AdminsController extends AbstractController
     #[Route('/ams/save-location', name: 'admins_save_location')]
     public function saveLocation(Request $request): Response|RedirectResponse
     {
+        /** @var Employee $user */
         $user = $this->security->getUser();
         $request = $request->request;
         if (false === empty($request->get('office-name'))
@@ -112,8 +114,14 @@ class AdminsController extends AbstractController
     #[Route('/ams/delete-location/{id}', name: 'delete_location')]
     public function deleteAsset(int $id, Request $request): Response
     {
+        /** @var Employee $user */
+        $user = $this->security->getUser();
         $location = $this->locationRepository->find($id);
-        $location->setIsDeleted(1);
+        $location
+            ->setIsDeleted(1)
+            ->setDeletedBy($user->getId())
+            ->setDeletedAt(new DateTimeImmutable())
+        ;
         $this->entityManager->persist($location);
         $this->entityManager->flush();
 
