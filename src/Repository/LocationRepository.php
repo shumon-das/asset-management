@@ -63,4 +63,14 @@ class LocationRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+
+    public function findIds(): ?array
+    {
+        return $this->createQueryBuilder('l')
+            ->select('l.id as id')
+            ->addSelect('l.officName as name')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 }

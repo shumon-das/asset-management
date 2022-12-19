@@ -7,7 +7,7 @@ use App\Repository\VendorsRepository;
 
 trait AssetListDataTrait
 {
-    private function assetsListData(Assets $asset, VendorsRepository $vendorsRepository): array
+    private function assetsListData(array $assignedAssetsIds, Assets $asset, VendorsRepository $vendorsRepository): array
     {
         $vendor = $vendorsRepository->find($asset->getVendor());
         return [
@@ -15,8 +15,9 @@ trait AssetListDataTrait
             'productCategory' => $asset->getProductCategory(),
             'productType' => $asset->getProductType(),
             'product' => $asset->getProduct(),
-            'vendor' => $vendor->getVendorName(),
+            'vendor' => $vendor?->getVendorName(),
             'assetName' => $asset->getAssetName(),
+            'assign' => in_array($asset->getId(),$assignedAssetsIds),
             'serialNumber' => $asset->getSeriulNumber(),
         ];
     }

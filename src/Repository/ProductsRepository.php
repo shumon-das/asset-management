@@ -75,4 +75,14 @@ class ProductsRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
+
+    public function findIds(): ?array
+    {
+        return $this->createQueryBuilder('p')
+            ->select('p.id as id')
+            ->addSelect('p.name')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 }

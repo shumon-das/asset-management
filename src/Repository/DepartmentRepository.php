@@ -63,4 +63,14 @@ class DepartmentRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+
+    public function findIds(): ?array
+    {
+        return $this->createQueryBuilder('d')
+            ->select('d.id as id')
+            ->addSelect('d.departmentName as name')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 }

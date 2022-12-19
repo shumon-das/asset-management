@@ -4,64 +4,22 @@ namespace App\Controller;
 
 use App\Entity\AssigningAssets;
 use App\Entity\Employee;
-use App\Repository\AssetsRepository;
-use App\Repository\AssigningAssetsRepository;
-use App\Repository\DepartmentRepository;
-use App\Repository\EmployeeRepository;
-use App\Repository\LocationRepository;
-use App\Repository\ProductsRepository;
-use App\Repository\VendorsRepository;
 use DateTimeImmutable;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Security;
 
-class AssigningController extends AbstractController
+class AssigningController extends AbstractApiController
 {
-    private AssigningAssetsRepository $assigningAssetsRepository;
-    private ProductsRepository $productsRepository;
-    private VendorsRepository $vendorsRepository;
-    private EmployeeRepository $employeeRepository;
-    private EntityManagerInterface $entityManager;
-    private Security $security;
-    private AssetsRepository $assetsRepository;
-    private LocationRepository $locationRepository;
-    private DepartmentRepository $departmentRepository;
-
-    public function __construct(
-        AssigningAssetsRepository $assigningAssetsRepository,
-        ProductsRepository        $productsRepository,
-        VendorsRepository         $vendorsRepository,
-        AssetsRepository          $assetsRepository,
-        LocationRepository        $locationRepository,
-        DepartmentRepository      $departmentRepository,
-        EmployeeRepository        $employeeRepository,
-        EntityManagerInterface    $entityManager,
-        Security                  $security
-    )
-    {
-        $this->assigningAssetsRepository = $assigningAssetsRepository;
-        $this->productsRepository = $productsRepository;
-        $this->vendorsRepository = $vendorsRepository;
-        $this->employeeRepository = $employeeRepository;
-        $this->entityManager = $entityManager;
-        $this->security = $security;
-        $this->assetsRepository = $assetsRepository;
-        $this->locationRepository = $locationRepository;
-        $this->departmentRepository = $departmentRepository;
-    }
-
     #[Route('/ams/assigned', name: 'assigned_assets')]
-    public function assignedAsset(AssigningAssetsRepository $assigningAssetsRepository): Response
+    public function assignedAsset(): Response
     {
-        $assignedProduct = $assigningAssetsRepository->findBy(['isDeleted' => 0]);
+        $assignedProduct = $this->assigningAssetsRepository->findBy(['isDeleted' => 0]);
+
         $data = [];
         foreach ($assignedProduct as $product) {
-            $data[$product->getId()] = $this->assignedData($product);
+            $data[$product->getId()] = $this->assignedData($product, $this->allEntityIdsAndNames());
         }
 
         return $this->render('assets/assigned-asset-list.html.twig', [
@@ -72,21 +30,9 @@ class AssigningController extends AbstractController
     #[Route('/ams/assigning', name: 'assigning_assets')]
     public function assigningAsset(): Response
     {
-        $products = $this->productsRepository->findBy(['isDeleted' => 0]);
-        $vendors = $this->vendorsRepository->findBy(['isDeleted' => 0]);
-        $employee = $this->employeeRepository->findBy(['isDeleted' => 0]);
-        $assets = $this->assetsRepository->findBy(['isDeleted' => 0]);
-        $locations = $this->locationRepository->findBy(['isDeleted' => 0]);
-        $departments = $this->departmentRepository->findBy(['isDeleted' => 0]);
-
-        return $this->render('assets/assigning-asset.html.twig', [
-            'products' => $products,
-            'vendors' => $vendors,
-            'users' => $employee,
-            'assets' => $assets,
-            'locations' => $locations,
-            'departments' => $departments,
-        ]);
+        return $this->render('assets/assigning-asset.html.twig',
+            $this->getRepositoriesData(),
+        );
     }
 
     #[Route('/ams/view-assigned/{id}', name: 'view_assigned_asset')]
@@ -94,7 +40,7 @@ class AssigningController extends AbstractController
     {
         $asset = $this->assigningAssetsRepository->find($id);
         return $this->render('assets/view-assigned.html.twig', [
-            'asset' => $this->assignedAssetData($asset)
+            'asset' => $this->assignedAssetData($asset, $this->allEntityIdsAndNames())
         ]);
     }
 
@@ -148,22 +94,10 @@ class AssigningController extends AbstractController
     public function editAssigningAsset(int $id): Response
     {
         $assignedAsset = $this->assigningAssetsRepository->find($id);
-        $products = $this->productsRepository->findBy(['isDeleted' => 0]);
-        $vendors = $this->vendorsRepository->findBy(['isDeleted' => 0]);
-        $employee = $this->employeeRepository->findBy(['isDeleted' => 0]);
-        $assets = $this->assetsRepository->findBy(['isDeleted' => 0]);
-        $locations = $this->locationRepository->findBy(['isDeleted' => 0]);
-        $departments = $this->departmentRepository->findBy(['isDeleted' => 0]);
 
-        return $this->render('assets/assigning-asset.html.twig', [
-            'assignedAsset' => $this->assignedData($assignedAsset),
-            'products' => $products,
-            'vendors' => $vendors,
-            'users' => $employee,
-            'assets' => $assets,
-            'locations' => $locations,
-            'departments' => $departments,
-        ]);
+        return $this->render('assets/assigning-asset.html.twig', array_merge([
+            'assignedAsset' => $this->assignedData($assignedAsset, $this->allEntityIdsAndNames()),
+        ], $this->getRepositoriesData()));
     }
 
     #[Route('/ams/update-assigned-asset', name: 'update_assigned_asset')]
@@ -191,45 +125,46 @@ class AssigningController extends AbstractController
         return new RedirectResponse('assigned');
     }
 
-    private function assignedData(?AssigningAssets $assignedProduct): array
+    private function assignedData(?AssigningAssets $assignedProduct, ?array $idsAndNames = []): array
     {
-        $vendor = $this->vendorsRepository->find($assignedProduct->getVendor());
-        $assigned = $this->employeeRepository->find($assignedProduct->getAssignTo());
+        $assigned = $assignedProduct->getAssignTo();
+        $asset = $assignedProduct->getAssetName();
+        $department = $assignedProduct->getDepartment();
+        $location = $assignedProduct->getLocation();
+        $vendor = $assignedProduct->getVendor();
         return [
             'id' => $assignedProduct->getId(),
-            'assetName' => $this->assetsRepository->findOneBy(['id' => $assignedProduct->getAssetName()])->getAssetName(),
-            'assetId' => $assignedProduct->getAssetName(),
-            'department' => $assignedProduct->getDepartment(),
-            'departmentName' => $this->departmentRepository->findOneBy(['id' => $assignedProduct->getDepartment()])?->getDepartmentName(),
-            'location' => $this->locationRepository->findOneBy(['id' => $assignedProduct->getLocation()])->getOfficName(),
-            'locationId' => $assignedProduct->getLocation(),
-            'assigned' => $assigned?->getName(),
-            'assignedId' =>$assignedProduct->getAssignTo(),
-            'vendor' => $vendor?->getVendorName(),
-            'vendorId' => $assignedProduct->getVendor(),
+            'assetName' => array_key_exists($asset, $idsAndNames['assetsIds']) ? $idsAndNames['assetsIds'][$asset] : null,
+            'assetId' => $asset,
+            'department' => $department,
+            'departmentName' => array_key_exists($department, $idsAndNames['departmentsIds']) ? $idsAndNames['departmentsIds'][$department] : null,
+            'location' => array_key_exists($location, $idsAndNames['locationsIds']) ? $idsAndNames['locationsIds'][$location] : null,
+            'locationId' => $location,
+            'assigned' => $idsAndNames['employeesIds'][$assigned],
+            'assignedId' => $assigned,
+            'vendor' => array_key_exists($vendor, $idsAndNames['vendorsIds']) ? $idsAndNames['vendorsIds'][$vendor] : null,
+            'vendorId' => $vendor,
             'currentState' => 'current state',
             'status' => $assignedProduct->isStatus() ? 'Assigned' : 'Not Assigned',
         ];
     }
 
-    private function assignedAssetData(?AssigningAssets $asset): array
+    private function assignedAssetData(?AssigningAssets $asset, array $idsAndNames): array
     {
-        $vendor = $this->vendorsRepository->find($asset->getVendor());
         return [
             'id' => $asset->getId(),
             'productCategory' => $asset->getProductCategory(),
             'productType' => $asset->getProductType(),
             'product' => $asset->getProduct(),
-            'vendor' => $vendor->getVendorName(),
+            'vendor' => $idsAndNames['vendorsIds'][$asset->getVendor()],
             'vendorId' => $asset->getVendor(),
-            'location' => $this->locationRepository->findOneBy(['id' => $asset->getLocation()])->getOfficName(),
-            'assetName' => $asset->getAssetName(),
-            'department' => $this->departmentRepository->findOneBy(['id' => $asset->getDepartment()])?->getDepartmentName(),
-            'assigned' => $this->employeeRepository->find($asset->getAssignTo())?->getName(),
+            'location' => $idsAndNames['locationsIds'][$asset->getLocation()],
+            'assetName' => $idsAndNames['assetsIds'][$asset->getAssetName()],
+            'department' => $idsAndNames['departmentsIds'][$asset->getDepartment()],
+            'assigned' => $idsAndNames['employeesIds'][$asset->getAssignTo()],
             'description' => $asset->getDescription(),
-            'createdBy' => ucwords($this->employeeRepository->find($asset->getCreatedBy())->getName()),
+            'createdBy' => ucwords($idsAndNames['employeesIds'][$asset->getCreatedBy()]),
             'status' => $asset->isStatus(),
-            'currentState' => 'current state',
             'createdAt' => $asset->getCreatedAt()->format('Y-M-d'),
         ];
     }

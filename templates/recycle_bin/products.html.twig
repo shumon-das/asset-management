@@ -55,6 +55,7 @@
                                         <th>Product Category</th>
                                         <th>Status</th>
                                         <th>Action</th>
+                                        <th>Delete Permanently</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -71,6 +72,10 @@
                                                     <a href="{{ path('revert_product', {id: product.id}) }}" class="btn btn-primary btn-sm"><i
                                                                 class="fas fa-backward"></i></a>
                                                 </div>
+                                            </td>
+                                            <td>
+                                                <a href="{{ path('delete_product_permanently', {id: product.id}) }}" class="btn btn-danger btn-sm delete-permanently"><i
+                                                                class="fas fa-trash-restore"></i></a>
                                             </td>
                                         </tr>
                                     {% endfor %}

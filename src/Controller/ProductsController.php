@@ -141,4 +141,16 @@ class ProductsController extends AbstractController
 
         return $this->redirect($request->headers->get('referer'));
     }
+
+    #[Route('/ams/delete-product-permanently/{id}', name: 'delete_product_permanently')]
+    public function deletePermanently($id, Request $request): Response
+    {
+        $record = $this->productsRepository->find($id);
+        if(false === empty($record)) {
+            $this->entityManager->remove($record);
+            $this->entityManager->flush();
+        }
+        $route = $request->headers->get('referer');
+        return $this->redirect($route);
+    }
 }

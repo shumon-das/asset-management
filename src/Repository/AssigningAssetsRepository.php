@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\AssigningAssets;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -63,4 +64,13 @@ class AssigningAssetsRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+
+    public function findIds(): ?array
+    {
+        return $this->createQueryBuilder('aa')
+            ->select('aa.id as id')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 }

@@ -55,8 +55,8 @@
                                         <th>Product</th>
                                         <th>Vendor</th>
                                         <th>Current State</th>
-                                        <th>Assign</th>
                                         <th>Action</th>
+                                        <th>Delete Permanently</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -68,14 +68,17 @@
                                             <td>{{ asset.productType }}</td>
                                             <td>{{ asset.product }}</td>
                                             <td>{{ asset.vendor }}</td>
-                                            <td>sdfsdf</td>
-                                            <td><a href="#" class="btn btn-primary btn-sm">assign</a></td>
+                                            <td></td>
                                             <td>
                                                 <div class="row d-block m-auto w-100 text-center">
                                                     <a href="{{ path('view_asset', {id: asset.id}) }}" class="btn btn-success btn-sm"><i class="fas fa-eye"></i></a>
-                                                    <a href="{{ path('revert_asset', {id: asset.id}) }}" class="btn btn-primary btn-sm"><i
+                                                    <a href="{{ path('revert_asset', {id: asset.id}) }}" class="btn btn-primary btn-sm restore"><i
                                                                 class="fas fa-backward"></i></a>
                                                 </div>
+                                            </td>
+                                            <td>
+                                                <a href="{{ path('delete_asset_permanently', {id: asset.id}) }}" class="btn btn-danger btn-sm delete-permanently"><i
+                                                                class="fas fa-trash-restore"></i></a>
                                             </td>
                                         </tr>
                                     {% endfor %}

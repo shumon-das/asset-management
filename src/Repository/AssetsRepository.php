@@ -63,4 +63,14 @@ class AssetsRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+
+    public function findIds(): ?array
+    {
+        return $this->createQueryBuilder('a')
+            ->select('a.id as id')
+            ->addSelect('a.assetName as name')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 }

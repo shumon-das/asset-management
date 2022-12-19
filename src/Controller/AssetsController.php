@@ -6,11 +6,13 @@ use App\Common\Asset\AssetListDataTrait;
 use App\Entity\Assets;
 use App\Entity\Employee;
 use App\Repository\AssetsRepository;
+use App\Repository\AssigningAssetsRepository;
 use App\Repository\EmployeeRepository;
 use App\Repository\ProductsRepository;
 use App\Repository\VendorsRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\NonUniqueResultException;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -27,6 +29,7 @@ class AssetsController extends AbstractController
     private EntityManagerInterface $entityManager;
     private EmployeeRepository $employeeRepository;
     private Security $security;
+    private AssigningAssetsRepository $assigningAssetsRepository;
 
     use AssetListDataTrait;
 
@@ -36,6 +39,7 @@ class AssetsController extends AbstractController
         ProductsRepository $productsRepository,
         EntityManagerInterface $entityManager,
         EmployeeRepository $employeeRepository,
+        AssigningAssetsRepository $assigningAssetsRepository,
         Security $security
     ){
         $this->assetsRepository = $assetsRepository;
@@ -44,15 +48,20 @@ class AssetsController extends AbstractController
         $this->entityManager = $entityManager;
         $this->employeeRepository = $employeeRepository;
         $this->security = $security;
+        $this->assigningAssetsRepository = $assigningAssetsRepository;
     }
 
+    /**
+     * @throws NonUniqueResultException
+     */
     #[Route('/ams/assets', name: 'app_assets')]
     public function assets(): Response
     {
         $assets = $this->assetsRepository->findBy(['isDeleted' => 0]);
+        $assignedAssetIds = array_column($this->assigningAssetsRepository->findIds(), 'id');
         $data = [];
         foreach ($assets as $asset) {
-            $data[$asset->getId()] = $this->assetsListData($asset, $this->vendorsRepository);
+            $data[$asset->getId()] = $this->assetsListData($assignedAssetIds, $asset, $this->vendorsRepository);
         }
 
         return $this->render('assets/asset-list.html.twig', [
@@ -193,6 +202,17 @@ class AssetsController extends AbstractController
 
         return $this->redirect($request->headers->get('referer'));
     }
+    #[Route('/ams/delete-asset-permanently/{id}', name: 'delete_asset_permanently')]
+    public function deletePermanently($id, Request $request): Response
+    {
+        $record = $this->assetsRepository->find($id);
+        if(false === empty($record)) {
+            $this->entityManager->remove($record);
+            $this->entityManager->flush();
+        }
+        $route = $request->headers->get('referer');
+        return $this->redirect($route);
+    }
 
     private function singleAsset(?Assets $asset): array
     {
@@ -202,8 +222,8 @@ class AssetsController extends AbstractController
             'productCategory' => $asset->getProductCategory(),
             'productType' => $asset->getProductType(),
             'product' => $asset->getProduct(),
-            'vendor' => $vendor->getVendorName(),
-            'vendorId' => $vendor->getId(),
+            'vendor' => $vendor?->getVendorName(),
+            'vendorId' => $vendor?->getId(),
             'assetName' => $asset->getAssetName(),
             'seriulNumber' => $asset->getSeriulNumber(),
             'price' => $asset->getPrice(),

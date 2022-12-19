@@ -63,4 +63,14 @@ class VendorsRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+
+    public function findIds(): ?array
+    {
+        return $this->createQueryBuilder('v')
+            ->select('v.id as id')
+            ->addSelect('v.vendorName as name')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 }
