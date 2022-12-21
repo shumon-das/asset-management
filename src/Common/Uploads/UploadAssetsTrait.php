@@ -24,7 +24,7 @@ trait UploadAssetsTrait
                     ->setProduct($row[2])
                     ->setVendor($row[3])
                     ->setAssetName($row[4])
-                    ->setSeriulNumber($row[5])
+                    ->setSerialNumber($row[5])
                     ->setPrice($row[6])
                     ->setDescriptionType($row[7])
                     ->setLocation($row[8])

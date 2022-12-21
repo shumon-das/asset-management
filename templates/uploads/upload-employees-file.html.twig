@@ -42,7 +42,7 @@
                     <div class="col-12">
                         <div class="card">
                             <div class="card-header d-flex justify-content-between">
-                                <a href="{{ path('app_vendors') }}" class="btn btn-primary"> back to vendors</a>
+                                <a href="{{ path('app_employees') }}" class="btn btn-primary"> back to employees</a>
                             </div>
                             <div class="card-body">
                                 <div class="card">
@@ -51,9 +51,9 @@
                                     </div>
 
                                     <h5 class="p-3">Please <a href="files/example-vendors-csv.xlsx" download="">click here</a> to download your csv file Format to import</h5>
-                                    <form action="{{ path('app_upload_files') }}" method="post" enctype="multipart/form-data" class="pb-5">
+                                    <form action="{{ path('app_upload_employees') }}" method="post" enctype="multipart/form-data" class="pb-5">
                                         <label for="vendors-csv" class="ml-5 text-center d-block" style="width: 300px;height: 175px;line-height: 175px;border: 1px dashed;cursor: pointer">Upload Your CSV File</label>
-                                        <input type="file" name="vendors-csv" id="vendors-csv" style="display: none">
+                                        <input type="file" name="employees-csv" id="employees-csv" style="display: none">
                                         <button type="submit" class="btn btn-sm btn-success ml-5" style="width: 300px">Upload</button>
                                     </form>
                                 </div>

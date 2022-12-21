@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use App\Common\CommonMethodsTrait\DeletedMethodsTraits\DeletedMethodsTrait;
+use App\Common\CommonMethodsTrait\UserMethodsTraits\UserMethodsTrait;
 use App\Repository\EmployeeRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -10,6 +12,9 @@ use Symfony\Component\Security\Core\User\UserInterface;
 #[ORM\Entity(repositoryClass: EmployeeRepository::class)]
 class Employee implements UserInterface, PasswordAuthenticatedUserInterface
 {
+    use DeletedMethodsTrait;
+    use UserMethodsTrait;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -145,18 +150,6 @@ class Employee implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function isIsDeleted(): ?bool
-    {
-        return $this->isDeleted;
-    }
-
-    public function setIsDeleted(?bool $isDeleted): self
-    {
-        $this->isDeleted = $isDeleted;
-
-        return $this;
-    }
-
     public function getContactNo(): ?string
     {
         return $this->contactNo;
@@ -201,78 +194,6 @@ class Employee implements UserInterface, PasswordAuthenticatedUserInterface
     public function setDepartment(?int $department): self
     {
         $this->department = $department;
-
-        return $this;
-    }
-
-    public function getDeletedAt(): ?\DateTimeImmutable
-    {
-        return $this->deletedAt;
-    }
-
-    public function setDeletedAt(?\DateTimeImmutable $deletedAt): self
-    {
-        $this->deletedAt = $deletedAt;
-
-        return $this;
-    }
-
-    public function getCreatedAt(): ?\DateTimeImmutable
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(\DateTimeImmutable $createdAt): self
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
-    }
-
-    public function getCreatedBy(): ?int
-    {
-        return $this->createdBy;
-    }
-
-    public function setCreatedBy(int $createdBy): self
-    {
-        $this->createdBy = $createdBy;
-
-        return $this;
-    }
-
-    public function getDeletedBy(): ?int
-    {
-        return $this->deletedBy;
-    }
-
-    public function setDeletedBy(?int $deletedBy): self
-    {
-        $this->deletedBy = $deletedBy;
-
-        return $this;
-    }
-
-    public function getUpdatedBy(): ?int
-    {
-        return $this->updatedBy;
-    }
-
-    public function setUpdatedBy(?int $updatedBy): self
-    {
-        $this->updatedBy = $updatedBy;
-
-        return $this;
-    }
-
-    public function getUpdatedAt(): ?\DateTimeImmutable
-    {
-        return $this->updatedAt;
-    }
-
-    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): self
-    {
-        $this->updatedAt = $updatedAt;
 
         return $this;
     }

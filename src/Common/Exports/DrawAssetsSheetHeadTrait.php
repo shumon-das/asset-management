@@ -63,7 +63,7 @@ trait DrawAssetsSheetHeadTrait
             $sheet->getCell('D'.$rowAct)->setValue($row->getProduct());
             $sheet->getCell('E'.$rowAct)->setValue($this->getVendorNameById($row->getVendor()));
             $sheet->getCell('F'.$rowAct)->setValue($row->getAssetName());
-            $sheet->getCell('G'.$rowAct)->setValue($row->getSeriulNumber());
+            $sheet->getCell('G'.$rowAct)->setValue($row->getSerialNumber());
             $sheet->getCell('H'.$rowAct)->setValue($row->getPrice());
             $sheet->getCell('I'.$rowAct)->setValue($row->getDescriptionType());
             $sheet->getCell('J'.$rowAct)->setValue($row->getLocation());

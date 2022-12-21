@@ -5,36 +5,15 @@ namespace App\Controller;
 use App\Common\Product\ProductDataTrait;
 use App\Entity\Employee;
 use App\Entity\Products;
-use App\Repository\EmployeeRepository;
-use App\Repository\ProductsRepository;
 use DateTimeImmutable;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Security;
 
-class ProductsController extends AbstractController
+class ProductsController extends AbstractApiController
 {
-    private ProductsRepository $productsRepository;
-    private EntityManagerInterface $entityManager;
-    private EmployeeRepository $employeeRepository;
-    private Security $security;
     use ProductDataTrait;
-
-    public function __construct(
-        ProductsRepository $productsRepository,
-        EntityManagerInterface $entityManager,
-        EmployeeRepository $employeeRepository,
-        Security $security
-    ){
-        $this->productsRepository = $productsRepository;
-        $this->entityManager = $entityManager;
-        $this->employeeRepository = $employeeRepository;
-        $this->security = $security;
-    }
 
     #[Route('/ams/products', name: 'app_products')]
     public function products(): Response

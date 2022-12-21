@@ -54,7 +54,6 @@
                     <th>Department</th>
                     <th>Location</th>
                     <th>Assigned</th>
-                    <th>Current State</th>
                     <th>Status</th>
                     <th>Assign</th>
                     <th>Action</th>
@@ -68,7 +67,6 @@
                       <td>{{ asset.departmentName }}</td>
                       <td>{{ asset.location }}</td>
                       <td>{{ asset.assigned }}</td>
-                      <td>{{ asset.currentState }}</td>
                       <td>{{ asset.status }}</td>
                       <td class="text-center">
                         <a href="{{ path('edit_assigned_asset', {id: asset.id}) }}" class="btn btn-info btn-sm">Re Assign</a>

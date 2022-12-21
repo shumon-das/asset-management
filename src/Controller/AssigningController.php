@@ -50,8 +50,10 @@ class AssigningController extends AbstractApiController
         /** @var Employee $user */
         $user = $this->security->getUser();
         $assignedAsset = $this->assigningAssetsRepository->find($id);
-        $assignedAsset->setIsDeleted($user->getId())
-            ->setDeletedAt(new DateTimeImmutable());
+        $assignedAsset
+            ->setIsDeleted($user->getId())
+            ->setDeletedAt(new DateTimeImmutable())
+            ->setDeletedBy($user->getId());
         $this->entityManager->persist($assignedAsset);
         $this->entityManager->flush();
 
@@ -75,7 +77,6 @@ class AssigningController extends AbstractApiController
             ->setDepartment($request->get('department'))
             ->setAssignTo($request->get('assign-to'))
             ->setDescription($request->get('description'))
-//            ->setAssignComponent($request->get(''))
             ->setIsDeleted(0)
             ->setCreatedBy($user->getId())
             ->setUpdatedBy(null)
@@ -95,9 +96,10 @@ class AssigningController extends AbstractApiController
     {
         $assignedAsset = $this->assigningAssetsRepository->find($id);
 
-        return $this->render('assets/assigning-asset.html.twig', array_merge([
-            'assignedAsset' => $this->assignedData($assignedAsset, $this->allEntityIdsAndNames()),
-        ], $this->getRepositoriesData()));
+        return $this->render('assets/assigning-asset.html.twig', [
+            ...['assignedAsset' => $this->assignedData($assignedAsset, $this->allEntityIdsAndNames())],
+            ...$this->getRepositoriesData()
+        ]);
     }
 
     #[Route('/ams/update-assigned-asset', name: 'update_assigned_asset')]
@@ -132,6 +134,9 @@ class AssigningController extends AbstractApiController
         $department = $assignedProduct->getDepartment();
         $location = $assignedProduct->getLocation();
         $vendor = $assignedProduct->getVendor();
+        $product = $assignedProduct->getProduct();
+        $productType = $assignedProduct->getProductType();
+        $productCategory = $assignedProduct->getProductCategory();
         return [
             'id' => $assignedProduct->getId(),
             'assetName' => array_key_exists($asset, $idsAndNames['assetsIds']) ? $idsAndNames['assetsIds'][$asset] : null,
@@ -144,7 +149,10 @@ class AssigningController extends AbstractApiController
             'assignedId' => $assigned,
             'vendor' => array_key_exists($vendor, $idsAndNames['vendorsIds']) ? $idsAndNames['vendorsIds'][$vendor] : null,
             'vendorId' => $vendor,
-            'currentState' => 'current state',
+            'product' => array_key_exists($product, $idsAndNames['productsIds']) ? $idsAndNames['productsIds'][$product] : null,
+            'productId' => $product,
+            'productType' => array_key_exists($productType, $idsAndNames['productTypeIds']) ? $idsAndNames['productTypeIds'][$productType] : null,
+            'productCategory' => array_key_exists($productCategory, $idsAndNames['productCategoryIds']) ? $idsAndNames['productCategoryIds'][$productCategory] : null,
             'status' => $assignedProduct->isStatus() ? 'Assigned' : 'Not Assigned',
         ];
     }

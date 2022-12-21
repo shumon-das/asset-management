@@ -85,4 +85,24 @@ class ProductsRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
+
+    public function findTypeIds(): ?array
+    {
+        return $this->createQueryBuilder('p')
+            ->select('p.id as id')
+            ->addSelect('p.type')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    public function findCategoryIds(): ?array
+    {
+        return $this->createQueryBuilder('p')
+            ->select('p.id as id')
+            ->addSelect('p.category')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 }

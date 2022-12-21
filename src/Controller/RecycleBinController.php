@@ -5,45 +5,16 @@ namespace App\Controller;
 use App\Common\Asset\AssetListDataTrait;
 use App\Common\Product\ProductDataTrait;
 use App\Entity\Employee;
-use App\Repository\AssetsRepository;
-use App\Repository\EmployeeRepository;
-use App\Repository\ProductsRepository;
-use App\Repository\VendorsRepository;
 use DateTimeImmutable;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Security;
 
-class RecycleBinController extends AbstractController
+class RecycleBinController extends AbstractApiController
 {
-    private VendorsRepository $vendorsRepository;
-    private AssetsRepository $assetsRepository;
-    private ProductsRepository $productsRepository;
-    private EmployeeRepository $employeeRepository;
-    private EntityManagerInterface $entityManager;
-    private Security $security;
-
     use ProductDataTrait;
     use AssetListDataTrait;
 
-    public function __construct(
-        VendorsRepository $vendorsRepository,
-        AssetsRepository $assetsRepository,
-        ProductsRepository $productsRepository,
-        EmployeeRepository $employeeRepository,
-        EntityManagerInterface $entityManager,
-        Security $security,
-    ){
-        $this->vendorsRepository = $vendorsRepository;
-        $this->assetsRepository = $assetsRepository;
-        $this->productsRepository = $productsRepository;
-        $this->employeeRepository = $employeeRepository;
-        $this->entityManager = $entityManager;
-        $this->security = $security;
-    }
     #[Route('/ams/recycle/vendors', name: 'app_recycle_vendors')]
     public function recycleVendors(): Response
     {
@@ -76,9 +47,10 @@ class RecycleBinController extends AbstractController
     public function recycleAssets(): Response
     {
         $assets = $this->assetsRepository->findBy(['isDeleted' => 1]);
+        $assignedAssetIds = array_column($this->assigningAssetsRepository->findIds(), 'id');
         $data = [];
         foreach ($assets as $asset) {
-            $data[$asset->getId()] = $this->assetsListData($asset, $this->vendorsRepository);
+            $data[$asset->getId()] = $this->assetsListData($assignedAssetIds, $asset, $this->vendorsRepository);
         }
 
         return $this->render('recycle_bin/asset-list.html.twig', [

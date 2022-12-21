@@ -2,46 +2,17 @@
 
 namespace App\Controller;
 
+use App\Common\NamesTrait;
 use App\Entity\Employee;
-use App\Repository\DepartmentRepository;
-use App\Repository\EmployeeRepository;
-use App\Repository\LocationRepository;
 use DateTimeImmutable;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Security;
 
-class EmployeesController extends AbstractController
+class EmployeesController extends AbstractApiController
 {
-    private EmployeeRepository $employeeRepository;
-    private EntityManagerInterface $entityManager;
-    private Security $security;
-    private LocationRepository $locationRepository;
-    private DepartmentRepository $departmentRepository;
-    private UserPasswordHasherInterface $hasher;
-
-    public function __construct(
-        EmployeeRepository          $employeeRepository,
-        LocationRepository          $locationRepository,
-        DepartmentRepository        $departmentRepository,
-        EntityManagerInterface      $entityManager,
-        Security                    $security,
-        UserPasswordHasherInterface $hasher
-    )
-    {
-        $this->employeeRepository = $employeeRepository;
-        $this->entityManager = $entityManager;
-        $this->security = $security;
-        $this->locationRepository = $locationRepository;
-        $this->departmentRepository = $departmentRepository;
-        $this->hasher = $hasher;
-    }
-
+    use NamesTrait;
     #[Route('/ams/employees', name: 'app_employees')]
     public function employee(): Response
     {
@@ -55,9 +26,9 @@ class EmployeesController extends AbstractController
     #[Route('/ams/add-employee', name: 'app_add_employee')]
     public function addEmployee(): Response
     {
-        $locations = $this->locationRepository->findBy(['isDeleted' => 0]);
-        $departments = $this->departmentRepository->findBy(['isDeleted' => 0]);
-        $employees = $this->employeeRepository->findBy(['isDeleted' => 0]);
+        $locations = $this->locationRepository->findAll();
+        $departments = $this->departmentRepository->findAll();
+        $employees = $this->employeeRepository->findAll();
         return $this->render('employees/add-employee.html.twig', [
             'locations' => $locations,
             'departments' => $departments,
@@ -90,15 +61,17 @@ class EmployeesController extends AbstractController
                     ->setRoles(['ROLE_USER'])
                     ->setCreatedAt(new DateTimeImmutable())
                     ->setCreatedBy($user->getId())
-                    ->setUpdatedAt(null)
-                    ->setUpdatedBy(null);
+                    ->setIsDeleted(0)
+                ;
                 $this->entityManager->persist($employee);
                 $this->entityManager->flush();
+
+                return new RedirectResponse('employees');
             }
 
             $this->addFlash("error", "Sorry, ".$email." already exists. please try with another new email" );
 
-            return new RedirectResponse('employees');
+            return new RedirectResponse('add-employee');
         }
         $this->addFlash("error", "Sorry, you must have to fill email and password field");
 

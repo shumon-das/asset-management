@@ -4,28 +4,21 @@ namespace App\Controller;
 
 use App\Common\Uploads\UploadAssetsTrait;
 use App\Common\Uploads\UploadAssignedAssetsTrait;
+use App\Common\Uploads\UploadEmployeesTrait;
 use App\Common\Uploads\UploadProductsTrait;
 use App\Common\Uploads\UploadVendorsTrait;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class UploadsController extends AbstractController
+class UploadsController extends AbstractApiController
 {
     use UploadVendorsTrait;
     use UploadProductsTrait;
     use UploadAssetsTrait;
     use UploadAssignedAssetsTrait;
-
-    private EntityManagerInterface $entityManager;
-
-    public function __construct(EntityManagerInterface $entityManager)
-    {
-        $this->entityManager = $entityManager;
-    }
+    use UploadEmployeesTrait;
 
     #[Route('/ams/upload-vendors-file', name: 'app_upload_vendors_file')]
     public function uploadVendorsFile(): Response
@@ -72,20 +65,20 @@ class UploadsController extends AbstractController
         return new RedirectResponse('assets');
     }
 
-//    #[Route('/upload-assets-file', name: 'app_upload_assets_files')]
-//    public function uploadEmployees(): Response
-//    {
-//        return $this->render('uploads/upload-assets-file.html.twig', [
-//            'controller_name' => 'UploadsController',
-//        ]);
-//    }
-//
-//    #[Route('/upload-assets', name: 'app_upload_assets')]
-//    public function uploadEmployeesFiles(Request $request): RedirectResponse
-//    {
-//        $this->importAssets($request, $this->entityManager);
-//        return new RedirectResponse('assets');
-//    }
+    #[Route('/upload-employees-file', name: 'app_upload_employees_files', methods: 'GET')]
+    public function uploadEmployees(): Response
+    {
+        return $this->render('uploads/upload-employees-file.html.twig', [
+            'controller_name' => 'UploadsController',
+        ]);
+    }
+
+    #[Route('/upload-employees', name: 'app_upload_employees')]
+    public function uploadEmployeesFiles(Request $request): RedirectResponse
+    {
+        $this->importEmployees($request, $this->entityManager);
+        return new RedirectResponse('employees');
+    }
 
     #[Route('/ams/upload-assigned-assets-file', name: 'app_upload_assigned_assets_files', methods: 'GET')]
     public function uploadAssignedAssets(): Response

@@ -3,24 +3,14 @@
 namespace App\Controller;
 
 use App\Entity\Department;
-use App\Repository\DepartmentRepository;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Entity\Employee;
+use DateTimeImmutable;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class DepartmentsController extends AbstractController
+class DepartmentsController extends AbstractApiController
 {
-    private DepartmentRepository $departmentRepository;
-    private EntityManagerInterface $entityManager;
-
-    public function __construct(DepartmentRepository $departmentRepository, EntityManagerInterface $entityManager)
-    {
-        $this->departmentRepository = $departmentRepository;
-        $this->entityManager = $entityManager;
-    }
-
     #[Route('/ams/departments', name: 'app_departments')]
     public function departments(): Response
     {
@@ -34,6 +24,8 @@ class DepartmentsController extends AbstractController
     #[Route('/ams/add-department', name: 'app_add_department')]
     public function addDepartment(Request $request): Response
     {
+        /** @var Employee $user */
+        $user = $this->security->getUser();
         $request = $request->request;
         if (false === empty($request->get('departmentName'))) {
             $department = new Department();
@@ -41,7 +33,11 @@ class DepartmentsController extends AbstractController
                 ->setDepartmentName($request->get('departmentName'))
                 ->setContactPerson($request->get('contactPerson'))
                 ->setContactPersonEmail($request->get('contactPersonEmail'))
-                ->setContactPersonPhone($request->get('contactPersonPhone'));
+                ->setContactPersonPhone($request->get('contactPersonPhone'))
+                ->setCreatedBy($user->getCreatedBy())
+                ->setCreatedAt(new DateTimeImmutable())
+                ->setIsDeleted(0)
+            ;
             $this->entityManager->persist($department);
             $this->entityManager->flush();
             return $this->render('departments/departments.html.twig', [
@@ -54,10 +50,17 @@ class DepartmentsController extends AbstractController
     }
 
     #[Route('/ams/delete-department/{id}', name: 'delete_department')]
-    public function deleteAsset(int $id, Request $request): Response
+    public function deleteDepartment(int $id, Request $request): Response
     {
+        /** @var Employee $user */
+        $user = $this->security->getUser();
         $location = $this->departmentRepository->find($id);
-        $location->setIsDeleted(1);
+        $location
+            ->setIsDeleted(1)
+            ->setDeletedAt(new DateTimeImmutable())
+            ->setDeletedBy($user->getId())
+        ;
+
         $this->entityManager->persist($location);
         $this->entityManager->flush();
 

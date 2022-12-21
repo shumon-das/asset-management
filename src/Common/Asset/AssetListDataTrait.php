@@ -18,7 +18,7 @@ trait AssetListDataTrait
             'vendor' => $vendor?->getVendorName(),
             'assetName' => $asset->getAssetName(),
             'assign' => in_array($asset->getId(),$assignedAssetsIds),
-            'serialNumber' => $asset->getSeriulNumber(),
+            'serialNumber' => $asset->getSerialNumber(),
         ];
     }
 }

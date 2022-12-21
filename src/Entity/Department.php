@@ -2,12 +2,17 @@
 
 namespace App\Entity;
 
+use App\Common\CommonMethodsTrait\DeletedMethodsTraits\DeletedMethodsTrait;
+use App\Common\CommonMethodsTrait\UserMethodsTraits\UserMethodsTrait;
 use App\Repository\DepartmentRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: DepartmentRepository::class)]
 class Department
 {
+    use DeletedMethodsTrait;
+    use UserMethodsTrait;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -27,6 +32,24 @@ class Department
 
     #[ORM\Column(nullable: true)]
     private ?bool $isDeleted = null;
+
+    #[ORM\Column]
+    private ?\DateTimeImmutable $createdAt = null;
+
+    #[ORM\Column]
+    private ?int $createdBy = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $updatedAt = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $updatedBy = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $deletedAt = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $deletedBy = null;
 
     public function getId(): ?int
     {
@@ -77,18 +100,6 @@ class Department
     public function setContactPersonPhone(?string $contactPersonPhone): self
     {
         $this->contactPersonPhone = $contactPersonPhone;
-
-        return $this;
-    }
-
-    public function isIsDeleted(): ?bool
-    {
-        return $this->isDeleted;
-    }
-
-    public function setIsDeleted(?bool $isDeleted): self
-    {
-        $this->isDeleted = $isDeleted;
 
         return $this;
     }

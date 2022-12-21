@@ -2,11 +2,10 @@
 
 namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class NotificationsController extends AbstractController
+class NotificationsController extends AbstractApiController
 {
     #[Route('/ams/notifications', name: 'app_notifications')]
     public function index(): Response

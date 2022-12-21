@@ -16,9 +16,9 @@ trait GetVendorNameTrait
         $this->employeeRepository = $employeeRepository;
     }
 
-    public function getVendorNameById(int $id): string
+    public function getVendorNameById(int $id): ?string
     {
-        return $this->vendorsRepository->find($id)->getVendorName();
+        return $this->vendorsRepository->find($id)?->getVendorName();
 
     }
 

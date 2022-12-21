@@ -4,35 +4,13 @@ namespace App\Controller;
 
 use App\Entity\Employee;
 use App\Entity\Vendors;
-use App\Repository\EmployeeRepository;
-use App\Repository\VendorsRepository;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Security;
 
-class VendorsController extends AbstractController
+class VendorsController extends AbstractApiController
 {
-    private VendorsRepository $vendorsRepository;
-    private EntityManagerInterface $entityManager;
-    private Security $security;
-    private EmployeeRepository $employeeRepository;
-
-    public function __construct(
-        VendorsRepository $vendorsRepository,
-        EntityManagerInterface $entityManager,
-        Security $security,
-        EmployeeRepository $employeeRepository
-    ){
-        $this->vendorsRepository = $vendorsRepository;
-        $this->entityManager = $entityManager;
-        $this->security = $security;
-        $this->employeeRepository = $employeeRepository;
-    }
-
     #[Route('/ams/vendors', name: 'app_vendors')]
     public function vendors(): Response
     {

@@ -3,6 +3,7 @@
 namespace App\Common\Exports;
 
 use App\Common\GetVendorNameTrait;
+use App\Common\NamesTrait;
 use App\Repository\AssetsRepository;
 use App\Repository\AssigningAssetsRepository;
 use App\Repository\DepartmentRepository;
@@ -17,6 +18,7 @@ trait DrawAssignedAssetsSheetHeadTrait
     private LocationRepository $locationRepository;
     private AssetsRepository $assetsRepository;
     use GetVendorNameTrait;
+    use NamesTrait;
 
     public function __construct(
         AssigningAssetsRepository $assigningAssetsRepository,
@@ -55,20 +57,23 @@ trait DrawAssignedAssetsSheetHeadTrait
         $sheet->getCell('H1')->setValue('Department');
         $sheet->getCell('I1')->setValue('Assign To');
         $sheet->getCell('J1')->setValue('Description');
+        $sheet->getCell('J1')->setValue('Created At');
 
+        $names = $this->allEntityIdsAndNames();
         $assets = $this->assigningAssetsRepository->findAll();
         $rowAct = 3;
         foreach ($assets as $key => $row) {
             $sheet->getCell('A'.$rowAct)->setValue('#'.$row->getId());
             $sheet->getCell('B'.$rowAct)->setValue($row->getProductCategory());
-            $sheet->getCell('C'.$rowAct)->setValue($row->getProductType());
-            $sheet->getCell('D'.$rowAct)->setValue($row->getProduct());
-            $sheet->getCell('E'.$rowAct)->setValue($this->getVendorNameById($row->getVendor()));
-            $sheet->getCell('F'.$rowAct)->setValue($this->locationRepository->findOneBy(['id' => $row->getLocation()])->getOfficName());
-            $sheet->getCell('G'.$rowAct)->setValue($this->assetsRepository->findOneBy(['id' => $row->getAssetName()])->getAssetName());
-            $sheet->getCell('H'.$rowAct)->setValue($this->departmentRepository->findOneBy(['id' => $row->getDepartment()])->getDepartmentName());
-            $sheet->getCell('I'.$rowAct)->setValue($this->getEmployeeNameById($row->getAssignTo()));
+            $sheet->getCell('C'.$rowAct)->setValue($row->getProductType() ? $names['productTypeIds'][$row->getProductType()] ?? 0 : 0);
+            $sheet->getCell('D'.$rowAct)->setValue($row->getProduct() ? $names['productsIds'][$row->getProduct()] ?? 0 : 0);
+            $sheet->getCell('E'.$rowAct)->setValue($row->getVendor() ? $names['vendorsIds'][$row->getVendor()] ?? 0 : 0);
+            $sheet->getCell('F'.$rowAct)->setValue($row->getLocation() ? $names['locationsIds'][$row->getLocation()] ?? 0 : 0);
+            $sheet->getCell('G'.$rowAct)->setValue($row->getAssetName() ? $names['assetsIds'][$row->getAssetName()] ?? 0 : 0);
+            $sheet->getCell('H'.$rowAct)->setValue($row->getDepartment() ? $names['departmentsIds'][$row->getDepartment()] ?? 0 : 0);
+            $sheet->getCell('I'.$rowAct)->setValue($row->getAssignTo() ? $names['employeesIds'][$row->getAssignTo()] ?? 0 : 0);
             $sheet->getCell('J'.$rowAct)->setValue($row->getDescription());
+            $sheet->getCell('J'.$rowAct)->setValue($row->getCreatedAt()->format('Y-M-d'));
 
             $rowAct++;
         }

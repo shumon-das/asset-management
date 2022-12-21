@@ -2,6 +2,10 @@
 
 namespace App\Entity;
 
+use App\Common\CommonMethodsTrait\DeletedMethodsTraits\DeletedMethodsTrait;
+use App\Common\CommonMethodsTrait\DescriptionMethodsTrait;
+use App\Common\CommonMethodsTrait\StatusMethodsTrait;
+use App\Common\CommonMethodsTrait\UserMethodsTraits\UserMethodsTrait;
 use App\Repository\AssetsRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -9,6 +13,11 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: AssetsRepository::class)]
 class Assets
 {
+    use DeletedMethodsTrait;
+    use UserMethodsTrait;
+    use StatusMethodsTrait;
+    use DescriptionMethodsTrait;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -30,7 +39,7 @@ class Assets
     private ?string $assetName = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $seriulNumber = null;
+    private ?string $serialNumber = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $price = null;
@@ -151,14 +160,14 @@ class Assets
         return $this;
     }
 
-    public function getSeriulNumber(): ?string
+    public function getSerialNumber(): ?string
     {
-        return $this->seriulNumber;
+        return $this->serialNumber;
     }
 
-    public function setSeriulNumber(?string $seriulNumber): self
+    public function setSerialNumber(?string $serialNumber): self
     {
-        $this->seriulNumber = $seriulNumber;
+        $this->serialNumber = $serialNumber;
 
         return $this;
     }
@@ -235,18 +244,6 @@ class Assets
         return $this;
     }
 
-    public function getDescription(): ?string
-    {
-        return $this->description;
-    }
-
-    public function setDescription(?string $description): self
-    {
-        $this->description = $description;
-
-        return $this;
-    }
-
     public function getUsefulLife(): ?string
     {
         return $this->usefulLife;
@@ -279,102 +276,6 @@ class Assets
     public function setRate(?string $rate): self
     {
         $this->rate = $rate;
-
-        return $this;
-    }
-
-    public function getCreatedBy(): ?int
-    {
-        return $this->createdBy;
-    }
-
-    public function setCreatedBy(?int $createdBy): self
-    {
-        $this->createdBy = $createdBy;
-
-        return $this;
-    }
-
-    public function getUpdatedBy(): ?int
-    {
-        return $this->updatedBy;
-    }
-
-    public function setUpdatedBy(?int $updatedBy): self
-    {
-        $this->updatedBy = $updatedBy;
-
-        return $this;
-    }
-
-    public function getDeletedBy(): ?int
-    {
-        return $this->deletedBy;
-    }
-
-    public function setDeletedBy(?int $deletedBy): self
-    {
-        $this->deletedBy = $deletedBy;
-
-        return $this;
-    }
-
-    public function getCreatedAt(): ?\DateTimeImmutable
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(\DateTimeImmutable $createdAt): self
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
-    }
-
-    public function getUpdatedAt(): ?\DateTimeImmutable
-    {
-        return $this->updatedAt;
-    }
-
-    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): self
-    {
-        $this->updatedAt = $updatedAt;
-
-        return $this;
-    }
-
-    public function getDeletedAt(): ?\DateTimeImmutable
-    {
-        return $this->deletedAt;
-    }
-
-    public function setDeletedAt(?\DateTimeImmutable $deletedAt): self
-    {
-        $this->deletedAt = $deletedAt;
-
-        return $this;
-    }
-
-    public function isStatus(): ?bool
-    {
-        return $this->status;
-    }
-
-    public function setStatus(?bool $status): self
-    {
-        $this->status = $status;
-
-        return $this;
-    }
-
-    public function isIsDeleted(): ?bool
-    {
-        return $this->isDeleted;
-    }
-
-    public function setIsDeleted(?bool $isDeleted): self
-    {
-        $this->isDeleted = $isDeleted;
 
         return $this;
     }

@@ -12,6 +12,7 @@ use App\Repository\ProductsRepository;
 use App\Repository\VendorsRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\Security;
 
 class AbstractApiController extends AbstractController
@@ -25,6 +26,7 @@ class AbstractApiController extends AbstractController
     public AssetsRepository $assetsRepository;
     public LocationRepository $locationRepository;
     public DepartmentRepository $departmentRepository;
+    public UserPasswordHasherInterface $hasher;
     use NamesTrait;
 
     public function __construct(
@@ -36,7 +38,8 @@ class AbstractApiController extends AbstractController
         DepartmentRepository      $departmentRepository,
         EmployeeRepository        $employeeRepository,
         EntityManagerInterface    $entityManager,
-        Security                  $security
+        Security                  $security,
+        UserPasswordHasherInterface $hasher
     )
     {
         $this->assigningAssetsRepository = $assigningAssetsRepository;
@@ -48,6 +51,7 @@ class AbstractApiController extends AbstractController
         $this->assetsRepository = $assetsRepository;
         $this->locationRepository = $locationRepository;
         $this->departmentRepository = $departmentRepository;
+        $this->hasher = $hasher;
     }
 
     public function getRepositoriesData(): array

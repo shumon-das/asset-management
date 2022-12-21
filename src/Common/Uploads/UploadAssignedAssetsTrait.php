@@ -31,7 +31,6 @@ trait UploadAssignedAssetsTrait
                     ->setDescription($row[8])
                     ->setStatus(true)
                     ->setCreatedAt(new \DateTimeImmutable())
-                    ->setDeletedBy(null)
                     ->setCreatedBy(1)
                 ;
                 $entityManager->persist($assignedAsset);

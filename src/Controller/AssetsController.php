@@ -3,57 +3,22 @@
 namespace App\Controller;
 
 use App\Common\Asset\AssetListDataTrait;
+use App\Common\NamesTrait;
 use App\Entity\Assets;
 use App\Entity\Employee;
 use App\Repository\AssetsRepository;
-use App\Repository\AssigningAssetsRepository;
-use App\Repository\EmployeeRepository;
-use App\Repository\ProductsRepository;
-use App\Repository\VendorsRepository;
 use DateTimeImmutable;
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\NonUniqueResultException;
 use Exception;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Security;
 
-class AssetsController extends AbstractController
+class AssetsController extends AbstractApiController
 {
-    private AssetsRepository $assetsRepository;
-    private VendorsRepository $vendorsRepository;
-    private ProductsRepository $productsRepository;
-    private EntityManagerInterface $entityManager;
-    private EmployeeRepository $employeeRepository;
-    private Security $security;
-    private AssigningAssetsRepository $assigningAssetsRepository;
-
     use AssetListDataTrait;
+    use NamesTrait;
 
-    public function __construct(
-        AssetsRepository $assetsRepository,
-        VendorsRepository $vendorsRepository,
-        ProductsRepository $productsRepository,
-        EntityManagerInterface $entityManager,
-        EmployeeRepository $employeeRepository,
-        AssigningAssetsRepository $assigningAssetsRepository,
-        Security $security
-    ){
-        $this->assetsRepository = $assetsRepository;
-        $this->vendorsRepository = $vendorsRepository;
-        $this->productsRepository = $productsRepository;
-        $this->entityManager = $entityManager;
-        $this->employeeRepository = $employeeRepository;
-        $this->security = $security;
-        $this->assigningAssetsRepository = $assigningAssetsRepository;
-    }
-
-    /**
-     * @throws NonUniqueResultException
-     */
     #[Route('/ams/assets', name: 'app_assets')]
     public function assets(): Response
     {
@@ -99,7 +64,7 @@ class AssetsController extends AbstractController
             ->setProduct($request->get('product'))
             ->setVendor($request->get('vendor'))
             ->setAssetName($request->get('asset-name'))
-            ->setSeriulNumber($request->get('serial-number'))
+            ->setSerialNumber($request->get('serial-number'))
             ->setPrice($request->get('price'))
             ->setDescriptionType($request->get('description-type'))
             ->setLocation($request->get('location'))
@@ -156,7 +121,7 @@ class AssetsController extends AbstractController
             ->setProduct($request->get('product'))
             ->setVendor($request->get('vendor'))
             ->setAssetName($request->get('asset-name'))
-            ->setSeriulNumber($request->get('serial-number'))
+            ->setSerialNumber($request->get('serial-number'))
             ->setPrice($request->get('price'))
             ->setDescriptionType($request->get('description-type'))
             ->setLocation($request->get('location'))
@@ -202,6 +167,7 @@ class AssetsController extends AbstractController
 
         return $this->redirect($request->headers->get('referer'));
     }
+
     #[Route('/ams/delete-asset-permanently/{id}', name: 'delete_asset_permanently')]
     public function deletePermanently($id, Request $request): Response
     {
@@ -216,16 +182,15 @@ class AssetsController extends AbstractController
 
     private function singleAsset(?Assets $asset): array
     {
-        $vendor = $this->vendorsRepository->find($asset->getVendor());
         return [
             'id' => $asset->getId(),
             'productCategory' => $asset->getProductCategory(),
             'productType' => $asset->getProductType(),
             'product' => $asset->getProduct(),
-            'vendor' => $vendor?->getVendorName(),
-            'vendorId' => $vendor?->getId(),
+            'vendor' => $asset->getVendor() ? $this->allEntityIdsAndNames()['vendorsIds'][$asset->getVendor()] : null,
+            'vendorId' => $asset->getVendor(),
             'assetName' => $asset->getAssetName(),
-            'seriulNumber' => $asset->getSeriulNumber(),
+            'serialNumber' => $asset->getSerialNumber(),
             'price' => $asset->getPrice(),
             'descriptionType' => $asset->getDescriptionType(),
             'location' => $asset->getLocation(),
@@ -237,7 +202,7 @@ class AssetsController extends AbstractController
             'residualValue' => $asset->getResidualValue(),
             'rate' => $asset->getRate(),
             'createdAt' => $asset->getCreatedAt()->format('Y-M-d'),
-            'createdBy' => ucwords($this->employeeRepository->find($asset->getCreatedBy())->getName()),
+            'createdBy' => ucwords($this->allEntityIdsAndNames()['employeesIds'][$asset->getCreatedBy()]),
             'status' => $asset->isStatus() ? "Active" : "Not Active",
         ];
     }
