@@ -4,13 +4,15 @@ namespace App\Common\Uploads;
 
 use App\Entity\Assets;
 use App\Entity\AssigningAssets;
+use App\Entity\Employee;
 use Doctrine\ORM\EntityManagerInterface;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 trait UploadAssignedAssetsTrait
 {
-    public function importAssignedAssets(Request $request, EntityManagerInterface $entityManager): void
+    public function importAssignedAssets(Request $request, UserInterface $user, EntityManagerInterface $entityManager): void
     {
         $assignedAssetFile = $request->files->get('assigned-assets-csv');
         $spreadsheet = IOFactory::load($assignedAssetFile);
@@ -31,7 +33,7 @@ trait UploadAssignedAssetsTrait
                     ->setDescription($row[8])
                     ->setStatus(true)
                     ->setCreatedAt(new \DateTimeImmutable())
-                    ->setCreatedBy(1)
+                    ->setCreatedBy($user->getId())
                 ;
                 $entityManager->persist($assignedAsset);
             }

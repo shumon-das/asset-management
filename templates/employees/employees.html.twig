@@ -42,8 +42,9 @@
                     <div class="col-12">
                         <div class="card">
                             <div class="card-header">
-                                <a href="{{ path('app_add_employee') }}" class="btn btn-primary btn-sm">add new
-                                    employee</a>
+                                <a href="{{ path('app_add_employee') }}" class="btn btn-primary btn-sm">
+                                    <i class="fas fa-plus-circle mr-1"></i> add new employee
+                                </a>
                             </div>
                             <div class="card-body">
                                 <table id="example1" class="table table-bordered table-striped">
@@ -70,8 +71,18 @@
                                             <td>
                                                 <div class="row d-sm-flex justify-content-sm-around">
                                                     <a href="#" class="btn btn-info btn-sm"><i class="fas fa-edit"></i></a>
-                                                    <a href="{{ path('delete_employee', {id: em.id}) }}" class="btn btn-danger btn-sm"><i
-                                                                class="fas fa-trash"></i></a>
+                                                    {% if recycle is defined %}
+                                                        <a href="{{ path( 'revert_employee', {id: em.id}) }}" class="btn btn-primary restore btn-sm">
+                                                              <i class="fas fa-backward"></i>
+                                                        </a>
+                                                         <a href="{{ path( 'delete_employee_permanently', {id: em.id}) }}" class="btn btn-danger restore btn-sm">
+                                                              <i class="fas fa-trash-restore"></i>
+                                                        </a>
+                                                    {% else %}
+                                                        <a href="{{ path('delete_employee', {id: em.id}) }}" class="btn btn-danger btn-sm">
+                                                            <i class="fas fa-trash"></i>
+                                                        </a>
+                                                    {% endif %}
                                                 </div>
                                             </td>
                                         </tr>

@@ -114,15 +114,8 @@ class AdminsController extends AbstractController
     #[Route('/ams/delete-location/{id}', name: 'delete_location')]
     public function deleteAsset(int $id, Request $request): Response
     {
-        /** @var Employee $user */
-        $user = $this->security->getUser();
         $location = $this->locationRepository->find($id);
-        $location
-            ->setIsDeleted(1)
-            ->setDeletedBy($user->getId())
-            ->setDeletedAt(new DateTimeImmutable())
-        ;
-        $this->entityManager->persist($location);
+        $this->entityManager->remove($location);
         $this->entityManager->flush();
 
         return $this->redirect($request->headers->get('referer'));

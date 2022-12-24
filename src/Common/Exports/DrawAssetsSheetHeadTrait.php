@@ -2,21 +2,13 @@
 
 namespace App\Common\Exports;
 
-use App\Common\GetVendorNameTrait;
-use App\Repository\AssetsRepository;
+use App\Common\NamesTrait;
 use Exception;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 trait DrawAssetsSheetHeadTrait
 {
-    private AssetsRepository $assetsRepository;
-    use GetVendorNameTrait;
-
-    public function __construct(AssetsRepository $assetsRepository)
-    {
-        $this->assetsRepository = $assetsRepository;
-    }
-
+    use NamesTrait;
     /**
      * @throws Exception
      */
@@ -57,11 +49,12 @@ trait DrawAssetsSheetHeadTrait
         $assets = $this->assetsRepository->findAll();
         $rowAct = 3;
         foreach ($assets as $key => $row) {
+            $vendor = $this->allEntityIdsAndNames()['vendorsIds'][$row->getVendor()] ?? 0;
             $sheet->getCell('A'.$rowAct)->setValue('#'.$row->getId());
             $sheet->getCell('B'.$rowAct)->setValue($row->getProductCategory());
             $sheet->getCell('C'.$rowAct)->setValue($row->getProductType());
             $sheet->getCell('D'.$rowAct)->setValue($row->getProduct());
-            $sheet->getCell('E'.$rowAct)->setValue($this->getVendorNameById($row->getVendor()));
+            $sheet->getCell('E'.$rowAct)->setValue($vendor);
             $sheet->getCell('F'.$rowAct)->setValue($row->getAssetName());
             $sheet->getCell('G'.$rowAct)->setValue($row->getSerialNumber());
             $sheet->getCell('H'.$rowAct)->setValue($row->getPrice());

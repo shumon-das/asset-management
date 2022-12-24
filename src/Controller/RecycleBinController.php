@@ -20,8 +20,9 @@ class RecycleBinController extends AbstractApiController
     {
         $vendors = $this->vendorsRepository->findBy(['isDeleted' => 1]);
 
-        return $this->render('recycle_bin/vendors.html.twig', [
+        return $this->render('vendors/vendors.html.twig', [
             'vendors' => $vendors,
+            'recycle' => 'recycle',
         ]);
     }
 
@@ -53,8 +54,9 @@ class RecycleBinController extends AbstractApiController
             $data[$asset->getId()] = $this->assetsListData($assignedAssetIds, $asset, $this->vendorsRepository);
         }
 
-        return $this->render('recycle_bin/asset-list.html.twig', [
+        return $this->render('assets/asset-list.html.twig', [
             'assets' => $data,
+            'recycle' => 'recycle'
         ]);
     }
 
@@ -82,8 +84,9 @@ class RecycleBinController extends AbstractApiController
             $products[$key] = $this->productData($row, $this->employeeRepository);
         }
 
-        return $this->render('recycle_bin/products.html.twig', [
+        return $this->render('products/products.html.twig', [
             'products' => $products,
+            'recycle' => 'recycle'
         ]);
     }
 
@@ -98,6 +101,28 @@ class RecycleBinController extends AbstractApiController
                 ->setDeletedAt(new DateTimeImmutable())
         ;
         $this->entityManager->persist($product);
+        $this->entityManager->flush();
+
+        return $this->redirect($request->headers->get('referer'));
+    }
+
+    #[Route('/ams/recycle/employees', name: 'app_recycle_employees')]
+    public function employee(): Response
+    {
+        $employees = $this->employeeRepository->findBy(['isDeleted' => 1]);
+
+        return $this->render('employees/employees.html.twig', [
+            'employees' => $employees,
+            'recycle' => 'recycle'
+        ]);
+    }
+
+    #[Route('/ams/revert-employee/{id}', name: 'revert_employee')]
+    public function deleteEmployee(int $id, Request $request): Response
+    {
+        $location = $this->employeeRepository->find($id);
+        $location->setIsDeleted(0);
+        $this->entityManager->persist($location);
         $this->entityManager->flush();
 
         return $this->redirect($request->headers->get('referer'));

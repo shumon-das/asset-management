@@ -51,7 +51,7 @@ class AssigningController extends AbstractApiController
         $user = $this->security->getUser();
         $assignedAsset = $this->assigningAssetsRepository->find($id);
         $assignedAsset
-            ->setIsDeleted($user->getId())
+            ->setIsDeleted(1)
             ->setDeletedAt(new DateTimeImmutable())
             ->setDeletedBy($user->getId());
         $this->entityManager->persist($assignedAsset);
@@ -79,11 +79,7 @@ class AssigningController extends AbstractApiController
             ->setDescription($request->get('description'))
             ->setIsDeleted(0)
             ->setCreatedBy($user->getId())
-            ->setUpdatedBy(null)
-            ->setDeletedBy(null)
             ->setCreatedAt(new DateTimeImmutable())
-            ->setUpdatedAt(null)
-            ->setDeletedAt(null)
             ->setStatus(true);
         $this->entityManager->persist($assignAsset);
         $this->entityManager->flush();

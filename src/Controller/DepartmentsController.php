@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Department;
 use App\Entity\Employee;
 use DateTimeImmutable;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -22,7 +23,7 @@ class DepartmentsController extends AbstractApiController
     }
 
     #[Route('/ams/add-department', name: 'app_add_department')]
-    public function addDepartment(Request $request): Response
+    public function addDepartment(Request $request): RedirectResponse|Response
     {
         /** @var Employee $user */
         $user = $this->security->getUser();
@@ -40,10 +41,10 @@ class DepartmentsController extends AbstractApiController
             ;
             $this->entityManager->persist($department);
             $this->entityManager->flush();
-            return $this->render('departments/departments.html.twig', [
-                'controller_name' => 'DepartmentsController',
-            ]);
+            return new RedirectResponse('departments');
         }
+
+        $this->addFlash('errors', 'department name should not be empty');
         return $this->render('departments/add-department.html.twig', [
             'controller_name' => 'DepartmentsController',
         ]);
@@ -52,16 +53,8 @@ class DepartmentsController extends AbstractApiController
     #[Route('/ams/delete-department/{id}', name: 'delete_department')]
     public function deleteDepartment(int $id, Request $request): Response
     {
-        /** @var Employee $user */
-        $user = $this->security->getUser();
-        $location = $this->departmentRepository->find($id);
-        $location
-            ->setIsDeleted(1)
-            ->setDeletedAt(new DateTimeImmutable())
-            ->setDeletedBy($user->getId())
-        ;
-
-        $this->entityManager->persist($location);
+        $department = $this->departmentRepository->find($id);
+        $this->entityManager->remove($department);
         $this->entityManager->flush();
 
         return $this->redirect($request->headers->get('referer'));

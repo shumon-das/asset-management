@@ -10,12 +10,6 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 trait DrawEmployeesSheetHeadTrait
 {
     use NamesTrait;
-    private EmployeeRepository $employeeRepository;
-
-    public function __construct(EmployeeRepository $employeeRepository)
-    {
-        $this->employeeRepository = $employeeRepository;
-    }
 
     /**
      * @throws Exception

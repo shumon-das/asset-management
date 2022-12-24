@@ -9,13 +9,7 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 trait DrawProductsSheetHeadTrait
 {
-    private ProductsRepository $productsRepository;
-    use GetVendorNameTrait;
-
-    public function __construct(ProductsRepository $productsRepository)
-    {
-        $this->productsRepository = $productsRepository;
-    }
+//    use GetVendorNameTrait;
 
     /**
      * @throws Exception

@@ -42,7 +42,9 @@
           <div class="col-12">
             <div class="card">
               <div class="card-header">
-                <a href="{{ path('app_add_department') }}" class="btn btn-primary btn-sm">add new department</a>
+                <a href="{{ path('app_add_department') }}" class="btn btn-primary btn-sm">
+                   <i class="fas fa-plus-circle mr-1"></i> add new department
+                </a>
               </div>
               <div class="card-body">
                 <table id="example1" class="table table-bordered table-striped">
@@ -66,7 +68,6 @@
                     <td>{{ data.contactPersonPhone }}</td>
                     <td>
                       <div class="row d-sm-flex justify-content-sm-around">
-                        <a href="#" class="btn btn-info btn-sm"><i class="fas fa-edit"></i></a>
                         <a href="{{ path('delete_department', {id: data.id}) }}" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></a>
                       </div>
                     </td>

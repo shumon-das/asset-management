@@ -9,13 +9,7 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 trait DrawManufacturesSheetHeadTrait
 {
-    private ProductsRepository $productsRepository;
-    use GetVendorNameTrait;
-
-    public function __construct(ProductsRepository $productsRepository)
-    {
-        $this->productsRepository = $productsRepository;
-    }
+//    use GetVendorNameTrait;
 
     /**
      * @throws Exception
@@ -27,7 +21,7 @@ trait DrawManufacturesSheetHeadTrait
         $sheet->getColumnDimension('C')->setAutoSize(true);
         $sheet->getCell('A1')->setValue('ID');
         $sheet->getCell('B1')->setValue('Manufacturer');
-//        $sheet->getCell('C1')->setValue('Added At');
+        $sheet->getCell('C1')->setValue('Created At');
 
         $uniqManufacturer = $this->productsRepository->getUniqueManufacturer();
         $products = [];
@@ -39,7 +33,7 @@ trait DrawManufacturesSheetHeadTrait
         foreach ($products as $row) {
             $sheet->getCell('A' . $rowAct)->setValue('#'.$row->getId());
             $sheet->getCell('B' . $rowAct)->setValue($row->getManufacturer());
-//            $sheet->getCell('C' . $rowAct)->setValue($row->getCreatedAt()->format('Y-m-d'));
+            $sheet->getCell('C' . $rowAct)->setValue($row->getCreatedAt()->format('Y-m-d'));
 
             $rowAct++;
         }

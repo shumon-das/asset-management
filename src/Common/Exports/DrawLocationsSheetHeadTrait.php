@@ -8,14 +8,6 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 trait DrawLocationsSheetHeadTrait
 {
-
-    private LocationRepository $locationRepository;
-
-    public function __construct(LocationRepository $locationRepository)
-    {
-        $this->locationRepository = $locationRepository;
-    }
-
     /**
      * @throws Exception
      */

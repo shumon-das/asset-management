@@ -42,8 +42,9 @@
                     <div class="col-12">
                         <div class="card">
                             <div class="card-header">
-                                <a href="{{ path('app_add_product') }}" class="btn btn-primary btn-sm">add new
-                                    product</a>
+                                <a href="{{ path('app_add_product') }}" class="btn btn-primary btn-sm">
+                                    <i class="fas fa-plus-circle mr-1"></i> add new product
+                                </a>
                             </div>
                             <div class="card-body">
                                 <table id="example1" class="table table-bordered table-striped">
@@ -69,8 +70,18 @@
                                                 <div class="row d-sm-flex justify-content-sm-around">
                                                     <a href="{{ path('view_product', {id: product.id}) }}" class="btn btn-success btn-sm"><i class="fas fa-eye"></i></a>
                                                     <a href="{{ path('edit_product', {id: product.id}) }}" class="btn btn-info btn-sm"><i class="fas fa-edit"></i></a>
-                                                    <a href="{{ path('delete_product', {id: product.id}) }}" class="btn btn-danger btn-sm"><i
-                                                                class="fas fa-trash"></i></a>
+                                                    {% if recycle is defined %}
+                                                        <a href="{{ path( 'revert_product', {id: product.id}) }}" class="btn btn-primary restore btn-sm">
+                                                              <i class="fas fa-backward"></i>
+                                                        </a>
+                                                         <a href="{{ path( 'delete_product_permanently', {id: product.id}) }}" class="btn btn-danger restore btn-sm">
+                                                              <i class="fas fa-trash-restore"></i>
+                                                        </a>
+                                                    {% else %}
+                                                        <a href="{{ path('delete_product', {id: product.id}) }}" class="btn btn-danger btn-sm">
+                                                            <i class="fas fa-trash"></i>
+                                                        </a>
+                                                    {% endif %}
                                                 </div>
                                             </td>
                                         </tr>

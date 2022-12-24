@@ -8,13 +8,6 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 trait DrawVendorsSheetHeadTrait
 {
-    private VendorsRepository $vendorsRepository;
-
-    public function __construct(VendorsRepository $vendorsRepository)
-    {
-        $this->vendorsRepository = $vendorsRepository;
-    }
-
     /**
      * @throws Exception
      */

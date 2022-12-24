@@ -81,11 +81,21 @@ class EmployeesController extends AbstractApiController
     }
 
     #[Route('/ams/delete-employee/{id}', name: 'delete_employee')]
-    public function deleteAsset(int $id, Request $request): Response
+    public function deleteEmployee(int $id, Request $request): Response
     {
-        $location = $this->employeeRepository->find($id);
-        $location->setIsDeleted(1);
-        $this->entityManager->persist($location);
+        $employee = $this->employeeRepository->find($id);
+        $employee->setIsDeleted(1);
+        $this->entityManager->persist($employee);
+        $this->entityManager->flush();
+
+        return $this->redirect($request->headers->get('referer'));
+    }
+
+    #[Route('/ams/delete-employee-permanently/{id}', name: 'delete_employee_permanently')]
+    public function deleteEmployeePermanently($id, Request $request): Response
+    {
+        $employee = $this->employeeRepository->find($id);
+        $this->entityManager->remove($employee);
         $this->entityManager->flush();
 
         return $this->redirect($request->headers->get('referer'));

@@ -13,24 +13,8 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 trait DrawAssignedAssetsSheetHeadTrait
 {
-    private AssigningAssetsRepository $assigningAssetsRepository;
-    private DepartmentRepository $departmentRepository;
-    private LocationRepository $locationRepository;
-    private AssetsRepository $assetsRepository;
-    use GetVendorNameTrait;
+//    use GetVendorNameTrait;
     use NamesTrait;
-
-    public function __construct(
-        AssigningAssetsRepository $assigningAssetsRepository,
-        DepartmentRepository $departmentRepository,
-        LocationRepository $locationRepository,
-        AssetsRepository $assetsRepository,
-    ){
-        $this->assigningAssetsRepository = $assigningAssetsRepository;
-        $this->departmentRepository = $departmentRepository;
-        $this->locationRepository = $locationRepository;
-        $this->assetsRepository = $assetsRepository;
-    }
 
     /**
      * @throws Exception

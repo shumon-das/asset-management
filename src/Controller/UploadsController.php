@@ -91,7 +91,7 @@ class UploadsController extends AbstractApiController
     #[Route('/ams/upload-assigned-assets', name: 'app_upload_assigned_assets', methods: 'POST')]
     public function uploadAssignedAssetsFiles(Request $request): RedirectResponse
     {
-        $this->importAssignedAssets($request, $this->entityManager);
+        $this->importAssignedAssets($request, $this->user, $this->entityManager);
         return new RedirectResponse('assigned');
     }
 }

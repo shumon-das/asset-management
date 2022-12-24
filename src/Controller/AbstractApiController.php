@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Common\NamesTrait;
+use App\Entity\Employee;
 use App\Repository\AssetsRepository;
 use App\Repository\AssigningAssetsRepository;
 use App\Repository\DepartmentRepository;
@@ -14,6 +15,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class AbstractApiController extends AbstractController
 {
@@ -27,6 +29,9 @@ class AbstractApiController extends AbstractController
     public LocationRepository $locationRepository;
     public DepartmentRepository $departmentRepository;
     public UserPasswordHasherInterface $hasher;
+
+    /** @var Employee $user */
+    public null|UserInterface $user;
     use NamesTrait;
 
     public function __construct(
@@ -39,7 +44,7 @@ class AbstractApiController extends AbstractController
         EmployeeRepository        $employeeRepository,
         EntityManagerInterface    $entityManager,
         Security                  $security,
-        UserPasswordHasherInterface $hasher
+        UserPasswordHasherInterface $hasher,
     )
     {
         $this->assigningAssetsRepository = $assigningAssetsRepository;
@@ -52,6 +57,7 @@ class AbstractApiController extends AbstractController
         $this->locationRepository = $locationRepository;
         $this->departmentRepository = $departmentRepository;
         $this->hasher = $hasher;
+        $this->user = $this->security->getUser();
     }
 
     public function getRepositoriesData(): array
