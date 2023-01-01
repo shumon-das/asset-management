@@ -2,9 +2,8 @@
 
 namespace App\Controller;
 
+use App\Entity\Common\DepartmentMethodsTrait;
 use App\Entity\Department;
-use App\Entity\Employee;
-use DateTimeImmutable;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -12,6 +11,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class DepartmentsController extends AbstractApiController
 {
+    use DepartmentMethodsTrait;
     #[Route('/ams/departments', name: 'app_departments')]
     public function departments(): Response
     {
@@ -25,20 +25,10 @@ class DepartmentsController extends AbstractApiController
     #[Route('/ams/add-department', name: 'app_add_department')]
     public function addDepartment(Request $request): RedirectResponse|Response
     {
-        /** @var Employee $user */
-        $user = $this->security->getUser();
         $request = $request->request;
         if (false === empty($request->get('departmentName'))) {
             $department = new Department();
-            $department
-                ->setDepartmentName($request->get('departmentName'))
-                ->setContactPerson($request->get('contactPerson'))
-                ->setContactPersonEmail($request->get('contactPersonEmail'))
-                ->setContactPersonPhone($request->get('contactPersonPhone'))
-                ->setCreatedBy($user->getCreatedBy())
-                ->setCreatedAt(new DateTimeImmutable())
-                ->setIsDeleted(0)
-            ;
+            $this->departmentMethods($department, $request, false);
             $this->entityManager->persist($department);
             $this->entityManager->flush();
             return new RedirectResponse('departments');

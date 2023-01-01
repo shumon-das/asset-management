@@ -46,7 +46,7 @@
                                     locations</a>
                             </div>
                             <div class="card-body">
-                                <form action="{{ path(location is defined ? 'admin_update_location' : 'admins_save_location') }}" method="post">
+                                <form action="{{ path('admins_save_location') }}" method="post">
                                     <div class="row mb-5">
                                         <div class="col-md-7 text-center">
                                             {% for error in app.flashes('error') %}

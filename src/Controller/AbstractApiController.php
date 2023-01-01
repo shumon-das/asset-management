@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Common\NamesTrait;
 use App\Entity\Employee;
+use App\Entity\Location;
 use App\Repository\AssetsRepository;
 use App\Repository\AssigningAssetsRepository;
 use App\Repository\DepartmentRepository;
@@ -13,6 +14,7 @@ use App\Repository\ProductsRepository;
 use App\Repository\VendorsRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -70,5 +72,12 @@ class AbstractApiController extends AbstractController
             'locations' => $this->locationRepository->findBy(['isDeleted' => 0]),
             'departments' => $this->departmentRepository->findBy(['isDeleted' => 0]),
         ];
+    }
+
+    protected function persistData(Location $entityData): RedirectResponse
+    {
+        $this->entityManager->persist($entityData);
+        $this->entityManager->flush();
+        return new RedirectResponse('location');
     }
 }
