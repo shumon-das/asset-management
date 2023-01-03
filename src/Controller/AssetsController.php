@@ -52,12 +52,22 @@ class AssetsController extends AbstractApiController
      * @throws Exception
      */
     #[Route('/ams/save-assets', name: 'app_save_assets')]
-    public function saveAssets(Request $request, ): RedirectResponse
+    public function saveAssets(Request $request): RedirectResponse
     {
         /** @var Employee $user */
         $user = $this->security->getUser();
         $request = $request->request;
-        $asset = new Assets();
+        if(false === empty($request->get('id'))) {
+            $asset = $this->assetsRepository->find($request->get('id'));
+            $asset
+                ->setUpdatedBy($user->getId())
+                ->setUpdatedAt(new DateTimeImmutable());
+        } else {
+            $asset = new Assets();
+            $asset
+                ->setCreatedBy($user->getId())
+                ->setCreatedAt(new DateTimeImmutable());
+        }
         $asset
             ->setProductCategory($request->get('product-category'))
             ->setProductType($request->get('product-type'))
@@ -77,12 +87,7 @@ class AssetsController extends AbstractApiController
             ->setRate($request->get('rate'))
             ->setIsDeleted(0)
             ->setStatus(true)
-            ->setCreatedBy($user->getId())
-            ->setUpdatedBy(null)
-            ->setDeletedBy(null)
-            ->setCreatedAt(new DateTimeImmutable())
-            ->setUpdatedAt(null)
-            ->setDeletedAt(null);
+        ;
         $this->entityManager->persist($asset);
         $this->entityManager->flush();
 
@@ -103,42 +108,6 @@ class AssetsController extends AbstractApiController
                 'vendors' => $vendors,
             ],
         ]);
-    }
-
-    /**
-     * @throws Exception
-     */
-    #[Route('/ams/update-assets', name: 'app_update_assets')]
-    public function updateAssets(Request $request): RedirectResponse
-    {
-        /** @var Employee $user */
-        $user = $this->security->getUser();
-        $request = $request->request;
-        $asset = $this->assetsRepository->find($request->get('id'));
-        $asset
-            ->setProductCategory($request->get('product-category'))
-            ->setProductType($request->get('product-type'))
-            ->setProduct($request->get('product'))
-            ->setVendor($request->get('vendor'))
-            ->setAssetName($request->get('asset-name'))
-            ->setSerialNumber($request->get('serial-number'))
-            ->setPrice($request->get('price'))
-            ->setDescriptionType($request->get('description-type'))
-            ->setLocation($request->get('location'))
-            ->setPurchaseDate(new DateTimeImmutable($request->get('purchase-date')))
-            ->setWarrantyExpiryDate(new DateTimeImmutable($request->get('warranty-expiry-date')))
-            ->setPurchaseType($request->get('purchase-type'))
-            ->setDescription($request->get('description'))
-            ->setUsefulLife($request->get('useful-life'))
-            ->setResidualValue($request->get('residual-value'))
-            ->setRate($request->get('rate'))
-            ->setUpdatedBy($user->getId())
-            ->setUpdatedAt(new DateTimeImmutable())
-        ;
-        $this->entityManager->persist($asset);
-        $this->entityManager->flush();
-
-        return new RedirectResponse('assets');
     }
 
     #[Route('/ams/view-asset/{id}', name: 'view_asset')]

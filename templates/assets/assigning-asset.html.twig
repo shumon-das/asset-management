@@ -45,7 +45,7 @@
                                 <a href="{{ path('app_assets') }}" class="btn btn-primary btn-sm">back to asset list</a>
                             </div>
                             <div class="card-body">
-                                <form action="{{ path(assignedAsset is defined ? 'update_assigned_asset' : 'save_assign_asset') }}"
+                                <form action="{{ path('save_assign_asset') }}"
                                       method="post">
                                     <div class="row">
                                         <div class="col-md-3">

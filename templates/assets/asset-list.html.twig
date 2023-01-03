@@ -56,7 +56,6 @@
                                         <th>Product Type</th>
                                         <th>Product</th>
                                         <th>Vendor</th>
-                                        <th>Current State</th>
                                         <th>Assign</th>
                                         <th>Action</th>
                                     </tr>
@@ -70,7 +69,6 @@
                                             <td>{{ asset.productType }}</td>
                                             <td>{{ asset.product }}</td>
                                             <td>{{ asset.vendor }}</td>
-                                            <td>sdfsdf</td>
                                             <td>
                                                 {% if asset.assign %}
                                                     <a href="{{ path('edit_assigned_asset', {id: asset.id}) }}" class="btn btn-success btn-sm assigned">Assigned</a>
