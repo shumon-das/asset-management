@@ -71,4 +71,12 @@ class AbstractApiController extends AbstractController
             'departments' => $this->departmentRepository->findBy(['isDeleted' => 0]),
         ];
     }
+
+    public function permanentlyDeleteItem(mixed $repository, int $id): bool
+    {
+        $item = $repository->find($id);
+        $this->entityManager->remove($item);
+        $this->entityManager->flush();
+        return true;
+    }
 }

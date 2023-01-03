@@ -140,13 +140,8 @@ class AssetsController extends AbstractApiController
     #[Route('/ams/delete-asset-permanently/{id}', name: 'delete_asset_permanently')]
     public function deletePermanently($id, Request $request): Response
     {
-        $record = $this->assetsRepository->find($id);
-        if(false === empty($record)) {
-            $this->entityManager->remove($record);
-            $this->entityManager->flush();
-        }
-        $route = $request->headers->get('referer');
-        return $this->redirect($route);
+        $this->permanentlyDeleteItem($this->assetsRepository, $id);
+        return $this->redirect($request->headers->get('referer'));
     }
 
     private function singleAsset(?Assets $asset): array

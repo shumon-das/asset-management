@@ -53,10 +53,7 @@ class DepartmentsController extends AbstractApiController
     #[Route('/ams/delete-department/{id}', name: 'delete_department')]
     public function deleteDepartment(int $id, Request $request): Response
     {
-        $department = $this->departmentRepository->find($id);
-        $this->entityManager->remove($department);
-        $this->entityManager->flush();
-
+        $this->permanentlyDeleteItem($this->departmentRepository, $id);
         return $this->redirect($request->headers->get('referer'));
     }
 }

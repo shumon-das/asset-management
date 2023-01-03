@@ -6,27 +6,13 @@ use App\Entity\Employee;
 use App\Entity\Location;
 use App\Repository\LocationRepository;
 use DateTimeImmutable;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Security;
 
-class AdminsController extends AbstractController
+class AdminsController extends AbstractApiController
 {
-    private LocationRepository $locationRepository;
-    private EntityManagerInterface $entityManager;
-    private Security $security;
-
-    public function __construct(LocationRepository $locationRepository, EntityManagerInterface $entityManager, Security $security)
-    {
-        $this->locationRepository = $locationRepository;
-        $this->entityManager = $entityManager;
-        $this->security = $security;
-    }
-
     #[Route('/ams/location', name: 'app_admins_location')]
     public function index(): Response
     {
@@ -114,10 +100,7 @@ class AdminsController extends AbstractController
     #[Route('/ams/delete-location/{id}', name: 'delete_location')]
     public function deleteAsset(int $id, Request $request): Response
     {
-        $location = $this->locationRepository->find($id);
-        $this->entityManager->remove($location);
-        $this->entityManager->flush();
-
+        $this->permanentlyDeleteItem($this->locationRepository, $id);
         return $this->redirect($request->headers->get('referer'));
     }
 }

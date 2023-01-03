@@ -105,30 +105,6 @@ class AssigningController extends AbstractApiController
             ...$this->getRepositoriesData()
         ]);
     }
-//
-//    #[Route('/ams/update-assigned-asset', name: 'update_assigned_asset')]
-//    public function updateAssignedAsset(Request $request): RedirectResponse
-//    {
-//        /** @var Employee $user */
-//        $user = $this->security->getUser();
-//        $request = $request->request;
-//        $assignAsset = $this->assigningAssetsRepository->find($request->get('id'));
-//        $assignAsset
-//            ->setProductCategory($request->get('product-category'))
-//            ->setProductType($request->get('product-type'))
-//            ->setProduct($request->get('product-name'))
-//            ->setVendor($request->get('vendor'))
-//            ->setLocation($request->get('location'))
-//            ->setAssetName($request->get('asset-name'))
-//            ->setDepartment($request->get('department'))
-//            ->setAssignTo($request->get('assign-to'))
-//            ->setDescription($request->get('description'))
-//            ;
-//        $this->entityManager->persist($assignAsset);
-//        $this->entityManager->flush();
-//
-//        return new RedirectResponse('assigned');
-//    }
 
     private function assignedData(?AssigningAssets $assignedProduct, ?array $idsAndNames = []): array
     {
