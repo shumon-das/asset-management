@@ -2,9 +2,12 @@
 
 namespace App\Controller;
 
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Address;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
@@ -39,5 +42,26 @@ class LoginController extends AbstractController
     {
         // controller can be blank: it will never be called!
         return new RedirectResponse('login');
+    }
+
+    #[Route('/send-test-email', name: 'send_test_email')]
+    public function sendTestEmail(MailerInterface $mailer): Response
+    {
+        $email = (new TemplatedEmail())
+                    ->from('fabien@example.com')
+                    ->to(new Address('ryan@example.com'))
+                    ->subject('Thanks for signing up!')
+
+                    // path of the Twig template to render
+                    ->htmlTemplate('emails/testmail.html.twig')
+
+                    // pass variables (name => value) to the template
+                    ->context([
+                        'expiration_date' => new \DateTime('+7 days'),
+                        'username' => 'foo',
+                    ])
+                ;
+        $mailer->send($email);
+        return new Response('mail sent');
     }
 }
