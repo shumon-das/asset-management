@@ -44,22 +44,6 @@ class AssigningController extends AbstractApiController
         ]);
     }
 
-    #[Route('/ams/delete-assigned/{id}', name: 'delete_assigned')]
-    public function deleteAssigned(int $id, Request $request): Response
-    {
-        /** @var Employee $user */
-        $user = $this->security->getUser();
-        $assignedAsset = $this->assigningAssetsRepository->find($id);
-        $assignedAsset
-            ->setIsDeleted(1)
-            ->setDeletedAt(new DateTimeImmutable())
-            ->setDeletedBy($user->getId());
-        $this->entityManager->persist($assignedAsset);
-        $this->entityManager->flush();
-
-        return $this->redirect($request->headers->get('referer'));
-    }
-
     #[Route('/ams/save-assign-asset', name: 'save_assign_asset')]
     public function saveAssignAsset(Request $request): RedirectResponse
     {

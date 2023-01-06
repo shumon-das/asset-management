@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Entity\Employee;
 use App\Entity\Location;
-use App\Repository\LocationRepository;
 use DateTimeImmutable;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -100,7 +99,7 @@ class AdminsController extends AbstractApiController
     #[Route('/ams/delete-location/{id}', name: 'delete_location')]
     public function deleteAsset(int $id, Request $request): Response
     {
-        $this->permanentlyDeleteItem($this->locationRepository, $id);
+        $this->deleteItem($this->locationRepository, $id, true);
         return $this->redirect($request->headers->get('referer'));
     }
 }

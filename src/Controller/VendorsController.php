@@ -117,25 +117,14 @@ class VendorsController extends AbstractApiController
     #[Route('/ams/delete-vendor/{id}', name: 'delete_vendor')]
     public function deleteVendor($id, Request $request): Response
     {
-        /** @var Employee $user */
-        $user = $this->security->getUser();
-        $vendor = $this->vendorsRepository->find($id);
-        if(false === empty($vendor)) {
-            $vendor->setIsDeleted(1)
-                ->setDeletedAt(new \DateTimeImmutable())
-                ->setDeletedBy($user->getId())
-            ;
-            $this->entityManager->persist($vendor);
-            $this->entityManager->flush();
-        }
-        $route = $request->headers->get('referer');
-        return $this->redirect($route);
+        $this->deleteItem($this->vendorsRepository, $id);
+        return $this->redirect($request->headers->get('referer'));
     }
 
     #[Route('/ams/delete-vendor-permanently/{id}', name: 'delete_vendor_permanently')]
     public function deletePermanently($id, Request $request): Response
     {
-        $this->permanentlyDeleteItem($this->vendorsRepository, $id);
+        $this->deleteItem($this->vendorsRepository, $id, true);
         return $this->redirect($request->headers->get('referer'));
     }
 
