@@ -2,8 +2,10 @@
 
 namespace App\Controller;
 
+use App\Entity\Common\VendorMethodsTrait;
 use App\Entity\Employee;
 use App\Entity\Vendors;
+use Exception;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -11,6 +13,8 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class VendorsController extends AbstractApiController
 {
+    use VendorMethodsTrait;
+
     #[Route('/ams/vendors', name: 'app_vendors')]
     public function vendors(): Response
     {
@@ -29,41 +33,14 @@ class VendorsController extends AbstractApiController
         ]);
     }
 
+    /**
+     * @throws Exception
+     */
     #[Route('/ams/save-vendor', name: 'app_save_vendor')]
     public function saveVendor(Request $request): RedirectResponse
     {
-        /** @var Employee $user */
-        $user = $this->security->getUser();
-        $request = $request->request;
-        if($request->get('id')) {
-            $vendor = $this->vendorsRepository->find($request->get('id'));
-            $vendor
-            ->setUpdatedAt(new \DateTimeImmutable())
-            ->setUpdatedBy($user->getId());
-        } else {
-            $vendor = new Vendors();
-        }
-        $vendor
-            ->setVendorName($request->get('vendor-name'))
-            ->setEmail($request->get('vendor-email'))
-            ->setPhone($request->get('phone'))
-            ->setContactPerson($request->get('contact-person'))
-            ->setDesignation($request->get('designation'))
-            ->setCountry($request->get('country'))
-            ->setState($request->get('state'))
-            ->setCity($request->get('city'))
-            ->setZipCode($request->get('zip-code'))
-            ->setGstinNo($request->get('gstin-no'))
-            ->setAddress($request->get('address'))
-            ->setDescription($request->get('description'))
-            ->setStatus(false)
-            ->setIsDeleted(false)
-            ->setCreatedAt(new \DateTimeImmutable())
-            ->setDeletedBy(null)
-            ->setCreatedBy($user->getId())
-        ;
-
-        $this->entityManager->persist($vendor);
+        $persistVendor = $this->vendorMethods(new Vendors(), $request);
+        $this->entityManager->persist($persistVendor);
         $this->entityManager->flush();
 
         return new RedirectResponse('vendors');
@@ -73,7 +50,6 @@ class VendorsController extends AbstractApiController
     public function viewVendor(int $id): Response
     {
         $vendor = $this->vendorsRepository->find($id);
-
         return $this->render('vendors/view-vendor.html.twig', [
             'vendor' => $vendor,
             'createdAt' => $vendor->getCreatedAt()->format('Y-M-d'),
@@ -85,7 +61,6 @@ class VendorsController extends AbstractApiController
     public function editVendor(int $id): Response
     {
         $vendor = $this->vendorsRepository->find($id);
-
         return $this->render('vendors/add-vendor.html.twig', [
             'vendor' => $vendor,
         ]);

@@ -80,4 +80,22 @@ class AbstractApiController extends AbstractController
         $this->entityManager->flush();
         return new RedirectResponse('location');
     }
+
+    public function deleteItem(mixed $repository, int $id, bool $permanently = false): bool
+    {
+        /** @var Employee $user */
+        $user = $this->security->getUser();
+        $item = $repository->find($id);
+        $this->entityManager->remove($item);
+        $item
+            ->setIsDeleted(1)
+            ->setDeletedAt(new \DateTimeImmutable())
+            ->setDeletedBy($user->getId())
+        ;
+        true === $permanently
+            ? $this->entityManager->remove($item)
+            : $this->entityManager->persist($item);
+        $this->entityManager->flush();
+        return true;
+    }
 }
