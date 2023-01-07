@@ -3,9 +3,9 @@
 namespace App\Controller;
 
 use App\Common\Product\ProductDataTrait;
-use App\Entity\Employee;
+use App\Entity\Common\ProductMethodsTrait;
 use App\Entity\Products;
-use DateTimeImmutable;
+use Exception;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,6 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class ProductsController extends AbstractApiController
 {
     use ProductDataTrait;
+    use ProductMethodsTrait;
 
     #[Route('/ams/products', name: 'app_products')]
     public function products(): Response
@@ -36,29 +37,16 @@ class ProductsController extends AbstractApiController
         ]);
     }
 
+    /**
+     * @throws Exception
+     */
     #[Route('/ams/save-products', name: 'app_save_products')]
     public function saveProducts(Request $request): RedirectResponse
     {
-        /** @var Employee $user */
-        $user = $this->security->getUser();
-        $request = $request->request;
-        $product = new Products();
-        $product
-            ->setCategory($request->get('product-category'))
-            ->setType($request->get('product-type'))
-            ->setName($request->get('product-name'))
-            ->setManufacturer($request->get('manufacturer'))
-            ->setDescription($request->get('description'))
-            ->setStatus(true)
-            ->setIsDeleted(0)
-            ->setCreatedAt(new DateTimeImmutable())
-            ->setUpdatedAt(null)
-            ->setDeletedAt(null)
-            ->setCreatedBy($user->getId())
-            ->setUpdatedBy(null)
-            ->setDeletedBy(null);
-        $this->entityManager->persist($product);
-        $this->entityManager->flush();
+        $id =  $request->request->get('id');
+        $id
+            ? $this->productMethods($this->productsRepository->find($id), $request, true)
+            : $this->productMethods(new Products(), $request, false);
 
         return new RedirectResponse('products');
     }
@@ -71,27 +59,6 @@ class ProductsController extends AbstractApiController
         return $this->render('products/add-product.html.twig', [
             'product' => $this->productData($product, $this->employeeRepository),
         ]);
-    }
-
-    #[Route('/ams/update-product', name: 'app_product_update')]
-    public function updateVendor(Request $request): RedirectResponse
-    {
-        /** @var Employee $user */
-        $user = $this->security->getUser();
-        $request = $request->request;
-        $product = $this->productsRepository->find($request->get('id'));
-        $product
-            ->setCategory($request->get('product-category'))
-            ->setType($request->get('product-type'))
-            ->setName($request->get('product-name'))
-            ->setManufacturer($request->get('manufacturer'))
-            ->setDescription($request->get('description'))
-            ->setUpdatedAt(new DateTimeImmutable())
-            ->setUpdatedBy($user->getId());
-        $this->entityManager->persist($product);
-        $this->entityManager->flush();
-
-        return new RedirectResponse('products');
     }
 
     #[Route('/ams/view-product/{id}', name: 'view_product')]

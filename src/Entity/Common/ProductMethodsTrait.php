@@ -3,10 +3,15 @@
 namespace App\Entity\Common;
 
 use App\Entity\Products;
+use Exception;
 
 trait ProductMethodsTrait
 {
     use CommonMethodsTrait;
+
+    /**
+     * @throws Exception
+     */
     public function productMethods(Products $product, $request, bool $update): Products
     {
         $product
@@ -18,5 +23,4 @@ trait ProductMethodsTrait
             ->setStatus(true);
         return $this->commonMethods($product, $update);
     }
-
 }

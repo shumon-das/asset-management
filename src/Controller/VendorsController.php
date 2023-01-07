@@ -39,10 +39,7 @@ class VendorsController extends AbstractApiController
     #[Route('/ams/save-vendor', name: 'app_save_vendor')]
     public function saveVendor(Request $request): RedirectResponse
     {
-        $persistVendor = $this->vendorMethods(new Vendors(), $request);
-        $this->entityManager->persist($persistVendor);
-        $this->entityManager->flush();
-
+        $this->vendorMethods(new Vendors(), $request);
         return new RedirectResponse('vendors');
     }
 
