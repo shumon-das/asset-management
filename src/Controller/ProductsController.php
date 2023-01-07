@@ -108,28 +108,14 @@ class ProductsController extends AbstractApiController
     #[Route('/ams/delete-product/{id}', name: 'delete_product')]
     public function deleteProduct(int $id, Request $request): Response
     {
-        /** @var Employee $user */
-        $user = $this->security->getUser();
-        $product = $this->productsRepository->find($id);
-        $product->setIsDeleted(1)
-                ->setDeletedBy($user->getId())
-                ->setDeletedAt(new DateTimeImmutable())
-        ;
-        $this->entityManager->persist($product);
-        $this->entityManager->flush();
-
+        $this->deleteItem($this->productsRepository, $id);
         return $this->redirect($request->headers->get('referer'));
     }
 
     #[Route('/ams/delete-product-permanently/{id}', name: 'delete_product_permanently')]
     public function deletePermanently($id, Request $request): Response
     {
-        $record = $this->productsRepository->find($id);
-        if(false === empty($record)) {
-            $this->entityManager->remove($record);
-            $this->entityManager->flush();
-        }
-        $route = $request->headers->get('referer');
-        return $this->redirect($route);
+        $this->deleteItem($this->productsRepository, $id, true);
+        return $this->redirect($request->headers->get('referer'));
     }
 }

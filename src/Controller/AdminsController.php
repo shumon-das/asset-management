@@ -7,6 +7,7 @@ use App\Entity\Location;
 use App\Repository\LocationRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use DateTimeImmutable;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,13 +21,8 @@ class AdminsController extends AbstractController
     private EntityManagerInterface $entityManager;
     private Security $security;
 
-    public function __construct(LocationRepository $locationRepository, EntityManagerInterface $entityManager, Security $security)
-    {
-        $this->locationRepository = $locationRepository;
-        $this->entityManager = $entityManager;
-        $this->security = $security;
-    }
-
+class AdminsController extends AbstractApiController
+{
     #[Route('/ams/location', name: 'app_admins_location')]
     public function index(): Response
     {
@@ -81,10 +77,7 @@ class AdminsController extends AbstractController
     #[Route('/ams/delete-location/{id}', name: 'delete_location')]
     public function deleteAsset(int $id, Request $request): Response
     {
-        $location = $this->locationRepository->find($id);
-        $this->entityManager->remove($location);
-        $this->entityManager->flush();
-
+        $this->deleteItem($this->locationRepository, $id, true);
         return $this->redirect($request->headers->get('referer'));
     }
 }

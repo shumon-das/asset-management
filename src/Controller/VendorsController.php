@@ -35,7 +35,14 @@ class VendorsController extends AbstractApiController
         /** @var Employee $user */
         $user = $this->security->getUser();
         $request = $request->request;
-        $vendor = new Vendors();
+        if($request->get('id')) {
+            $vendor = $this->vendorsRepository->find($request->get('id'));
+            $vendor
+            ->setUpdatedAt(new \DateTimeImmutable())
+            ->setUpdatedBy($user->getId());
+        } else {
+            $vendor = new Vendors();
+        }
         $vendor
             ->setVendorName($request->get('vendor-name'))
             ->setEmail($request->get('vendor-email'))
@@ -54,36 +61,6 @@ class VendorsController extends AbstractApiController
             ->setCreatedAt(new \DateTimeImmutable())
             ->setDeletedBy(null)
             ->setCreatedBy($user->getId())
-        ;
-
-        $this->entityManager->persist($vendor);
-        $this->entityManager->flush();
-
-        return new RedirectResponse('vendors');
-    }
-
-    #[Route('/ams/update-vendor', name: 'app_update_vendor')]
-    public function updateVendor(Request $request): RedirectResponse
-    {
-        /** @var Employee $user */
-        $user = $this->security->getUser();
-        $request = $request->request;
-        $vendor = $this->vendorsRepository->find($request->get('id'));
-        $vendor
-            ->setVendorName($request->get('vendor-name'))
-            ->setEmail($request->get('vendor-email'))
-            ->setPhone($request->get('phone'))
-            ->setContactPerson($request->get('contact-person'))
-            ->setDesignation($request->get('designation'))
-            ->setCountry($request->get('country'))
-            ->setState($request->get('state'))
-            ->setCity($request->get('city'))
-            ->setZipCode($request->get('zip-code'))
-            ->setGstinNo($request->get('gstin-no'))
-            ->setAddress($request->get('address'))
-            ->setDescription($request->get('description'))
-            ->setUpdatedAt(new \DateTimeImmutable())
-            ->setUpdatedBy($user->getId())
         ;
 
         $this->entityManager->persist($vendor);
@@ -117,52 +94,14 @@ class VendorsController extends AbstractApiController
     #[Route('/ams/delete-vendor/{id}', name: 'delete_vendor')]
     public function deleteVendor($id, Request $request): Response
     {
-        /** @var Employee $user */
-        $user = $this->security->getUser();
-        $vendor = $this->vendorsRepository->find($id);
-        if(false === empty($vendor)) {
-            $vendor->setIsDeleted(1)
-                ->setDeletedAt(new \DateTimeImmutable())
-                ->setDeletedBy($user->getId())
-            ;
-            $this->entityManager->persist($vendor);
-            $this->entityManager->flush();
-        }
-        $route = $request->headers->get('referer');
-        return $this->redirect($route);
+        $this->deleteItem($this->vendorsRepository, $id);
+        return $this->redirect($request->headers->get('referer'));
     }
 
     #[Route('/ams/delete-vendor-permanently/{id}', name: 'delete_vendor_permanently')]
     public function deletePermanently($id, Request $request): Response
     {
-        $record = $this->vendorsRepository->find($id);
-        if(false === empty($record)) {
-            $this->entityManager->remove($record);
-            $this->entityManager->flush();
-        }
-        $route = $request->headers->get('referer');
-        return $this->redirect($route);
-    }
-
-    private function vendorData(?Vendors $vendor): array
-    {
-        return [
-            'id' => $vendor->getId(),
-            'vendorName' => $vendor->getVendorName(),
-            'contactPerson' => $vendor->getContactPerson(),
-            'email' => $vendor->getEmail(),
-            'gstinNo' => $vendor->getGstinNo(),
-            'phone' => $vendor->getPhone(),
-            'status' => $vendor->isStatus(),
-            'createdAt' => $vendor->getCreatedAt()->format('Y-M-d'),
-            'createdBy' => $vendor->getCreatedBy(),
-            'designation' => $vendor->getDescription(),
-            'country' => $vendor->getCountry(),
-            'state' => $vendor->getState(),
-            'city' => $vendor->getCity(),
-            'zipCode' => $vendor->getZipCode(),
-            'address' => $vendor->getAddress(),
-            'description' => $vendor->getDescription(),
-        ];
+        $this->deleteItem($this->vendorsRepository, $id, true);
+        return $this->redirect($request->headers->get('referer'));
     }
 }

@@ -56,7 +56,6 @@
                                         <th>Product Type</th>
                                         <th>Product</th>
                                         <th>Vendor</th>
-                                        <th>Current State</th>
                                         <th>Assign</th>
                                         <th>Action</th>
                                     </tr>
@@ -70,7 +69,6 @@
                                             <td>{{ asset.productType }}</td>
                                             <td>{{ asset.product }}</td>
                                             <td>{{ asset.vendor }}</td>
-                                            <td>sdfsdf</td>
                                             <td>
                                                 {% if asset.assign %}
                                                     <a href="{{ path('edit_assigned_asset', {id: asset.id}) }}" class="btn btn-success btn-sm assigned">Assigned</a>
@@ -80,16 +78,16 @@
                                             </td>
                                             <td>
                                                 <div class="row d-block m-auto w-100 text-center">
-                                                    <a href="{{ path('view_asset', {id: asset.id}) }}" class="btn btn-success btn-sm"><i class="fas fa-eye"></i></a>
-                                                    <a href="{{ path('edit_asset', {id: asset.id}) }}" class="btn btn-info btn-sm"><i class="fas fa-edit"></i></a>
                                                     {% if recycle is defined %}
                                                         <a href="{{ path( 'revert_asset', {id: asset.id}) }}" class="btn btn-primary restore btn-sm">
                                                               <i class="fas fa-backward"></i>
                                                         </a>
-                                                         <a href="{{ path( 'delete_asset_permanently', {id: asset.id}) }}" class="btn btn-danger restore btn-sm">
+                                                         <a href="{{ path( 'delete_asset_permanently', {id: asset.id}) }}" class="btn btn-danger delete-permanently btn-sm">
                                                               <i class="fas fa-trash-restore"></i>
                                                         </a>
                                                     {% else %}
+                                                        <a href="{{ path('view_asset', {id: asset.id}) }}" class="btn btn-success btn-sm"><i class="fas fa-eye"></i></a>
+                                                        <a href="{{ path('edit_asset', {id: asset.id}) }}" class="btn btn-info btn-sm"><i class="fas fa-edit"></i></a>
                                                         <a href="{{ path('delete_asset', {id: asset.id}) }}" class="btn btn-danger btn-sm"><i
                                                                     class="fas fa-trash"></i>
                                                         </a>
