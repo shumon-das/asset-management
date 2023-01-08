@@ -46,7 +46,7 @@ class ProductsController extends AbstractApiController
         $id =  $request->request->get('id');
         $id
             ? $this->productMethods($this->productsRepository->find($id), $request, true)
-            : $this->productMethods(new Products(), $request, false);
+            : $this->productMethods(new Products(), $request);
 
         return new RedirectResponse('products');
     }

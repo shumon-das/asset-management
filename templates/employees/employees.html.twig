@@ -70,7 +70,7 @@
                                             <td>X</td>
                                             <td>
                                                 <div class="row d-sm-flex justify-content-sm-around">
-                                                    <a href="#" class="btn btn-info btn-sm"><i class="fas fa-edit"></i></a>
+                                                    <a href="{{ path('edit_employee', {id:em.id}) }}" class="btn btn-info btn-sm"><i class="fas fa-edit"></i></a>
                                                     {% if recycle is defined %}
                                                         <a href="{{ path( 'revert_employee', {id: em.id}) }}" class="btn btn-primary restore btn-sm">
                                                               <i class="fas fa-backward"></i>

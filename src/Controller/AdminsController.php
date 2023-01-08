@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Common\LocationMethodsTrait;
 use App\Entity\Location;
+use App\Entity\Vendors;
+use Exception;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -30,28 +32,16 @@ class AdminsController extends AbstractApiController
         ]);
     }
 
+    /**
+     * @throws Exception
+     */
     #[Route('/ams/save-location', name: 'admins_save_location')]
     public function saveLocation(Request $request): Response|RedirectResponse
     {
-        $request = $request->request;
-        if ($request->get('id')) {
-            $location = $this->locationRepository->find($request->get('id'));
-            $update = true;
-        } else {
-            $update = false;
-            if (false === empty($request->get('office-name'))
-                && false === empty($request->get('country'))) {
-                $location = new Location();
-            } else {
-                $this->addFlash('error', 'Sorry, you must have to provide Office Name & Country');
-                return $this->render('admins/add-locations.html.twig', [
-                    'controller_name' => 'AdminsController',
-                ]);
-            }
-        }
-        $locationData = $this->locationMethods($location, $request, $update);
-        $this->entityManager->persist($locationData);
-        $this->entityManager->flush();
+        $id = $request->request->get('id');
+        $id
+            ? $this->locationMethods($this->locationRepository->find($id), $request, true)
+            : $this->locationMethods(new Location(), $request);
         return new RedirectResponse('location');
     }
 

@@ -60,6 +60,7 @@
                                                     <div class="form-group">
                                                         <label>Employee Name</label>
                                                         <input type="text" class="form-control" id="name" name="name"
+                                                               value="{{ employee.name ?? '' }}"
                                                                placeholder="Enter employee name" required>
                                                     </div>
                                                 </div>
@@ -68,6 +69,7 @@
                                                     <div class="form-group">
                                                         <label>Employee Email</label>
                                                         <input type="text" class="form-control" id="email" name="email"
+                                                               value="{{ employee.email ?? '' }}"
                                                                placeholder="Enter employee email" required>
                                                     </div>
                                                 </div>
@@ -79,7 +81,7 @@
                                                     <div class="form-group">
                                                         <label>Contact No</label>
                                                         <input type="text" class="form-control" id="contact-no"
-                                                               name="contact-no"
+                                                               name="contact-no" value="{{ employee.contactNo ?? ''}}"
                                                                placeholder="Enter contact no" required>
                                                     </div>
                                                 </div>
@@ -89,7 +91,8 @@
                                                         <label>Department</label>
                                                         <select class="form-control select2" style="width: 100%;"
                                                                 name="department" id="department" required>
-                                                            <option selected="selected" value="0">select Department
+                                                            <option selected="selected" value="{{ employee.department ?? '' }}">
+                                                                {{ departmentName ?? 'Select Department' }}
                                                             </option>
                                                             {% if departments is defined %}
                                                                 {% for department in departments %}
@@ -108,7 +111,8 @@
                                                         <label for="location">Location</label>
                                                         <select class="form-control select2" style="width: 100%;"
                                                                 id="location" name="location" required>
-                                                            <option selected="selected" value="0">Select Location
+                                                            <option selected="selected" value="{{ employee.location ?? ''}}">
+                                                                {{ locationName ?? 'Select Location' }}
                                                             </option>
                                                             {% if locations is defined %}
                                                                 {% for location in locations %}
@@ -124,8 +128,8 @@
                                                         <label>Reporting Manager</label>
                                                         <select class="form-control select2" style="width: 100%;" required
                                                                 id="reporting-manager" name="reporting-manager">
-                                                            <option selected="selected" value="0">Select Manager From
-                                                                Employees
+                                                            <option selected="selected" value="{{ employee.reportingManager ?? ''}}">
+                                                                {{ reportingManager ?? 'Select Manager From Employees'}}
                                                             </option>
                                                             {% if employees is defined %}
                                                                 {% for employee in employees %}
@@ -142,12 +146,13 @@
                                                     <div class="form-group">
                                                         <label>Default password for this employee</label>
                                                         <input type="password" class="form-control" id="password"
-                                                               name="password" required
+                                                               name="password"
                                                                placeholder="Enter default password">
                                                     </div>
                                                 </div>
                                             </div>
                                             <hr>
+                                            <input type="hidden" name="id" id="" value="{{ employee is defined ? employee.id : ''}}">
                                             <div class="row mt-3">
                                                 <div class="col-md-12 mt-3 text-right">
                                                     <button type="submit" class="btn btn-primary">

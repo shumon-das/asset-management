@@ -3,8 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\AssigningAssets;
+use App\Entity\Common\AssigningMethodsTrait;
 use App\Entity\Employee;
 use DateTimeImmutable;
+use Exception;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -12,6 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class AssigningController extends AbstractApiController
 {
+    use AssigningMethodsTrait;
     #[Route('/ams/assigned', name: 'assigned_assets')]
     public function assignedAsset(): Response
     {
@@ -44,38 +47,16 @@ class AssigningController extends AbstractApiController
         ]);
     }
 
+    /**
+     * @throws Exception
+     */
     #[Route('/ams/save-assign-asset', name: 'save_assign_asset')]
     public function saveAssignAsset(Request $request): RedirectResponse
     {
-        /** @var Employee $user */
-        $user = $this->security->getUser();
-        $request = $request->request;
-        if(false === empty($request->get('id'))) {
-            $assignAsset = $this->assigningAssetsRepository->find($request->get('id'));
-            $assignAsset
-                ->setUpdatedBy($user->getId())
-                ->setUpdatedAt(new DateTimeImmutable());
-        } else {
-            $assignAsset = new AssigningAssets();
-            $assignAsset
-                ->setCreatedBy($user->getId())
-                ->setCreatedAt(new DateTimeImmutable());
-        }
-        $assignAsset
-            ->setProductCategory($request->get('product-category'))
-            ->setProductType($request->get('product-type'))
-            ->setProduct($request->get('product-name'))
-            ->setVendor($request->get('vendor'))
-            ->setLocation($request->get('location'))
-            ->setAssetName($request->get('asset-name'))
-            ->setDepartment($request->get('department'))
-            ->setAssignTo($request->get('assign-to'))
-            ->setDescription($request->get('description'))
-            ->setIsDeleted(0)
-            ->setStatus(true);
-        $this->entityManager->persist($assignAsset);
-        $this->entityManager->flush();
-
+        $id = $request-$request->get('id');
+        $id
+            ? $this->assigningMethods($this->assigningAssetsRepository->find($id), $request, true)
+            : $this->assigningMethods(new AssigningAssets(), $request);
         return new RedirectResponse('assigned');
     }
 
@@ -83,14 +64,18 @@ class AssigningController extends AbstractApiController
     public function editAssigningAsset(int $id): Response
     {
         $assignedAsset = $this->assigningAssetsRepository->find($id);
+        $data = [];
+        if (false === empty($assignedAsset)) {
+            $data = [
+                ...['assignedAsset' => $this->assignedData($assignedAsset, $this->allEntityIdsAndNames())],
+                ...$this->getRepositoriesData()
+            ];
+        }
 
-        return $this->render('assets/assigning-asset.html.twig', [
-            ...['assignedAsset' => $this->assignedData($assignedAsset, $this->allEntityIdsAndNames())],
-            ...$this->getRepositoriesData()
-        ]);
+        return $this->render('assets/assigning-asset.html.twig', $data);
     }
 
-    private function assignedData(?AssigningAssets $assignedProduct, ?array $idsAndNames = []): array
+    private function assignedData(AssigningAssets $assignedProduct, ?array $idsAndNames = []): array
     {
         $assigned = $assignedProduct->getAssignTo();
         $asset = $assignedProduct->getAssetName();

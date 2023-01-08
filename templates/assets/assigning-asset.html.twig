@@ -55,9 +55,11 @@
                                                         id="product-category" style="width: 100%;">
                                                     <option selected="selected"
                                                             value="{{ assignedAsset.productCategory ?? '' }}">{{ assignedAsset.productCategory ?? 'Select Product Category' }}</option>
-                                                    {% for product in products %}
-                                                        <option value="{{ product.id }}">{{ product.category }}</option>
-                                                    {% endfor %}
+                                                    {% if products is defined %}
+                                                        {% for product in products %}
+                                                            <option value="{{ product.id }}">{{ product.category }}</option>
+                                                        {% endfor %}
+                                                    {% endif %}
                                                 </select>
                                             </div>
                                         </div>
@@ -69,9 +71,11 @@
                                                         id="product-type" style="width: 100%;">
                                                     <option selected="selected"
                                                             value="{{ assignedAsset.productType ?? '' }}">{{ assignedAsset.productType ?? 'Select Product Type' }}</option>
-                                                    {% for product in products %}
-                                                        <option value="{{ product.id }}">{{ product.type }}</option>
-                                                    {% endfor %}
+                                                    {% if products is defined %}
+                                                        {% for product in products %}
+                                                            <option value="{{ product.id }}">{{ product.type }}</option>
+                                                        {% endfor %}
+                                                    {% endif %}
                                                 </select>
                                             </div>
                                         </div>
@@ -83,9 +87,11 @@
                                                         id="product-name" style="width: 100%;">
                                                     <option selected="selected"
                                                             value="{{ assignedAsset.productId ?? '' }}">{{ assignedAsset.product ?? 'Select Product' }}</option>
-                                                    {% for product in products %}
-                                                        <option value="{{ product.id }}">{{ product.name }}</option>
-                                                    {% endfor %}
+                                                    {% if products is defined %}
+                                                        {% for product in products %}
+                                                            <option value="{{ product.id }}">{{ product.name }}</option>
+                                                        {% endfor %}
+                                                    {% endif %}
                                                 </select>
                                             </div>
                                         </div>
@@ -97,9 +103,11 @@
                                                         style="width: 100%;">
                                                     <option selected="selected"
                                                             value="{{ assignedAsset.vendorId ?? '' }}">{{ assignedAsset.vendor ?? 'Select Vendor' }}</option>
-                                                    {% for vendor in vendors %}
-                                                        <option value="{{ vendor.id }}">{{ vendor.vendorName }}</option>
-                                                    {% endfor %}
+                                                    {% if vendors is defined %}
+                                                        {% for vendor in vendors %}
+                                                            <option value="{{ vendor.id }}">{{ vendor.vendorName }}</option>
+                                                        {% endfor %}
+                                                    {% endif %}
                                                 </select>
                                             </div>
                                         </div>
@@ -114,9 +122,11 @@
                                                         style="width: 100%;">
                                                     <option selected="selected"
                                                             value="{{ assignedAsset.locationId ?? '' }}">{{ assignedAsset.location ?? 'Select Location' }}</option>
-                                                    {% for location in locations %}
-                                                        <option value="{{ location.id }}">{{ location.officName }}</option>
-                                                    {% endfor %}
+                                                    {% if locations is defined %}
+                                                        {% for location in locations %}
+                                                            <option value="{{ location.id }}">{{ location.officName }}</option>
+                                                        {% endfor %}
+                                                    {% endif %}
                                                 </select>
                                             </div>
                                         </div>
@@ -128,9 +138,11 @@
                                                         style="width: 100%;">
                                                     <option selected="selected"
                                                             value="{{ assignedAsset.assetId ?? '' }}">{{ assignedAsset.assetName ?? 'Select Asset' }}</option>
-                                                    {% for asset in assets %}
-                                                        <option value="{{ asset.id }}">{{ asset.assetName }}</option>
-                                                    {% endfor %}
+                                                    {% if assets is defined %}
+                                                        {% for asset in assets %}
+                                                            <option value="{{ asset.id }}">{{ asset.assetName }}</option>
+                                                        {% endfor %}
+                                                    {% endif %}
                                                 </select>
                                             </div>
                                         </div>
@@ -142,9 +154,11 @@
                                                         style="width: 100%;">
                                                     <option selected="selected"
                                                             value="{{ assignedAsset.department ?? '' }}">{{ assignedAsset.departmentName ?? 'Select Department' }}</option>
-                                                    {% for department in departments %}
-                                                        <option value="{{ department.id }}">{{ department.departmentName }}</option>
-                                                    {% endfor %}
+                                                    {% if departments is defined %}
+                                                        {% for department in departments %}
+                                                            <option value="{{ department.id }}">{{ department.departmentName }}</option>
+                                                        {% endfor %}
+                                                    {% endif %}
                                                 </select>
                                             </div>
                                         </div>
@@ -156,9 +170,11 @@
                                                         style="width: 100%;">
                                                     <option selected="selected"
                                                             value="{{ assignedAsset.assignedId ?? '' }}">{{ assignedAsset.assigned ?? 'Select User' }}</option>
-                                                    {% for user in users %}
-                                                        <option value="{{ user.id }}">{{ user.name }}</option>
-                                                    {% endfor %}
+                                                    {% if users is defined %}
+                                                        {% for user in users %}
+                                                            <option value="{{ user.id }}">{{ user.name }}</option>
+                                                        {% endfor %}
+                                                    {% endif %}
                                                 </select>
                                             </div>
                                         </div>

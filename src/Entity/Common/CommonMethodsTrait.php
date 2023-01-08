@@ -2,6 +2,8 @@
 
 namespace App\Entity\Common;
 
+use App\Entity\Assets;
+use App\Entity\AssigningAssets;
 use App\Entity\Department;
 use App\Entity\Employee;
 use App\Entity\Location;
@@ -15,18 +17,23 @@ trait CommonMethodsTrait
     /**
      * @throws Exception
      */
-    private function commonMethods(Location|Department|Vendors|Products|Employee $entity, bool $update): Location|Department|Vendors|Products|Employee
+    private function commonMethods(
+        Location|Department|Vendors|Products|Employee|Assets|AssigningAssets $entity, bool $update
+    ): Location|Department|Vendors|Products|Employee|Assets|AssigningAssets
     {
         /** @var Employee $user */
         $user = $this->security->getUser();
         $createdAt = $update
                          ? new DateTimeImmutable($entity->getCreatedAt()->format('Y-m-d h:i:s'))
                          : new DateTimeImmutable();
+        $createdBy = $entity->getCreatedBy() ?? $user->getId();
+        $updateAt = $update ? new DateTimeImmutable() : null;
+        $updatedBy = $update ? $user->getId() : null;
         $entity
-            ->setUpdatedAt($update ? new DateTimeImmutable() : null)
-            ->setUpdatedBy($update ? $user->getId() : null)
+            ->setUpdatedAt($updateAt)
+            ->setUpdatedBy($updatedBy)
             ->setCreatedAt($createdAt)
-            ->setCreatedBy($entity->getCreatedBy() ?? $user->getId())
+            ->setCreatedBy($createdBy)
             ->setDeletedAt(null)
             ->setDeletedBy(null)
             ->setIsDeleted(0)

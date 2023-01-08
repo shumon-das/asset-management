@@ -3,11 +3,16 @@
 namespace App\Entity\Common;
 
 use App\Entity\Department;
+use Exception;
 
 trait DepartmentMethodsTrait
 {
     use CommonMethodsTrait;
-    public function departmentMethods(Department $department, $request, string $update): Department
+
+    /**
+     * @throws Exception
+     */
+    public function departmentMethods(Department $department, $request, bool $update = false): Department
     {
         $department
             ->setDepartmentName($request->get('departmentName'))

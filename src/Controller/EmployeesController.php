@@ -3,8 +3,10 @@
 namespace App\Controller;
 
 use App\Common\NamesTrait;
+use App\Entity\Common\EmployeeMethodsTrait;
 use App\Entity\Employee;
 use DateTimeImmutable;
+use Exception;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -12,6 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class EmployeesController extends AbstractApiController
 {
+    use EmployeeMethodsTrait;
     use NamesTrait;
     #[Route('/ams/employees', name: 'app_employees')]
     public function employee(): Response
@@ -36,47 +39,37 @@ class EmployeesController extends AbstractApiController
         ]);
     }
 
+    /**
+     * @throws Exception
+     */
     #[Route('/ams/save-employee', name: 'app_save_employee')]
     public function saveEmployee(Request $request): RedirectResponse|Response
     {
-        /** @var Employee $user */
-        $user = $this->security->getUser();
         $request = $request->request;
-        $email = $request->get('email');
-        $password = $request->get('password');
-        $employee = new Employee();
-        $hashedPassword = $this->hasher->hashPassword($employee, $password);
-        $existEmail = $this->employeeRepository->findOneBy(['email' => $email]);
+        $id = $request->get('id');
+        $id
+            ? $this->employeeMethods($this->employeeRepository->find($id), $request, true)
+            : $this->employeeMethods(new Employee(), $request);
+            return new RedirectResponse('employees');
+    }
 
-        if (false === empty($email) && false === empty($password)) {
-            if($existEmail?->getEmail() < 1) {
-                $employee
-                    ->setName($request->get('name'))
-                    ->setEmail($email)
-                    ->setPassword($hashedPassword)
-                    ->setLocation($request->get('location'))
-                    ->setContactNo($request->get('contact-no'))
-                    ->setDepartment($request->get('department'))
-                    ->setReportingManager($request->get('reporting-manager'))
-                    ->setRoles(['ROLE_USER'])
-                    ->setCreatedAt(new DateTimeImmutable())
-                    ->setCreatedBy($user->getId())
-                    ->setIsDeleted(0)
-                ;
-                $this->entityManager->persist($employee);
-                $this->entityManager->flush();
+    #[Route('/ams/edit-employee/{id}', name: 'edit_employee')]
+    public function editEmployee(int $id, Request $request): Response
+    {
 
-                return new RedirectResponse('employees');
-            }
-
-            $this->addFlash("error", "Sorry, ".$email." already exists. please try with another new email" );
-
-            return new RedirectResponse('add-employee');
-        }
-        $this->addFlash("error", "Sorry, you must have to fill email and password field");
-
+        $employee = $this->employeeRepository->find($id);
+        $locations = $this->locationRepository->findAll();
+        $departments = $this->departmentRepository->findAll();
+        $employees = $this->employeeRepository->findAll();
+        $names = $this->allEntityIdsAndNames();
         return $this->render('employees/add-employee.html.twig', [
-            'controller_name' => 'EmployeesController',
+            'locations' => $locations,
+            'departments' => $departments,
+            'employees' => $employees,
+            'employee' => $employee,
+            'departmentName' => $names['departmentsIds'][$employee->getDepartment()],
+            'locationName' => $names['locationsIds'][$employee->getLocation()],
+            'reportingManager' => $names['employeesIds'][$employee->getReportingManager()],
         ]);
     }
 

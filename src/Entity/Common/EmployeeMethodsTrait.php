@@ -3,19 +3,24 @@
 namespace App\Entity\Common;
 
 use App\Entity\Employee;
+use Exception;
 
 trait EmployeeMethodsTrait
 {
     use CommonMethodsTrait;
-    public function employeeMethods(Employee $employee, $request, bool $update): Employee
+
+    /**
+     * @throws Exception
+     */
+    public function employeeMethods(Employee $employee, $request, bool $update = false): Employee
     {
         $email = $request->get('email');
-        $password = $request->get('password');
-        $hashedPassword = $this->hasher->hashPassword($employee, $password);
+        false === empty($request->get('password'))
+            ? $employee->setPassword($this->hasher->hashPassword($employee, $request->get('password')))
+            : null;
         $employee
             ->setName($request->get('name'))
             ->setEmail($email)
-            ->setPassword($hashedPassword)
             ->setLocation($request->get('location'))
             ->setContactNo($request->get('contact-no'))
             ->setDepartment($request->get('department'))
@@ -24,5 +29,4 @@ trait EmployeeMethodsTrait
         ;
         return $this->commonMethods($employee, $update);
     }
-
 }

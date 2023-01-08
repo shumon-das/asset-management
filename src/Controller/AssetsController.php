@@ -5,9 +5,8 @@ namespace App\Controller;
 use App\Common\Asset\AssetListDataTrait;
 use App\Common\NamesTrait;
 use App\Entity\Assets;
-use App\Entity\Employee;
+use App\Entity\Common\AssetMethodsTrait;
 use App\Repository\AssetsRepository;
-use DateTimeImmutable;
 use Exception;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,6 +16,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class AssetsController extends AbstractApiController
 {
     use AssetListDataTrait;
+    use AssetMethodsTrait;
     use NamesTrait;
 
     #[Route('/ams/assets', name: 'app_assets')]
@@ -54,43 +54,10 @@ class AssetsController extends AbstractApiController
     #[Route('/ams/save-assets', name: 'app_save_assets')]
     public function saveAssets(Request $request): RedirectResponse
     {
-        /** @var Employee $user */
-        $user = $this->security->getUser();
-        $request = $request->request;
-        if(false === empty($request->get('id'))) {
-            $asset = $this->assetsRepository->find($request->get('id'));
-            $asset
-                ->setUpdatedBy($user->getId())
-                ->setUpdatedAt(new DateTimeImmutable());
-        } else {
-            $asset = new Assets();
-            $asset
-                ->setCreatedBy($user->getId())
-                ->setCreatedAt(new DateTimeImmutable());
-        }
-        $asset
-            ->setProductCategory($request->get('product-category'))
-            ->setProductType($request->get('product-type'))
-            ->setProduct($request->get('product'))
-            ->setVendor($request->get('vendor'))
-            ->setAssetName($request->get('asset-name'))
-            ->setSerialNumber($request->get('serial-number'))
-            ->setPrice($request->get('price'))
-            ->setDescriptionType($request->get('description-type'))
-            ->setLocation($request->get('location'))
-            ->setPurchaseDate(new DateTimeImmutable($request->get('purchase-date')))
-            ->setWarrantyExpiryDate(new DateTimeImmutable($request->get('warranty-expiry-date')))
-            ->setPurchaseType($request->get('purchase-type'))
-            ->setDescription($request->get('description'))
-            ->setUsefulLife($request->get('useful-life'))
-            ->setResidualValue($request->get('residual-value'))
-            ->setRate($request->get('rate'))
-            ->setIsDeleted(0)
-            ->setStatus(true)
-        ;
-        $this->entityManager->persist($asset);
-        $this->entityManager->flush();
-
+        $id = $request->request->get('id');
+        $id
+            ? $this->assetMethods($this->assetsRepository->find($id), $request, true)
+            :$this->assetMethods(new Assets(), $request);
         return new RedirectResponse('assets');
     }
 
@@ -114,7 +81,6 @@ class AssetsController extends AbstractApiController
     public function viewAsset(int $id, AssetsRepository $assetsRepository): Response
     {
         $asset = $assetsRepository->find($id);
-
         return $this->render('assets/view-asset.html.twig', [
             'asset' => $this->singleAsset($asset),
             'title' => $asset->getAssetName(),

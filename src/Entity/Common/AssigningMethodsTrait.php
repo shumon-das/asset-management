@@ -3,11 +3,16 @@
 namespace App\Entity\Common;
 
 use App\Entity\AssigningAssets;
+use Exception;
 
 trait AssigningMethodsTrait
 {
     use CommonMethodsTrait;
-    public function assigningMethods(AssigningAssets $assigningAsset, $request, bool $update): AssigningAssets
+
+    /**
+     * @throws Exception
+     */
+    public function assigningMethods(AssigningAssets $assigningAsset, $request, bool $update = false): AssigningAssets
     {
         $assigningAsset
             ->setProductCategory($request->get('product-category'))

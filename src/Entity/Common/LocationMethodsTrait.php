@@ -3,11 +3,16 @@
 namespace App\Entity\Common;
 
 use App\Entity\Location;
+use Exception;
 
 trait LocationMethodsTrait
 {
     use CommonMethodsTrait;
-    public function locationMethods(Location $location, $request, bool $update): Location
+
+    /**
+     * @throws Exception
+     */
+    public function locationMethods(Location $location, $request, bool $update = false): Location
     {
         $location
             ->setOfficName($request->get('office-name'))

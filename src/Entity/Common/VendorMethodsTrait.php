@@ -12,7 +12,7 @@ trait VendorMethodsTrait
     /**
      * @throws Exception
      */
-    public function vendorMethods(Vendors $vendor, $request): Vendors
+    public function vendorMethods(Vendors $vendor, $request, bool $update = false): Vendors
     {
         $vendor
             ->setVendorName($request->get('vendor-name'))
@@ -29,6 +29,6 @@ trait VendorMethodsTrait
             ->setDescription($request->get('description'))
             ->setStatus(false);
 
-        return $this->commonMethods($vendor, $request, $this->vendorsRepository);
+        return $this->commonMethods($vendor, $update);
     }
 }
