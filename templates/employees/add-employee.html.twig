@@ -144,10 +144,12 @@
                                             <div class="row mt-3">
                                                 <div class="col-md-6">
                                                     <div class="form-group">
-                                                        <label>Default password for this employee</label>
-                                                        <input type="password" class="form-control" id="password"
+                                                        {% if employee is not defined %}
+                                                            <label>Default password for this employee</label>
+                                                            <input type="password" class="form-control" id="password"
                                                                name="password"
                                                                placeholder="Enter default password">
+                                                        {% endif %}
                                                     </div>
                                                 </div>
                                             </div>

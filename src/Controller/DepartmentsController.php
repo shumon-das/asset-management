@@ -16,8 +16,13 @@ class DepartmentsController extends AbstractApiController
     #[Route('/ams/departments', name: 'app_departments')]
     public function departments(): Response
     {
+        $employeeIds = $this->employeeRepository->findIds();
+//        $ids = array_values(array_column($employeeIds, 'id'));
         $departments = $this->departmentRepository->findBy(['isDeleted' => 0]);
-
+//        foreach ($departments as $key => $department) {
+//            dd(in_array($department->getId(), $ids));
+//            $departments[$key] = $department;
+//        }
         return $this->render('departments/departments.html.twig', [
             'departments' => $departments,
         ]);
@@ -30,7 +35,6 @@ class DepartmentsController extends AbstractApiController
     public function addDepartment(Request $request): RedirectResponse|Response
     {
         $this->departmentMethods(new Department(), $request);
-//        $this->addFlash('errors', 'department name should not be empty');
         return new RedirectResponse('departments');
     }
 

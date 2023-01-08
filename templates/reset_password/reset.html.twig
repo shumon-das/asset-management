@@ -6,10 +6,10 @@
     <div class="row mt-5">
         <div class="col-md-4">
             {% if error is defined %}
-               <span class="text-danger">{{ error }}</span>
-            {% elseif message is defined %}
-               <span class="text-success">{{ message }}</span>
-               <script>const myTimeout = setTimeout(window.location.href ="/", 5000);</script>
+                <span class="text-danger">{{ error }}</span>
+                {% elseif message is defined %}
+                <span class="text-success">{{ message }}</span>
+                <script>const myTimeout = setTimeout(window.location.href ="/", 5000);</script>
             {% endif %}
         </div>
         <div class="col-md-4">
