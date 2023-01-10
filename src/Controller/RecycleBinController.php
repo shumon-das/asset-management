@@ -18,30 +18,18 @@ class RecycleBinController extends AbstractApiController
     #[Route('/ams/recycle/vendors', name: 'app_recycle_vendors')]
     public function recycleVendors(): Response
     {
-        $vendors = $this->vendorsRepository->findBy(['isDeleted' => 1]);
-
-        return $this->render('vendors/vendors.html.twig', [
-            'vendors' => $vendors,
-            'recycle' => 'recycle',
-        ]);
+        return $this->returnResponseWithData(
+            $this->vendorsRepository,
+            'vendors/vendors.html.twig',
+            true
+        );
     }
 
     #[Route('/ams/revert-vendor/{id}', name: 'revert_vendor')]
     public function revertVendor($id, Request $request): Response
     {
-        /** @var Employee $user */
-        $user = $this->security->getUser();
-        $vendor = $this->vendorsRepository->find($id);
-        if(false === empty($vendor)) {
-            $vendor->setIsDeleted(0)
-                ->setDeletedAt(new \DateTimeImmutable())
-                ->setDeletedBy($user->getId())
-            ;
-            $this->entityManager->persist($vendor);
-            $this->entityManager->flush();
-        }
-        $route = $request->headers->get('referer');
-        return $this->redirect($route);
+        $this->revertItem($this->vendorsRepository, $id);
+        return $this->redirect($request->headers->get('referer'));
     }
 
     #[Route('/ams/recycle/assets', name: 'app_recycle_assets')]
@@ -51,7 +39,7 @@ class RecycleBinController extends AbstractApiController
         $assignedAssetIds = array_column($this->assigningAssetsRepository->findIds(), 'id');
         $data = [];
         foreach ($assets as $asset) {
-            $data[$asset->getId()] = $this->assetsListData($assignedAssetIds, $asset, $this->vendorsRepository);
+            $data[$asset->getId()] = $this->assetsListData($assignedAssetIds, $asset);
         }
 
         return $this->render('assets/asset-list.html.twig', [
@@ -63,16 +51,7 @@ class RecycleBinController extends AbstractApiController
     #[Route('/ams/revert-asset/{id}', name: 'revert_asset')]
     public function revertAsset(int $id, Request $request): Response
     {
-        /** @var Employee $user */
-        $user = $this->security->getUser();
-        $product = $this->assetsRepository->find($id);
-        $product->setIsDeleted(0)
-                ->setDeletedBy($user->getId())
-                ->setDeletedAt(new DateTimeImmutable())
-        ;
-        $this->entityManager->persist($product);
-        $this->entityManager->flush();
-
+        $this->revertItem($this->assetsRepository, $id);
         return $this->redirect($request->headers->get('referer'));
     }
 
@@ -81,7 +60,7 @@ class RecycleBinController extends AbstractApiController
     {
         $products = $this->productsRepository->findBy(['isDeleted' => 1]);
         foreach ($products as $key => $row) {
-            $products[$key] = $this->productData($row, $this->employeeRepository);
+            $products[$key] = $this->productData($row);
         }
 
         return $this->render('products/products.html.twig', [
@@ -93,38 +72,39 @@ class RecycleBinController extends AbstractApiController
     #[Route('/ams/revert-product/{id}', name: 'revert_product')]
     public function revertProduct(int $id, Request $request): Response
     {
-        /** @var Employee $user */
-        $user = $this->security->getUser();
-        $product = $this->productsRepository->find($id);
-        $product->setIsDeleted(0)
-                ->setDeletedBy($user->getId())
-                ->setDeletedAt(new DateTimeImmutable())
-        ;
-        $this->entityManager->persist($product);
-        $this->entityManager->flush();
-
+        $this->revertItem($this->productsRepository, $id);
         return $this->redirect($request->headers->get('referer'));
     }
 
     #[Route('/ams/recycle/employees', name: 'app_recycle_employees')]
     public function employee(): Response
     {
-        $employees = $this->employeeRepository->findBy(['isDeleted' => 1]);
-
-        return $this->render('employees/employees.html.twig', [
-            'employees' => $employees,
-            'recycle' => 'recycle'
-        ]);
+        return $this->returnResponseWithData(
+            $this->employeeRepository,
+            'employees/employees.html.twig',
+            true
+        );
     }
 
     #[Route('/ams/revert-employee/{id}', name: 'revert_employee')]
     public function deleteEmployee(int $id, Request $request): Response
     {
-        $location = $this->employeeRepository->find($id);
-        $location->setIsDeleted(0);
-        $this->entityManager->persist($location);
-        $this->entityManager->flush();
-
+        $this->revertItem($this->employeeRepository, $id);
         return $this->redirect($request->headers->get('referer'));
+    }
+
+    private function revertItem($repository, $id): bool
+    {
+        /** @var Employee $user */
+        $user = $this->security->getUser();
+        $item = $repository->find($id);
+        $item
+            ->setIsDeleted(0)
+            ->setDeletedBy($user->getId())
+            ->setDeletedAt(new DateTimeImmutable())
+        ;
+        $this->entityManager->persist($item);
+        $this->entityManager->flush();
+        return true;
     }
 }

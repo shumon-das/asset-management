@@ -26,7 +26,7 @@ class AssetsController extends AbstractApiController
         $assignedAssetIds = array_column($this->assigningAssetsRepository->findIds(), 'id');
         $data = [];
         foreach ($assets as $asset) {
-            $data[$asset->getId()] = $this->assetsListData($assignedAssetIds, $asset, $this->vendorsRepository);
+            $data[$asset->getId()] = $this->assetsListData($assignedAssetIds, $asset);
         }
 
         return $this->render('assets/asset-list.html.twig', [

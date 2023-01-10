@@ -32,9 +32,7 @@ class ExportsController extends AbstractApiController
     #[Route('/ams/exports', name: 'app_exports')]
     public function index(): Response
     {
-        return $this->render('exports/exports.html.twig', [
-            'controller_name' => 'ExportsController',
-        ]);
+        return $this->render('exports/exports.html.twig');
     }
 
     /**

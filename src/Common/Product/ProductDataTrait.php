@@ -2,13 +2,15 @@
 
 namespace App\Common\Product;
 
+use App\Common\NamesTrait;
 use App\Entity\Products;
-use App\Repository\EmployeeRepository;
 
 trait ProductDataTrait
 {
-    private function productData(?Products $product, EmployeeRepository $employeeRepository): array
+    use NamesTrait;
+    private function productData(Products $product): array
     {
+        $names = $this->allEntityIdsAndNames();
         return [
             'id' => $product->getId(),
             'category' => $product->getCategory(),
@@ -18,7 +20,7 @@ trait ProductDataTrait
             'description' => $product->getDescription(),
             'status' => $product->isStatus() ? 'active' : 'not active',
             'createdAt' => $product->getCreatedAt()->format('Y-M-d'),
-            'createdBy' => ucwords($employeeRepository->find($product->getCreatedBy())->getName()),
+            'createdBy' => ucwords($names['employeesIds'][$product->getCreatedBy()]),
         ];
     }
 }

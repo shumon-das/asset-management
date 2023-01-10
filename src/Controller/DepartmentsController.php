@@ -17,12 +17,11 @@ class DepartmentsController extends AbstractApiController
     public function departments(): Response
     {
         $employeeIds = $this->employeeRepository->findIds();
-//        $ids = array_values(array_column($employeeIds, 'id'));
+        $ids = array_values(array_column($employeeIds, 'id'));
         $departments = $this->departmentRepository->findBy(['isDeleted' => 0]);
-//        foreach ($departments as $key => $department) {
-//            dd(in_array($department->getId(), $ids));
-//            $departments[$key] = $department;
-//        }
+        foreach ($departments as $key => $department) {
+            $departments[$key] = $this->getDepartments($department, $ids);
+        }
         return $this->render('departments/departments.html.twig', [
             'departments' => $departments,
         ]);
@@ -43,5 +42,20 @@ class DepartmentsController extends AbstractApiController
     {
         $this->deleteItem($this->departmentRepository, $id, true);
         return $this->redirect($request->headers->get('referer'));
+    }
+
+    private function getDepartments(Department $department, array $ids): array
+    {
+        $names = $this->allEntityIdsAndNames();
+        return [
+            'id' => $department->getId(),
+            'departmentName' => $department->getDepartmentName(),
+            'contactPerson' => $department->getContactPerson(),
+            'contactPersonEmail' => $department->getContactPersonEmail(),
+            'contactPersonPhone' => $department->getContactPersonPhone(),
+            'createdAt' => $department->getCreatedAt()->format('Y-M-d'),
+            'createdBy' => $names['employeesIds'][$department->getCreatedBy()],
+            'use' => in_array($department->getId(), $ids),
+        ];
     }
 }

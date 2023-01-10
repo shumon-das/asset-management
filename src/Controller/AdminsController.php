@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Entity\Common\LocationMethodsTrait;
 use App\Entity\Location;
-use App\Entity\Vendors;
 use Exception;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,7 +17,6 @@ class AdminsController extends AbstractApiController
     public function index(): Response
     {
         $data = $this->locationRepository->findBy(['isDeleted' => 0]);
-
         return $this->render('admins/locations.html.twig', [
             'locations' => $data,
         ]);
@@ -56,10 +54,7 @@ class AdminsController extends AbstractApiController
     #[Route('/ams/delete-location/{id}', name: 'delete_location')]
     public function deleteLocation(int $id, Request $request): Response
     {
-        $location = $this->locationRepository->find($id);
-        $this->entityManager->remove($location);
-        $this->entityManager->flush();
-
+        $this->deleteItem($this->locationRepository, $id, true);
         return $this->redirect($request->headers->get('referer'));
     }
 }

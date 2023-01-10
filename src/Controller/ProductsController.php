@@ -21,7 +21,7 @@ class ProductsController extends AbstractApiController
     {
         $products = $this->productsRepository->findBy(['isDeleted' => 0]);
         foreach ($products as $key => $row) {
-            $products[$key] = $this->productData($row, $this->employeeRepository);
+            $products[$key] = $this->productData($row);
         }
 
         return $this->render('products/products.html.twig', [
@@ -32,9 +32,7 @@ class ProductsController extends AbstractApiController
     #[Route('/ams/add-product', name: 'app_add_product')]
     public function addProduct(): Response
     {
-        return $this->render('products/add-product.html.twig', [
-            'controller_name' => 'ProductsController',
-        ]);
+        return $this->render('products/add-product.html.twig');
     }
 
     /**
@@ -55,9 +53,8 @@ class ProductsController extends AbstractApiController
     public function editProduct(int $id): Response
     {
         $product = $this->productsRepository->find($id);
-
         return $this->render('products/add-product.html.twig', [
-            'product' => $this->productData($product, $this->employeeRepository),
+            'product' => $this->productData($product),
         ]);
     }
 
@@ -65,9 +62,8 @@ class ProductsController extends AbstractApiController
     public function viewProduct(int $id): Response
     {
         $product = $this->productsRepository->find($id);
-
         return $this->render('products/view-product.html.twig', [
-            'product' => $this->productData($product, $this->employeeRepository),
+            'product' => $this->productData($product),
             'createdBy' => ucwords($this->employeeRepository->find($product->getCreatedBy())->getName()),
         ]);
     }

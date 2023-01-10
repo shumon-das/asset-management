@@ -15,6 +15,7 @@ use App\Repository\VendorsRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -74,13 +75,6 @@ class AbstractApiController extends AbstractController
         ];
     }
 
-    protected function persistData(Location $entityData): RedirectResponse
-    {
-        $this->entityManager->persist($entityData);
-        $this->entityManager->flush();
-        return new RedirectResponse('location');
-    }
-
     public function deleteItem(mixed $repository, int $id, bool $permanently = false): bool
     {
         /** @var Employee $user */
@@ -97,5 +91,14 @@ class AbstractApiController extends AbstractController
             : $this->entityManager->persist($item);
         $this->entityManager->flush();
         return true;
+    }
+
+    public function returnResponseWithData(mixed $repository, string $html, bool $recycle): Response
+    {
+        $employees = $repository->findBy(['isDeleted' => $recycle ? 1 : 0]);
+        return $this->render($html, [
+            'employees' => $employees,
+            'recycle' => $recycle ? 'recycle' : ''
+        ]);
     }
 }
