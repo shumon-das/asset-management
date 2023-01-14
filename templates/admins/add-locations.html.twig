@@ -70,9 +70,13 @@
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <label>Country</label>
-                                                        <input type="text" class="form-control" id="country"
-                                                               value="{{ location.country ?? '' }}"
-                                                               name="country" placeholder="Enter country">
+{#                                                        <input type="text" class="form-control" id="country"#}
+{#                                                               value="{{ location.country ?? '' }}"#}
+{#                                                               name="country" placeholder="Enter country">#}
+                                                        <select class="form-control" name="country" id="">
+                                                            <option selected="selected">{{ location.country ?? 'Select Country' }}</option>
+                                                            {% include 'countries.html.twig' %}
+                                                        </select>
                                                     </div>
                                                 </div>
                                             </div>
