@@ -68,7 +68,7 @@
                     <td>{{ data.contactPersonPhone }}</td>
                     <td>
                       <div class="row d-sm-flex justify-content-sm-around">
-                        <a href="{{ data.use ? 'javascript:void(0)' : path('delete_department', {id: data.id}) }}" class="btn btn-danger btn-sm {{ data.use ? 'delete-impossible' : '' }}">
+                        <a href="{{ data.use ? 'javascript:void(0)' : path('delete_department', {id: data.id}) }}" class="btn btn-sm {{ data.use ? 'delete-impossible btn-dark' : 'btn-danger' }}">
                           <i class="fas fa-trash"></i>
                         </a>
                       </div>

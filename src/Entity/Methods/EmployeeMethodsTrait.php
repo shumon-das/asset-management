@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Entity\Common;
+namespace App\Entity\Methods;
 
 use App\Entity\Employee;
 use Exception;

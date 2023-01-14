@@ -1,6 +1,6 @@
 {% extends 'form-base.html.twig' %}
 
-{% block title %}add new department{% endblock %}
+{% block title %}settings{% endblock %}
 
 {% block body %}
     <!-- Navbar -->
@@ -23,7 +23,7 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1>Add New Department</h1>
+                        <h1>Add New Category</h1>
                     </div>
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
@@ -42,29 +42,36 @@
                     <div class="col-12">
                         <div class="card">
                             <div class="card-header">
-                                <a href="{{ path('app_departments') }}" class="btn btn-primary btn-sm">back to
-                                    departments</a>
+                                <a href="{{ path('app_home') }}" class="btn btn-primary btn-sm">back to
+                                    dashboard</a>
                             </div>
                             <div class="card-body">
                                 <div class="row">
-                                    <form action="{{ path('app_save_department') }}" method="post">
+                                    <form action="{{ path('app_save_settings') }}" method="post">
                                         <div class="col-md-12">
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <div class="form-group">
-                                                        <label>Department Name</label>
-                                                        <input type="text" class="form-control" id="departmentName"
-                                                               name="departmentName" required
-                                                               placeholder="Enter department name">
+                                                        <label>Category Name</label>
+                                                        <input type="text" class="form-control" id="category-name"
+                                                               name="category-name" required
+                                                               placeholder="Enter category name">
                                                     </div>
                                                 </div>
 
                                                 <div class="col-md-6">
                                                     <div class="form-group">
-                                                        <label>Contact Person</label>
-                                                        <input type="text" class="form-control" id="contactPerson"
-                                                               name="contactPerson"
-                                                               placeholder="Enter contact person">
+                                                        <label>Logo</label>
+                                                        <select class="form-control select2" name="logo"
+                                                                    id="logo" style="width: 100%;">
+                                                            <option selected="selected">select logo</option>
+                                                            <option>Alaska</option>
+                                                            <option>California</option>
+                                                            <option>Delaware</option>
+                                                            <option>Tennessee</option>
+                                                            <option>Texas</option>
+                                                            <option>Washington</option>
+                                                        </select>
                                                     </div>
                                                 </div>
                                             </div>

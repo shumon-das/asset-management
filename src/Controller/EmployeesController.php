@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Common\NamesTrait;
-use App\Entity\Common\EmployeeMethodsTrait;
+use App\Entity\Methods\EmployeeMethodsTrait;
 use App\Entity\Employee;
 use DateTimeImmutable;
 use Exception;

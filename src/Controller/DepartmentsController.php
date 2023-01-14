@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\Common\DepartmentMethodsTrait;
+use App\Entity\Methods\DepartmentMethodsTrait;
 use App\Entity\Department;
 use Exception;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -31,7 +31,16 @@ class DepartmentsController extends AbstractApiController
      * @throws Exception
      */
     #[Route('/ams/add-department', name: 'app_add_department')]
-    public function addDepartment(Request $request): RedirectResponse|Response
+    public function addDepartment(Request $request): Response
+    {
+        return $this->render('departments/add-department.html.twig');
+    }
+
+    /**
+     * @throws Exception
+     */
+    #[Route('/ams/save-department', name: 'app_save_department')]
+    public function saveDepartment(Request $request): RedirectResponse|Response
     {
         $this->departmentMethods(new Department(), $request);
         return new RedirectResponse('departments');

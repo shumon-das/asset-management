@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Common\Product\ProductDataTrait;
-use App\Entity\Common\ProductMethodsTrait;
+use App\Entity\Methods\ProductMethodsTrait;
 use App\Entity\Products;
 use Exception;
 use Symfony\Component\HttpFoundation\RedirectResponse;

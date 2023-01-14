@@ -5,7 +5,7 @@ namespace App\Controller;
 use App\Common\Asset\AssetListDataTrait;
 use App\Common\NamesTrait;
 use App\Entity\Assets;
-use App\Entity\Common\AssetMethodsTrait;
+use App\Entity\Methods\AssetMethodsTrait;
 use App\Repository\AssetsRepository;
 use Exception;
 use Symfony\Component\HttpFoundation\RedirectResponse;

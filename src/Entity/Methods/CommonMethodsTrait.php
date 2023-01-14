@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Entity\Common;
+namespace App\Entity\Methods;
 
 use App\Entity\Assets;
 use App\Entity\AssigningAssets;
+use App\Entity\Categories;
 use App\Entity\Department;
 use App\Entity\Employee;
 use App\Entity\Location;
@@ -18,8 +19,8 @@ trait CommonMethodsTrait
      * @throws Exception
      */
     private function commonMethods(
-        Location|Department|Vendors|Products|Employee|Assets|AssigningAssets $entity, bool $update
-    ): Location|Department|Vendors|Products|Employee|Assets|AssigningAssets
+        Location|Department|Vendors|Products|Employee|Assets|AssigningAssets|Categories $entity, bool $update
+    ): Location|Department|Vendors|Products|Employee|Assets|AssigningAssets|Categories
     {
         /** @var Employee $user */
         $user = $this->security->getUser();

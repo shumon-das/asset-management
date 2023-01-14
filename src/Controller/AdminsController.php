@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\Common\LocationMethodsTrait;
+use App\Entity\Methods\LocationMethodsTrait;
 use App\Entity\Location;
 use Exception;
 use Symfony\Component\HttpFoundation\RedirectResponse;

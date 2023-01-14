@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\Common\VendorMethodsTrait;
+use App\Entity\Methods\VendorMethodsTrait;
 use App\Entity\Employee;
 use App\Entity\Vendors;
 use Exception;

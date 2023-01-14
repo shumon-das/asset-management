@@ -4,9 +4,9 @@ namespace App\Controller;
 
 use App\Common\NamesTrait;
 use App\Entity\Employee;
-use App\Entity\Location;
 use App\Repository\AssetsRepository;
 use App\Repository\AssigningAssetsRepository;
+use App\Repository\CategoriesRepository;
 use App\Repository\DepartmentRepository;
 use App\Repository\EmployeeRepository;
 use App\Repository\LocationRepository;
@@ -14,7 +14,6 @@ use App\Repository\ProductsRepository;
 use App\Repository\VendorsRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\Security;
@@ -32,8 +31,8 @@ class AbstractApiController extends AbstractController
     public LocationRepository $locationRepository;
     public DepartmentRepository $departmentRepository;
     public UserPasswordHasherInterface $hasher;
+    protected CategoriesRepository $categoriesRepository;
 
-    /** @var Employee $user */
     public null|UserInterface $user;
     use NamesTrait;
 
@@ -48,6 +47,7 @@ class AbstractApiController extends AbstractController
         EntityManagerInterface    $entityManager,
         Security                  $security,
         UserPasswordHasherInterface $hasher,
+        CategoriesRepository $categoriesRepository,
     )
     {
         $this->assigningAssetsRepository = $assigningAssetsRepository;
@@ -60,6 +60,7 @@ class AbstractApiController extends AbstractController
         $this->locationRepository = $locationRepository;
         $this->departmentRepository = $departmentRepository;
         $this->hasher = $hasher;
+        $this->categoriesRepository = $categoriesRepository;
         $this->user = $this->security->getUser();
     }
 
