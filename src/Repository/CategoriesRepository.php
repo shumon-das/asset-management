@@ -63,4 +63,14 @@ class CategoriesRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+
+ public function findIds(): ?array
+    {
+        return $this->createQueryBuilder('c')
+            ->select('c.id as id')
+            ->addSelect('d.name as name')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 }

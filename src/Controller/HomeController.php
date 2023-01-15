@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Common\NamesTrait;
 use App\Entity\Categories;
 use App\Entity\Methods\CategoriesMethodsTrait;
 use Exception;
@@ -12,6 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class HomeController extends AbstractApiController
 {
+    use NamesTrait;
     use CategoriesMethodsTrait;
     #[Route('/ams/dashboard', name: 'app_home')]
     public function index(): Response
@@ -92,10 +94,28 @@ class HomeController extends AbstractApiController
         ]);
     }
 
-    #[Route('/ams/settings', name: 'app_settings')]
-    public function settings(): Response
+    #[Route('/ams/categories', name: 'app_categories')]
+    public function categories(): Response
     {
-        return $this->render('home/settings.html.twig', [
+        $categories = $this->categoriesRepository->findBy(['isDeleted' => 0]);
+        $names = $this->allEntityIdsAndNames();
+        $childes = [];
+        foreach ($categories as $category) {
+            if ($category->getParent() === null && count($category->getChildes()) > 0) {
+                $childes = $names['categories'][$category->getId()];
+            }
+        }
+
+        return $this->render('home/categories.html.twig', [
+            'categories' => $categories,
+            'subCategory' => $childes,
+        ]);
+    }
+
+    #[Route('/ams/add-category', name: 'app_add_category')]
+    public function addCategory(): Response
+    {
+        return $this->render('home/add-category.html.twig', [
             'aside' => ''
         ]);
     }
@@ -103,14 +123,14 @@ class HomeController extends AbstractApiController
     /**
      * @throws Exception
      */
-    #[Route('/ams/save-settings', name: 'app_save_settings')]
-    public function saveSettings(Request $request): RedirectResponse
+    #[Route('/ams/save-category', name: 'app_save_category')]
+    public function saveCategory(Request $request): RedirectResponse
     {
         $id = $request->request->get('id');
         $id
             ? $this->categoriesMethods($this->categoriesRepository->find($id), $request, true)
             : $this->categoriesMethods(new Categories(), $request);
 
-        return new RedirectResponse('settings');
+        return new RedirectResponse('categories');
     }
 }

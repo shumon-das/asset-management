@@ -31,7 +31,7 @@ class AbstractApiController extends AbstractController
     public LocationRepository $locationRepository;
     public DepartmentRepository $departmentRepository;
     public UserPasswordHasherInterface $hasher;
-    protected CategoriesRepository $categoriesRepository;
+    public CategoriesRepository $categoriesRepository;
 
     public null|UserInterface $user;
     use NamesTrait;
