@@ -68,7 +68,7 @@ class CategoriesRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('c')
             ->select('c.id as id')
-            ->addSelect('d.name as name')
+            ->addSelect('c.name as name')
             ->getQuery()
             ->getResult()
         ;

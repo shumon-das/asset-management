@@ -39,31 +39,81 @@
         <section class="content">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col-md-2">
-                        <div class="row">
-                            <div class="col-6">
-                                <h5>Categories</h5>
-                            </div>
-                            <div class="col-6 text-right">
-                                <a href="#" class="btn btn-sm btn-primary">
-                                    <i class="fas fa-plus-square"></i>
+                    <div class="col-md-2" style="border-right: 2px solid lightgray">
+{#                        <div class="row">#}
+{#                            <div class="col-6">#}
+{#                                <h5>Categories</h5>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                        <form action="{{ path('app_save_category') }}" method="post">#}
+{#                            <div class="row">#}
+{#                                <div class="col-9">#}
+{#                                    <input type="text" class="form-control" id="category-name"#}
+{#                                           name="category-name" required#}
+{#                                           placeholder="Enter category name">#}
+{#                                </div>#}
+{#                                <div class="col-2 text-right">#}
+{#                                    <button type="submit" class="btn btn-primary"> add </button>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                        </form>#}
+{#                        <br>#}
+{#                        <table class="table">#}
+{#                            <tbody>#}
+{#                            {% for category in categories %}#}
+{#                                {% if category.parent is null %}#}
+{#                                    <tr>#}
+{#                                        <td class="btn-flat btn-outline-primary d-flex justify-content-between">#}
+{#                                               <span> {{ category.name }} </span>#}
+{#                                                {% if category.childes|length > 0 %}#}
+{#                                                    <i class="fas fa-angle-right right"></i>#}
+{#                                                {% endif %}#}
+{#                                        </td>#}
+{#                                    </tr>#}
+{#                                {% endif %}#}
+{#                            {% endfor %}#}
+{#                            </tbody>#}
+{#                        </table>#}
+                        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                            <!-- Add icons to the links using the .nav-icon class with font-awesome or any other icon font library -->
+                            <li class="nav-item">
+                                <a href="{{ path('app_home') }}" class="nav-link">
+                                    <i class="nav-icon fas fa-tachometer-alt"></i>
+                                    <p> Dashboard </p>
                                 </a>
-                            </div>
-                        </div>
-                        <table class="table">
-                            <tbody>
-                            {% for category in categories %}
-                                <tr>
-                                    <td class="btn-flat btn-outline-primary d-flex justify-content-between">
-                                       <span> {{ category.name }} </span>
-                                        {% if category.childes|length > 0 %}
-                                            <i class="fas fa-angle-right right"></i>
-                                        {% endif %}
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
+                            </li>
+
+                            <li class="nav-item">
+                                <a href="#" class="nav-link">
+                                    <i class="nav-icon fas fa-city"></i>
+                                    <p>
+                                        Assets
+                                        <i class="fas fa-angle-left right"></i>
+                                        <span class="badge badge-info right">6</span>
+                                    </p>
+                                </a>
+                                <ul class="nav nav-treeview">
+                                    <li class="nav-item">
+                                        <a href="{{ path('app_assets') }}" class="nav-link">
+                                            <i class="far fa-circle nav-icon"></i>
+                                            <p>Lists</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="{{ path('add_assets') }}" class="nav-link">
+                                            <i class="far fa-circle nav-icon"></i>
+                                            <p>Add new asset</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="{{ path('assigned_assets') }}" class="nav-link">
+                                            <i class="far fa-circle nav-icon"></i>
+                                            <p>Assigns assets</p>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
                     </div>
 
                     <div class="col-md-3">
@@ -71,17 +121,43 @@
                             <div class="col-6">
                                 <h5>Sub Categories</h5>
                             </div>
-                            <div class="col-6 text-right">
-                                <a href="#" class="btn btn-sm btn-primary">
-                                    <i class="fas fa-plus-square"></i>
-                                </a>
-                            </div>
                         </div>
+                        <form action="{{ path('app_save_category') }}" method="post">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="col-12">
+                                        <select class="form-control" name="parent" id="" required>
+                                            <option value="">Select Category</option>
+                                            {% for category in categories %}
+                                                <option value="{{ category.id }}">{{ category.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="row">
+                                        <div class="col-9">
+                                            <input type="text" class="form-control" id="category-name"
+                                                   name="category-name" required
+                                                   placeholder="Sub Category name">
+                                        </div>
+                                        <input type="hidden" name="sub" id="" value="sub">
+                                        <input type="hidden" name="id" id="" value="">
+                                        <div class="col-2 text-right">
+                                            <button type="submit" class="btn btn-primary"> add </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                        <br>
                         <table class="table">
                             <tbody>
                             {% for category in categories %}
                                 <tr>
-                                    <td class="btn-flat btn-outline-primary">{{ category.name }}</td>
+                                    {% if category.parent %}
+                                        <td class="btn-flat btn-outline-primary">{{ category.name }}</td>
+                                    {% endif %}
                                 </tr>
                             {% endfor %}
                             </tbody>

@@ -4,21 +4,28 @@ namespace App\Entity;
 
 use App\Common\CommonMethodsTrait\DeletedMethodsTraits\DeletedMethodsTrait;
 use App\Common\CommonMethodsTrait\UserMethodsTraits\UserMethodsTrait;
+use App\Common\UuidMethodsTrait;
 use App\Repository\EmployeeRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: EmployeeRepository::class)]
 class Employee implements UserInterface, PasswordAuthenticatedUserInterface
 {
     use DeletedMethodsTrait;
     use UserMethodsTrait;
+    use UuidMethodsTrait;
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
+
+    #[ORM\Column(type: 'uuid')]
+    private Uuid $uuid;
 
     #[ORM\Column(length: 180, unique: true)]
     private ?string $email = null;

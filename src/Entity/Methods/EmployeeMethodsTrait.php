@@ -4,6 +4,7 @@ namespace App\Entity\Methods;
 
 use App\Entity\Employee;
 use Exception;
+use Symfony\Component\Uid\Uuid;
 
 trait EmployeeMethodsTrait
 {
@@ -19,6 +20,7 @@ trait EmployeeMethodsTrait
             ? $employee->setPassword($this->hasher->hashPassword($employee, $request->get('password')))
             : null;
         $employee
+            ->setUuid(Uuid::v4())
             ->setName($request->get('name'))
             ->setEmail($email)
             ->setLocation($request->get('location'))
