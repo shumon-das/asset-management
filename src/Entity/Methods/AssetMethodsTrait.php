@@ -13,7 +13,7 @@ trait AssetMethodsTrait
     /**
      * @throws Exception
      */
-    public function assetMethods(Assets $asset, $request, bool $update = false): Assets
+    public function assetMethods(Assets $asset, $request, bool $update = false): array
     {
         $asset
             ->setProductCategory($request->get('product-category'))

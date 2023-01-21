@@ -1,0 +1,20 @@
+{% block toast %}
+  <link rel="stylesheet" href="{{ asset('plugins/toastr/toastr.min.css') }}">
+  <!-- jQuery -->
+  <script src="{{ asset('plugins/jquery/jquery.min.js') }}"></script>
+  <script src="{{ asset('plugins/toastr/toastr.min.js') }}"></script>
+
+  <script>
+    toastr.options = {
+      "timeOut": "2000",
+    }
+    function toastMessage(status, message = null) {
+      console.log(message)
+      if (status && status === 'success') {
+        toastr.success(message);
+      } else {
+        toastr.error(message);
+      }
+    }
+  </script>
+{% endblock %}

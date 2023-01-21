@@ -34,7 +34,7 @@ class AssetsController extends AbstractApiController
         ]);
     }
 
-    #[Route('/ams/asset', name: 'add_assets')]
+    #[Route('/ams/add-asset', name: 'add_asset')]
     public function addAsset(): Response
     {
         $products = $this->productsRepository->findAll();
@@ -55,10 +55,12 @@ class AssetsController extends AbstractApiController
     public function saveAssets(Request $request): RedirectResponse
     {
         $id = $request->request->get('id');
-        $id
+        $result = $id
             ? $this->assetMethods($this->assetsRepository->find($id), $request, true)
             :$this->assetMethods(new Assets(), $request);
-        return new RedirectResponse('assets');
+
+        $this->addFlash('message', $result);
+        return new RedirectResponse('add-asset');
     }
 
     #[Route('/ams/edit-asset/{id}', name: 'edit_asset')]
