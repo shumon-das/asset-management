@@ -42,11 +42,12 @@ class ProductsController extends AbstractApiController
     public function saveProducts(Request $request): RedirectResponse
     {
         $id =  $request->request->get('id');
-        $id
+        $result = $id
             ? $this->productMethods($this->productsRepository->find($id), $request, true)
             : $this->productMethods(new Products(), $request);
 
-        return new RedirectResponse('products');
+        $this->addFlash('message', $result);
+        return new RedirectResponse('add-product');
     }
 
     #[Route('/ams/edit-product/{id}', name: 'edit_product')]

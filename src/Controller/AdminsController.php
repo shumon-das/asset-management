@@ -37,10 +37,12 @@ class AdminsController extends AbstractApiController
     public function saveLocation(Request $request): Response|RedirectResponse
     {
         $id = $request->request->get('id');
-        $id
+        $result = $id
             ? $this->locationMethods($this->locationRepository->find($id), $request, true)
             : $this->locationMethods(new Location(), $request);
-        return new RedirectResponse('location');
+
+        $this->addFlash('message', $result);
+        return new RedirectResponse('add-location');
     }
 
     #[Route('/ams/edit-location/{id}', name: 'admin_edit_location')]

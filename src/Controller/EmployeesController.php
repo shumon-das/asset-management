@@ -43,14 +43,15 @@ class EmployeesController extends AbstractApiController
      * @throws Exception
      */
     #[Route('/ams/save-employee', name: 'app_save_employee')]
-    public function saveEmployee(Request $request): RedirectResponse|Response
+    public function saveEmployee(Request $request): RedirectResponse
     {
-        $request = $request->request;
-        $id = $request->get('id');
-        $id
+        $id = $request->request->get('id');
+        $result = $id
             ? $this->employeeMethods($this->employeeRepository->find($id), $request, true)
             : $this->employeeMethods(new Employee(), $request);
-            return new RedirectResponse('employees');
+
+        $this->addFlash('message', $result);
+        return new RedirectResponse('add-employee');
     }
 
     #[Route('/ams/edit-employee/{id}', name: 'edit_employee')]

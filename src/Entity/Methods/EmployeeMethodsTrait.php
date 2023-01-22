@@ -13,7 +13,7 @@ trait EmployeeMethodsTrait
     /**
      * @throws Exception
      */
-    public function employeeMethods(Employee $employee, $request, bool $update = false): Employee
+    public function employeeMethods(Employee $employee, $request, bool $update = false): array
     {
         $email = $request->get('email');
         false === empty($request->get('password'))

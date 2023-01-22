@@ -12,7 +12,7 @@ trait ProductMethodsTrait
     /**
      * @throws Exception
      */
-    public function productMethods(Products $product, $request, bool $update = false): Products
+    public function productMethods(Products $product, $request, bool $update = false): array
     {
         $product
             ->setCategory($request->get('product-category'))

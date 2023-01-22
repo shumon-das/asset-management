@@ -127,10 +127,11 @@ class HomeController extends AbstractApiController
     public function saveCategory(Request $request): RedirectResponse
     {
         $id = $request->request->get('id');
-        $id
+        $result = $id
             ? $this->categoriesMethods($this->categoriesRepository->find($id), $request, true)
             : $this->categoriesMethods(new Categories(), $request);
 
-        return new RedirectResponse('categories');
+        $this->addFlash('message', $result);
+        return new RedirectResponse('add-category');
     }
 }

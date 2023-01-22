@@ -12,7 +12,7 @@ trait CategoriesMethodsTrait
     /**
      * @throws Exception
      */
-    public function categoriesMethods(Categories $categories, $request, bool $update = false): Categories
+    public function categoriesMethods(Categories $categories, $request, bool $update = false): array
     {
         $parent = $request->get('parent')
             ? $this->updateParentChildes($request->get('parent'))

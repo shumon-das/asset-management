@@ -12,7 +12,7 @@ trait DepartmentMethodsTrait
     /**
      * @throws Exception
      */
-    public function departmentMethods(Department $department, $request, bool $update = false): Department
+    public function departmentMethods(Department $department, $request, bool $update = false): array
     {
         $department
             ->setDepartmentName($request->get('departmentName'))

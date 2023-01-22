@@ -12,7 +12,7 @@ trait VendorMethodsTrait
     /**
      * @throws Exception
      */
-    public function vendorMethods(Vendors $vendor, $request, bool $update = false): Vendors
+    public function vendorMethods(Vendors $vendor, $request, bool $update = false): array
     {
         $vendor
             ->setVendorName($request->get('vendor-name'))

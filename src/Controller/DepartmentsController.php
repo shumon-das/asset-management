@@ -42,8 +42,10 @@ class DepartmentsController extends AbstractApiController
     #[Route('/ams/save-department', name: 'app_save_department')]
     public function saveDepartment(Request $request): RedirectResponse|Response
     {
-        $this->departmentMethods(new Department(), $request);
-        return new RedirectResponse('departments');
+        $result = $this->departmentMethods(new Department(), $request);
+
+        $this->addFlash('message', $result);
+        return new RedirectResponse('add-department');
     }
 
     #[Route('/ams/delete-department/{id}', name: 'delete_department')]

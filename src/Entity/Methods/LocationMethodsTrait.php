@@ -12,7 +12,7 @@ trait LocationMethodsTrait
     /**
      * @throws Exception
      */
-    public function locationMethods(Location $location, $request, bool $update = false): Location
+    public function locationMethods(Location $location, $request, bool $update = false): array
     {
         $location
             ->setOfficName($request->get('office-name'))

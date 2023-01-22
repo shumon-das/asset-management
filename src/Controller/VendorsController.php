@@ -40,10 +40,12 @@ class VendorsController extends AbstractApiController
     public function saveVendor(Request $request): RedirectResponse
     {
         $id = $request->request->get('id');
-        $id
+        $result = $id
             ? $this->vendorMethods($this->vendorsRepository->find($id), $request, true)
             : $this->vendorMethods(new Vendors(), $request);
-        return new RedirectResponse('vendors');
+
+        $this->addFlash('message', $result);
+        return new RedirectResponse('add-vendor');
     }
 
     #[Route('/ams/view-vendor/{id}', name: 'view_vendor')]
