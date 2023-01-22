@@ -9,9 +9,10 @@
       "timeOut": "3000",
     }
     function toastMessage(status, message = null) {
-      console.log(message)
       if (status && status === 'success') {
         toastr.success(message);
+      } else if(status && status === 'deleteSuccess') {
+        toastr.error(message);
       } else {
         toastr.error(message);
       }

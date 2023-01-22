@@ -1,0 +1,20 @@
+{% block toast %}
+    {% for message in app.flashes('message') %}
+        {% if message.success is defined %}
+            <script>
+                let msg = '{{ message.success }}'
+                toastMessage('success', msg)
+            </script>
+        {% elseif message.error is defined %}
+            <script>
+                let msg = '{{ message.error }}'
+                toastMessage('error', msg)
+            </script>
+        {% elseif message.deleteSuccess is defined %}
+            <script>
+                let msg = '{{ message.deleteSuccess }}'
+                toastMessage('error', msg)
+            </script>
+        {% endif %}
+    {% endfor %}
+{% endblock %}

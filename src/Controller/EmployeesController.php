@@ -77,14 +77,18 @@ class EmployeesController extends AbstractApiController
     #[Route('/ams/delete-employee/{id}', name: 'delete_employee')]
     public function deleteEmployee(int $id, Request $request): Response
     {
-        $this->deleteItem($this->employeeRepository, $id);
+        $result = $this->deleteItem($this->employeeRepository, $id);
+
+        $this->addFlash('message', $result);
         return $this->redirect($request->headers->get('referer'));
     }
 
     #[Route('/ams/delete-employee-permanently/{id}', name: 'delete_employee_permanently')]
     public function deleteEmployeePermanently($id, Request $request): Response
     {
-        $this->deleteItem($this->employeeRepository, $id, true);
+        $result = $this->deleteItem($this->employeeRepository, $id, true);
+
+        $this->addFlash('message', $result);
         return $this->redirect($request->headers->get('referer'));
     }
 }

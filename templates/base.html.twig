@@ -28,9 +28,11 @@
     <link rel="stylesheet" href="../plugins/daterangepicker/daterangepicker.css">
     <!-- summernote -->
     <link rel="stylesheet" href="../plugins/summernote/summernote-bs4.min.css">
+    {% include 'toast.html.twig' %}
 </head>
-<body class="hold-transition sidebar-mini layout-fixed">
+<body class="hold-transition sidebar-mini">
 <div class="wrapper">
+    {% include 'toast-html.html.twig' %}
     {% block body %}{% endblock %}
 </div>
 <!-- ./wrapper -->

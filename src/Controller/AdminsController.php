@@ -56,7 +56,9 @@ class AdminsController extends AbstractApiController
     #[Route('/ams/delete-location/{id}', name: 'delete_location')]
     public function deleteLocation(int $id, Request $request): Response
     {
-        $this->deleteItem($this->locationRepository, $id, true);
+        $result = $this->deleteItem($this->locationRepository, $id, true);
+
+        $this->addFlash('message', $result);
         return $this->redirect($request->headers->get('referer'));
     }
 }

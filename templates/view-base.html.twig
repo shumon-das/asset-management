@@ -30,9 +30,11 @@
   <link rel="stylesheet" href="{{ asset('plugins/dropzone/min/dropzone.min.css') }}">
   <!-- Theme style -->
   <link rel="stylesheet" href="{{ asset('dist/css/adminlte.min.css') }}">
+    {% include 'toast.html.twig' %}
 </head>
 <body class="hold-transition sidebar-mini">
 <div class="wrapper">
+    {% include 'toast-html.html.twig' %}
     {% block body %} {% endblock body %}
 </div>
 <!-- ./wrapper -->

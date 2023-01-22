@@ -18,17 +18,19 @@ class RecycleBinController extends AbstractApiController
     #[Route('/ams/recycle/vendors', name: 'app_recycle_vendors')]
     public function recycleVendors(): Response
     {
-        return $this->returnResponseWithData(
-            $this->vendorsRepository,
-            'vendors/vendors.html.twig',
-            true
-        );
+        return $this->render(
+            'vendors/vendors.html.twig', [
+                'vendors' => $this->vendorsRepository->findBy(['isDeleted' => 1]),
+            'recycle' => 'recycle'
+        ]);
     }
 
     #[Route('/ams/revert-vendor/{id}', name: 'revert_vendor')]
     public function revertVendor($id, Request $request): Response
     {
-        $this->revertItem($this->vendorsRepository, $id);
+        $result = $this->revertItem($this->vendorsRepository, $id);
+
+        $this->addFlash('message', $result);
         return $this->redirect($request->headers->get('referer'));
     }
 
@@ -51,7 +53,9 @@ class RecycleBinController extends AbstractApiController
     #[Route('/ams/revert-asset/{id}', name: 'revert_asset')]
     public function revertAsset(int $id, Request $request): Response
     {
-        $this->revertItem($this->assetsRepository, $id);
+        $result = $this->revertItem($this->assetsRepository, $id);
+
+        $this->addFlash('message', $result);
         return $this->redirect($request->headers->get('referer'));
     }
 
@@ -72,7 +76,9 @@ class RecycleBinController extends AbstractApiController
     #[Route('/ams/revert-product/{id}', name: 'revert_product')]
     public function revertProduct(int $id, Request $request): Response
     {
-        $this->revertItem($this->productsRepository, $id);
+        $result = $this->revertItem($this->productsRepository, $id);
+
+        $this->addFlash('message', $result);
         return $this->redirect($request->headers->get('referer'));
     }
 
@@ -89,22 +95,28 @@ class RecycleBinController extends AbstractApiController
     #[Route('/ams/revert-employee/{id}', name: 'revert_employee')]
     public function deleteEmployee(int $id, Request $request): Response
     {
-        $this->revertItem($this->employeeRepository, $id);
+        $result = $this->revertItem($this->employeeRepository, $id);
+
+        $this->addFlash('message', $result);
         return $this->redirect($request->headers->get('referer'));
     }
 
-    private function revertItem($repository, $id): bool
+    private function revertItem($repository, $id): array
     {
-        /** @var Employee $user */
-        $user = $this->security->getUser();
-        $item = $repository->find($id);
-        $item
-            ->setIsDeleted(0)
-            ->setDeletedBy($user->getId())
-            ->setDeletedAt(new DateTimeImmutable())
-        ;
-        $this->entityManager->persist($item);
-        $this->entityManager->flush();
-        return true;
+        try {
+            /** @var Employee $user */
+            $user = $this->security->getUser();
+            $item = $repository->find($id);
+            $item
+                ->setIsDeleted(0)
+                ->setDeletedBy($user->getId())
+                ->setDeletedAt(new DateTimeImmutable())
+            ;
+            $this->entityManager->persist($item);
+            $this->entityManager->flush();
+            return ['success' => 'Item reverted successfully'];
+        } catch (\Exception $exception) {
+            return ['error' => $exception->getMessage()];
+        }
     }
 }

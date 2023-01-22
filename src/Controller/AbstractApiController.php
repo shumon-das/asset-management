@@ -12,7 +12,9 @@ use App\Repository\EmployeeRepository;
 use App\Repository\LocationRepository;
 use App\Repository\ProductsRepository;
 use App\Repository\VendorsRepository;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -76,22 +78,27 @@ class AbstractApiController extends AbstractController
         ];
     }
 
-    public function deleteItem(mixed $repository, int $id, bool $permanently = false): bool
+    public function deleteItem(mixed $repository, int $id, bool $permanently = false): array
     {
-        /** @var Employee $user */
-        $user = $this->security->getUser();
-        $item = $repository->find($id);
-        $this->entityManager->remove($item);
-        $item
-            ->setIsDeleted(1)
-            ->setDeletedAt(new \DateTimeImmutable())
-            ->setDeletedBy($user->getId())
-        ;
-        true === $permanently
-            ? $this->entityManager->remove($item)
-            : $this->entityManager->persist($item);
-        $this->entityManager->flush();
-        return true;
+        $deleteType = $permanently ? 'deleteSuccess' : 'success';
+        try {
+            /** @var Employee $user */
+            $user = $this->security->getUser();
+            $item = $repository->find($id);
+            $this->entityManager->remove($item);
+            $item
+                ->setIsDeleted(1)
+                ->setDeletedAt(new DateTimeImmutable())
+                ->setDeletedBy($user->getId())
+            ;
+            true === $permanently
+                ? $this->entityManager->remove($item)
+                : $this->entityManager->persist($item);
+            $this->entityManager->flush();
+            return [$deleteType => 'Item deleted successfully'];
+        } catch (Exception $exception) {
+            return ['error' => $exception->getMessage()];
+        }
     }
 
     public function returnResponseWithData(mixed $repository, string $html, bool $recycle): Response

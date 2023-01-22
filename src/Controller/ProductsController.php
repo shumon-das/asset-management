@@ -72,14 +72,18 @@ class ProductsController extends AbstractApiController
     #[Route('/ams/delete-product/{id}', name: 'delete_product')]
     public function deleteProduct(int $id, Request $request): Response
     {
-        $this->deleteItem($this->productsRepository, $id);
+        $result = $this->deleteItem($this->productsRepository, $id);
+
+        $this->addFlash('message', $result);
         return $this->redirect($request->headers->get('referer'));
     }
 
     #[Route('/ams/delete-product-permanently/{id}', name: 'delete_product_permanently')]
     public function deletePermanently($id, Request $request): Response
     {
-        $this->deleteItem($this->productsRepository, $id, true);
+        $result = $this->deleteItem($this->productsRepository, $id, true);
+
+        $this->addFlash('message', $result);
         return $this->redirect($request->headers->get('referer'));
     }
 }
