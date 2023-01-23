@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Assets;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -73,4 +74,18 @@ class AssetsRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
+
+    /**
+     * @throws NonUniqueResultException
+     */
+    public function getAssetsBetweenDate($date1, $date2): array
+    {
+        return $this->createQueryBuilder('a')
+            ->andWhere('a.warrantyExpiryDate BETWEEN :date1 AND :date2')
+            ->setParameters(['date1' => $date1, 'date2' => $date2])
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
+
 }

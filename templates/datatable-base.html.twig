@@ -71,6 +71,18 @@
   $(".assigned").attr('title', 'Re assign');
   $(".not-assign").attr('title', 'Assign now');
   $(".delete-impossible").attr('title', "Delete impossible,\nbecause it using somewhere");
+
+
+  let date = '2023-01-21 16:32:06';
+  $.ajax({
+      url: 'http://localhost/asset-management/public/ams/assets-expire-info',
+      method: 'post',
+      data: {date:date},
+      success: function (response) {
+          console.log(response)
+      }
+  })
+
   });
 
 </script>
