@@ -13,11 +13,12 @@ use Symfony\Component\Routing\Annotation\Route;
 class DepartmentsController extends AbstractApiController
 {
     use DepartmentMethodsTrait;
+
     #[Route('/ams/departments', name: 'app_departments')]
     public function departments(): Response
     {
-        $employeeIds = $this->employeeRepository->findIds();
-        $ids = array_values(array_column($employeeIds, 'id'));
+
+        $ids = $this->getIdsAsArray($this->employeeRepository->findAll(), 'getDepartment');
         $departments = $this->departmentRepository->findBy(['isDeleted' => 0]);
         foreach ($departments as $key => $department) {
             $departments[$key] = $this->getDepartments($department, $ids);

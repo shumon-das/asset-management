@@ -14,83 +14,90 @@
     </nav>
     <!-- /.navbar -->
 
-  {% include 'aside.html.twig' %}
+    {% include 'aside.html.twig' %}
 
-  <!-- Content Wrapper. Contains page content -->
-  <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
-    <section class="content-header">
-      <div class="container-fluid">
-        <div class="row mb-2">
-          <div class="col-sm-6">
-            <h1>Departments</h1>
-          </div>
-          <div class="col-sm-6">
-            <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="{{ path('app_home') }}">Home</a></li>
-              <li class="breadcrumb-item active">Departments</li>
-            </ol>
-          </div>
-        </div>
-      </div><!-- /.container-fluid -->
-    </section>
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1>Departments</h1>
+                    </div>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="{{ path('app_home') }}">Home</a></li>
+                            <li class="breadcrumb-item active">Departments</li>
+                        </ol>
+                    </div>
+                </div>
+            </div><!-- /.container-fluid -->
+        </section>
 
-    <!-- Main content -->
-    <section class="content">
-      <div class="container-fluid">
-        <div class="row">
-          <div class="col-12">
-            <div class="card">
-              <div class="card-header">
-                <a href="{{ path('app_add_department') }}" class="btn btn-primary btn-sm">
-                   <i class="fas fa-plus-circle mr-1"></i> add new department
-                </a>
-              </div>
-              <div class="card-body">
-                <table id="example1" class="table table-bordered table-striped">
-                  <thead>
-                  <tr>
-                    <th>S.No</th>
-                    <th>Department Name</th>
-                    <th>Contact Person Name</th>
-                    <th>Contact Person Email</th>
-                    <th>Contact Person Phone</th>
-                    <th>Action</th>
-                  </tr>
-                  </thead>
-                  <tbody>
-                  {% for data in departments %}
-                  <tr>
-                    <td>#ams-{{ data.id }}</td>
-                    <td>{{ data.departmentName}}</td>
-                    <td>{{ data.contactPerson }}</td>
-                    <td>{{ data.contactPersonEmail }}</td>
-                    <td>{{ data.contactPersonPhone }}</td>
-                    <td>
-                      <div class="row d-sm-flex justify-content-sm-around">
-                        <a href="{{ data.use ? 'javascript:void(0)' : path('delete_department', {id: data.id}) }}" class="btn btn-sm {{ data.use ? 'delete-impossible btn-dark' : 'btn-danger' }}">
-                          <i class="fas fa-trash"></i>
-                        </a>
-                      </div>
-                    </td>
-                  </tr>
-                  {% endfor %}
-                  </tbody>
-                </table>
-              </div>
-              <!-- /.card-body -->
+        <!-- Main content -->
+        <section class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <a href="{{ path('app_add_department') }}" class="btn btn-primary btn-sm">
+                                    <i class="fas fa-plus-circle mr-1"></i> add new department
+                                </a>
+                            </div>
+                            <div class="card-body">
+                                <table id="example1" class="table table-bordered table-striped">
+                                    <thead>
+                                    <tr>
+                                        <th>S.No</th>
+                                        <th>Department Name</th>
+                                        <th>Contact Person Name</th>
+                                        <th>Contact Person Email</th>
+                                        <th>Contact Person Phone</th>
+                                        <th>Action</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for data in departments %}
+                                        <tr>
+                                            <td>#ams-{{ data.id }}</td>
+                                            <td>{{ data.departmentName }}</td>
+                                            <td>{{ data.contactPerson }}</td>
+                                            <td>{{ data.contactPersonEmail }}</td>
+                                            <td>{{ data.contactPersonPhone }}</td>
+                                            <td>
+                                                <div class="row d-sm-flex justify-content-sm-around">
+                                                    {% if data.use %}
+                                                        <button class="btn btn-sm delete-impossible btn-dark">
+                                                            <i class="fas fa-trash"></i>
+                                                        </button>
+                                                    {% else %}
+                                                        <a href="{{ path('delete_department', {id: data.id}) }}"
+                                                           class="btn btn-sm btn-danger">
+                                                            <i class="fas fa-trash"></i>
+                                                        </a>
+                                                    {% endif %}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- /.card-body -->
+                        </div>
+                        <!-- /.card -->
+                    </div>
+                    <!-- /.col -->
+                </div>
+                <!-- /.row -->
             </div>
-            <!-- /.card -->
-          </div>
-          <!-- /.col -->
-        </div>
-        <!-- /.row -->
-      </div>
-      <!-- /.container-fluid -->
-    </section>
-    <!-- /.content -->
-  </div>
-  <!-- /.control-sidebar -->
+            <!-- /.container-fluid -->
+        </section>
+        <!-- /.content -->
+    </div>
+    <!-- /.control-sidebar -->
 
     {% include 'footer.html.twig' %}
 

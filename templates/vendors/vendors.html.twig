@@ -82,9 +82,15 @@
                                                               <i class="fas fa-trash-restore"></i>
                                                         </a>
                                                     {% else %}
-                                                        <a href="{{ path('delete_vendor', {id: vendor.id}) }}" class="btn btn-danger btn-sm">
-                                                            <i class="fas fa-trash"></i>
-                                                        </a>
+                                                        {% if vendor.use %}
+                                                            <button class="btn btn-sm delete-impossible btn-dark">
+                                                                <i class="fas fa-trash"></i>
+                                                            </button>
+                                                        {% else %}
+                                                           <a href="{{ path('delete_vendor', {id: vendor.id}) }}" class="btn btn-sm btn-danger">
+                                                                <i class="fas fa-trash"></i>
+                                                           </a>
+                                                        {% endif %}
                                                     {% endif %}
                                                 </div>
                                             </td>

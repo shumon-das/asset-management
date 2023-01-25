@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\Methods\VendorMethodsTrait;
-use App\Entity\Employee;
 use App\Entity\Vendors;
 use Exception;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -19,6 +18,10 @@ class VendorsController extends AbstractApiController
     public function vendors(): Response
     {
         $vendors = $this->vendorsRepository->findBy(['isDeleted' => 0]);
+        $assetVendorIds = $this->getIdsAsArray($this->assetsRepository->findAll(), 'getVendor');
+        foreach ($vendors as $key => $vendor) {
+            $vendors[$key] = $this->getVendor($vendor, $assetVendorIds);
+        }
 
         return $this->render('vendors/vendors.html.twig', [
             'vendors' => $vendors,
@@ -84,5 +87,19 @@ class VendorsController extends AbstractApiController
 
         $this->addFlash('message', $result);
         return $this->redirect($request->headers->get('referer'));
+    }
+
+    private function getVendor(Vendors $vendor, array $ids): array
+    {
+        return [
+            'id' => $vendor->getId(),
+            'vendorName' => $vendor->getVendorName(),
+            'contactPerson' => $vendor->getContactPerson(),
+            'email' => $vendor->getEmail(),
+            'gstinNo' => $vendor->getGstinNo(),
+            'phone' => $vendor->getPhone(),
+            'status' => null,
+            'use' => in_array($vendor->getId(), $ids),
+        ];
     }
 }

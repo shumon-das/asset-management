@@ -49,4 +49,28 @@ trait CommonMethodsTrait
             ? ['success' => 'data updated successfully']
             : ['success' => 'data saved successfully'] ;
     }
+
+
+    private function getVendor(Vendors $vendor, array $ids): array
+    {
+        return [
+            'id' => $vendor->getId(),
+            'vendorName' => $vendor->getVendorName(),
+            'contactPerson' => $vendor->getContactPerson(),
+            'email' => $vendor->getEmail(),
+            'gstinNo' => $vendor->getGstinNo(),
+            'phone' => $vendor->getPhone(),
+            'status' => null,
+            'use' => in_array($vendor->getId(), $ids),
+        ];
+    }
+
+    public function getIdsAsArray(array $findAll, string $entity): array
+    {
+        $data = [];
+        foreach ($findAll as $item) {
+            $data[] += $item->{$entity}();
+        }
+        return $data;
+    }
 }
