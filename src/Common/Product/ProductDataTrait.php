@@ -8,7 +8,7 @@ use App\Entity\Products;
 trait ProductDataTrait
 {
     use NamesTrait;
-    private function productData(Products $product): array
+    private function productData(Products $product, array $ids = []): array
     {
         $names = $this->allEntityIdsAndNames();
         return [
@@ -21,6 +21,7 @@ trait ProductDataTrait
             'status' => $product->isStatus() ? 'active' : 'not active',
             'createdAt' => $product->getCreatedAt()->format('Y-M-d'),
             'createdBy' => ucwords($names['employeesIds'][$product->getCreatedBy()]),
+            'use' => in_array($product->getId(), $ids),
         ];
     }
 }

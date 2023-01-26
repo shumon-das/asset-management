@@ -20,8 +20,9 @@ class ProductsController extends AbstractApiController
     public function products(): Response
     {
         $products = $this->productsRepository->findBy(['isDeleted' => 0]);
+        $assetsProductsIds = $this->getIdsAsArray($this->assetsRepository->findAll(), 'getProduct');
         foreach ($products as $key => $row) {
-            $products[$key] = $this->productData($row);
+            $products[$key] = $this->productData($row, $assetsProductsIds);
         }
 
         return $this->render('products/products.html.twig', [

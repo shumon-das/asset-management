@@ -78,14 +78,16 @@ class AssetsRepository extends ServiceEntityRepository
     /**
      * @throws NonUniqueResultException
      */
-    public function getAssetsBetweenDate($date1, $date2): array
+    public function getAssetsBetweenDate($date1, $date2): mixed
     {
         return $this->createQueryBuilder('a')
-            ->andWhere('a.warrantyExpiryDate BETWEEN :date1 AND :date2')
-            ->setParameters(['date1' => $date1, 'date2' => $date2])
+            ->where('a.warrantyExpiryDate BETWEEN :date1 AND :date2')
+            ->setParameters(['date1' => $date1->format('Y-m-d'), 'date2' => $date2->format('Y-m-d')])
             ->getQuery()
             ->getOneOrNullResult()
         ;
     }
-
+//$qb->where('e.fecha BETWEEN :monday AND :sunday')
+//->setParameter('monday', $monday->format('Y-m-d'))
+//->setParameter('sunday', $sunday->format('Y-m-d'));
 }

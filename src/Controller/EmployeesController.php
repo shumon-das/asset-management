@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Common\NamesTrait;
 use App\Entity\Methods\EmployeeMethodsTrait;
 use App\Entity\Employee;
-use DateTimeImmutable;
 use Exception;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,9 +28,9 @@ class EmployeesController extends AbstractApiController
     #[Route('/ams/add-employee', name: 'app_add_employee')]
     public function addEmployee(): Response
     {
-        $locations = $this->locationRepository->findAll();
-        $departments = $this->departmentRepository->findAll();
-        $employees = $this->employeeRepository->findAll();
+        $locations = $this->locationRepository->findBy(['isDeleted' => 0]);
+        $departments = $this->departmentRepository->findBy(['isDeleted' => 0]);
+        $employees = $this->employeeRepository->findBy(['isDeleted' => 0]);
         return $this->render('employees/add-employee.html.twig', [
             'locations' => $locations,
             'departments' => $departments,
@@ -59,9 +58,9 @@ class EmployeesController extends AbstractApiController
     {
 
         $employee = $this->employeeRepository->find($id);
-        $locations = $this->locationRepository->findAll();
-        $departments = $this->departmentRepository->findAll();
-        $employees = $this->employeeRepository->findAll();
+        $locations = $this->locationRepository->findBy(['isDeleted' => 0]);
+        $departments = $this->departmentRepository->findBy(['isDeleted' => 0]);
+        $employees = $this->employeeRepository->findBy(['isDeleted' => 0]);
         $names = $this->allEntityIdsAndNames();
         return $this->render('employees/add-employee.html.twig', [
             'locations' => $locations,

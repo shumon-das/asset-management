@@ -37,8 +37,8 @@ class AssetsController extends AbstractApiController
     #[Route('/ams/add-asset', name: 'add_asset')]
     public function addAsset(): Response
     {
-        $products = $this->productsRepository->findAll();
-        $vendors = $this->vendorsRepository->findAll();
+        $products = $this->productsRepository->findBy(['isDeleted' => 0]);
+        $vendors = $this->vendorsRepository->findBy(['isDeleted' => 0]);
 
         return $this->render('assets/asset-add.html.twig', [
             'data' => [
@@ -67,8 +67,8 @@ class AssetsController extends AbstractApiController
     public function editAsset(int $id, AssetsRepository $assetsRepository): Response
     {
         $asset = $assetsRepository->find($id);
-        $products = $this->productsRepository->findAll();
-        $vendors = $this->vendorsRepository->findAll();
+        $products = $this->productsRepository->findBy(['isDeleted' => 0]);
+        $vendors = $this->vendorsRepository->findBy(['isDeleted' => 0]);
 
         return $this->render('assets/asset-add.html.twig', [
             'data' => [
@@ -109,12 +109,13 @@ class AssetsController extends AbstractApiController
 
     private function singleAsset(?Assets $asset): array
     {
+        $names = $this->allEntityIdsAndNames();
         return [
             'id' => $asset->getId(),
             'productCategory' => $asset->getProductCategory(),
             'productType' => $asset->getProductType(),
-            'product' => $asset->getProduct(),
-            'vendor' => $asset->getVendor() ? $this->allEntityIdsAndNames()['vendorsIds'][$asset->getVendor()] : null,
+            'product' => $names['productsIds'][$asset->getProduct()],
+            'vendor' => $asset->getVendor() ? $names['vendorsIds'][$asset->getVendor()] : null,
             'vendorId' => $asset->getVendor(),
             'assetName' => $asset->getAssetName(),
             'serialNumber' => $asset->getSerialNumber(),
@@ -129,7 +130,7 @@ class AssetsController extends AbstractApiController
             'residualValue' => $asset->getResidualValue(),
             'rate' => $asset->getRate(),
             'createdAt' => $asset->getCreatedAt()->format('Y-M-d'),
-            'createdBy' => ucwords($this->allEntityIdsAndNames()['employeesIds'][$asset->getCreatedBy()]),
+            'createdBy' => ucwords($names['employeesIds'][$asset->getCreatedBy()]),
             'status' => $asset->isStatus() ? "Active" : "Not Active",
         ];
     }

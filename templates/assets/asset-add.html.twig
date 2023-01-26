@@ -78,9 +78,9 @@
                                                 <label>Product</label>
                                                 <select class="form-control select2" name="product" id="product"
                                                         style="width: 100%;" required>
-                                                    <option selected="selected">{{ data.asset.product ?? 'Select product' }}</option>
+                                                    <option selected="selected" value="{{ data.asset.product ?? '' }}">{{ data.asset.product ?? 'Select product' }}</option>
                                                     {% for product in data.products %}
-                                                        <option value="{{ product.name }}">{{ product.name }}</option>
+                                                        <option value="{{ product.id }}">{{ product.name }}</option>
                                                     {% endfor %}
                                                 </select>
                                             </div>

@@ -14,7 +14,7 @@ trait AssetListDataTrait
             'id' => $asset->getId(),
             'productCategory' => $asset->getProductCategory(),
             'productType' => $asset->getProductType(),
-            'product' => $asset->getProduct(),
+            'product' => $names['productsIds'][$asset->getProduct()],
             'vendor' => $names['vendorsIds'][$asset->getVendor()],
             'assetName' => $asset->getAssetName(),
             'assign' => in_array($asset->getId(),$assignedAssetsIds),
