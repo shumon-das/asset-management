@@ -12,7 +12,7 @@ trait AssigningMethodsTrait
     /**
      * @throws Exception
      */
-    public function assigningMethods(AssigningAssets $assigningAsset, $request, bool $update = false): AssigningAssets
+    public function assigningMethods(AssigningAssets $assigningAsset, $request, bool $update = false): array
     {
         $assigningAsset
             ->setProductCategory($request->get('product-category'))

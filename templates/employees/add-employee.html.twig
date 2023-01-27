@@ -82,7 +82,7 @@
                                                         <label>Contact No</label>
                                                         <input type="text" class="form-control" id="contact-no"
                                                                name="contact-no" value="{{ employee.contactNo ?? ''}}"
-                                                               placeholder="Enter contact no" required>
+                                                               placeholder="Enter contact no" >
                                                     </div>
                                                 </div>
 
@@ -116,7 +116,7 @@
                                                             </option>
                                                             {% if locations is defined %}
                                                                 {% for location in locations %}
-                                                                    <option value="{{ location.id }}">{{ location.officName }}</option>
+                                                                    <option value="{{ location.id }}">{{ location.officeName }}</option>
                                                                 {% endfor %}
                                                             {% endif %}
                                                         </select>

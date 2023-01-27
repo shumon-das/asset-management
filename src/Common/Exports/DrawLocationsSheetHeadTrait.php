@@ -38,7 +38,7 @@ trait DrawLocationsSheetHeadTrait
         $rowAct = 3;
         foreach ($locations as $row) {
             $sheet->getCell('A'.$rowAct)->setValue('#'.$row->getId());
-            $sheet->getCell('B'.$rowAct)->setValue($row->getOfficName());
+            $sheet->getCell('B'.$rowAct)->setValue($row->getOfficeName());
             $sheet->getCell('C'.$rowAct)->setValue($row->getCountry());
             $sheet->getCell('D'.$rowAct)->setValue($row->getState());
             $sheet->getCell('E'.$rowAct)->setValue($row->getCity());

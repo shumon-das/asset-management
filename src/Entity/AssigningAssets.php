@@ -9,6 +9,7 @@ use App\Common\CommonMethodsTrait\UserMethodsTraits\UserMethodsTrait;
 use App\Repository\AssigningAssetsRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: AssigningAssetsRepository::class)]
 class AssigningAssets
@@ -29,23 +30,27 @@ class AssigningAssets
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $productType = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $product = null;
+    #[ORM\Column(length: 255, nullable: false)]
+    #[Assert\NotBlank]
+    private string $product;
 
-    #[ORM\Column(nullable: true)]
-    private ?int $vendor = null;
+    #[ORM\Column(nullable: false)]
+    #[Assert\NotBlank]
+    private int $vendor;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $location = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $assetName = null;
+    #[ORM\Column(length: 255, nullable: false)]
+    #[Assert\NotBlank]
+    private string $assetName;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $department = null;
 
-    #[ORM\Column]
-    private ?int $assignTo = null;
+    #[ORM\Column(nullable: false)]
+    #[Assert\NotBlank]
+    private int $assignTo;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
@@ -106,24 +111,24 @@ class AssigningAssets
         return $this;
     }
 
-    public function getProduct(): ?string
+    public function getProduct(): string
     {
         return $this->product;
     }
 
-    public function setProduct(?string $product): self
+    public function setProduct(string $product): self
     {
         $this->product = $product;
 
         return $this;
     }
 
-    public function getVendor(): ?int
+    public function getVendor(): int
     {
         return $this->vendor;
     }
 
-    public function setVendor(?int $vendor): self
+    public function setVendor(int $vendor): self
     {
         $this->vendor = $vendor;
 
@@ -166,7 +171,7 @@ class AssigningAssets
         return $this;
     }
 
-    public function getAssignTo(): ?int
+    public function getAssignTo(): int
     {
         return $this->assignTo;
     }

@@ -10,6 +10,7 @@ use App\Common\CommonMethodsTrait\ZipCodeMethodsTrait;
 use App\Repository\VendorsRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: VendorsRepository::class)]
 class Vendors
@@ -34,7 +35,8 @@ class Vendors
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $contactPerson = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, unique: true)]
+    #[Assert\NotBlank]
     private ?string $email = null;
 
     #[ORM\Column(length: 255, nullable: true)]

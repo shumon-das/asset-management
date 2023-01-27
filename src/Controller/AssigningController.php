@@ -51,7 +51,7 @@ class AssigningController extends AbstractApiController
     #[Route('/ams/save-assign-asset', name: 'save_assign_asset')]
     public function saveAssignAsset(Request $request): RedirectResponse
     {
-        $id = $request-$request->get('id');
+        $id = $request->request->get('id');
         $id
             ? $this->assigningMethods($this->assigningAssetsRepository->find($id), $request, true)
             : $this->assigningMethods(new AssigningAssets(), $request);

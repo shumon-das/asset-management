@@ -5,16 +5,19 @@
   <script src="{{ asset('plugins/toastr/toastr.min.js') }}"></script>
 
   <script>
-    toastr.options = {
-      "timeOut": "3000",
-    }
+    let timeout = "3000";
     function toastMessage(status, message = null) {
       if (status && status === 'success') {
         toastr.success(message);
       } else if(status && status === 'deleteSuccess') {
+        timeout = "9000"
         toastr.error(message);
       } else {
+        timeout = "9000"
         toastr.error(message);
+      }
+      toastr.options = {
+        "timeOut": timeout,
       }
     }
   </script>

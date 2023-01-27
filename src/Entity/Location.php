@@ -7,6 +7,7 @@ use App\Common\CommonMethodsTrait\UserMethodsTraits\UserMethodsTrait;
 use App\Common\CommonMethodsTrait\ZipCodeMethodsTrait;
 use App\Repository\LocationRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: LocationRepository::class)]
 class Location
@@ -20,17 +21,21 @@ class Location
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $officName = null;
+    #[ORM\Column(length: 255, nullable: false)]
+    #[Assert\NotBlank]
+    private string $officeName;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $country = null;
+    #[ORM\Column(length: 255, nullable: false)]
+    #[Assert\NotBlank]
+    private string $country;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $state = null;
+    #[ORM\Column(length: 255, nullable: false)]
+    #[Assert\NotBlank]
+    private string $state;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $city = null;
+    #[ORM\Column(length: 255, nullable: false)]
+    #[Assert\NotBlank]
+    private string $city;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $zipCode = null;
@@ -70,48 +75,48 @@ class Location
         return $this->id;
     }
 
-    public function getOfficName(): ?string
+    public function getOfficeName(): string
     {
-        return $this->officName;
+        return $this->officeName;
     }
 
-    public function setOfficName(?string $officName): self
+    public function setOfficeName(string $officeName): self
     {
-        $this->officName = $officName;
+        $this->officeName = $officeName;
 
         return $this;
     }
 
-    public function getCountry(): ?string
+    public function getCountry(): string
     {
         return $this->country;
     }
 
-    public function setCountry(?string $country): self
+    public function setCountry(string $country): self
     {
         $this->country = $country;
 
         return $this;
     }
 
-    public function getState(): ?string
+    public function getState(): string
     {
         return $this->state;
     }
 
-    public function setState(?string $state): self
+    public function setState(string $state): self
     {
         $this->state = $state;
 
         return $this;
     }
 
-    public function getCity(): ?string
+    public function getCity(): string
     {
         return $this->city;
     }
 
-    public function setCity(?string $city): self
+    public function setCity(string $city): self
     {
         $this->city = $city;
 

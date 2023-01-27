@@ -47,13 +47,6 @@
                             </div>
                             <div class="card-body">
                                 <form action="{{ path('admins_save_location') }}" method="post">
-                                    <div class="row mb-5">
-                                        <div class="col-md-7 text-center">
-                                            {% for error in app.flashes('error') %}
-                                               <span class="alert alert-danger"> {{ error }} </span>
-                                            {% endfor %}
-                                        </div>
-                                    </div>
                                     <div class="row">
                                         <div class="col-md-1"></div>
                                         <div class="col-md-6">
@@ -62,7 +55,7 @@
                                                     <div class="form-group">
                                                         <label>Office Name</label>
                                                         <input type="text" class="form-control" id="office-name"
-                                                               value="{{ location.officName ?? '' }}"
+                                                               value="{{ location.officeName ?? '' }}" required
                                                                name="office-name" placeholder="Enter office name">
                                                     </div>
                                                 </div>
@@ -73,7 +66,7 @@
 {#                                                        <input type="text" class="form-control" id="country"#}
 {#                                                               value="{{ location.country ?? '' }}"#}
 {#                                                               name="country" placeholder="Enter country">#}
-                                                        <select class="form-control" name="country" id="">
+                                                        <select class="form-control" name="country" id="" required>
                                                             <option selected="selected">{{ location.country ?? 'Select Country' }}</option>
                                                             {% include 'countries.html.twig' %}
                                                         </select>
@@ -87,7 +80,7 @@
                                                     <div class="form-group">
                                                         <label for="exampleInputEmail1">State</label>
                                                         <input type="text" class="form-control" id="state"
-                                                               value="{{ location.state ?? '' }}"
+                                                               value="{{ location.state ?? '' }}" required
                                                                name="state" placeholder="Enter state">
                                                     </div>
                                                 </div>
@@ -96,7 +89,7 @@
                                                     <div class="form-group">
                                                         <label for="exampleInputEmail1">City</label>
                                                         <input type="text" class="form-control" id="city"
-                                                               value="{{ location.city ?? '' }}"
+                                                               value="{{ location.city ?? '' }}" required
                                                                name="city" placeholder="Enter city">
                                                     </div>
                                                 </div>

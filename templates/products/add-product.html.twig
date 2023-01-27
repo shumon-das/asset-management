@@ -54,14 +54,19 @@
                                             <div class="row">
                                                 <div class="col-md-12">
                                                     <div class="form-group">
-                                                        <label>Product Category</label>
-                                                        <select class="form-control select2" style="width: 100%;"
-                                                                id="product-category" name="product-category">
-                                                            <option selected="selected">{{ product.category ?? 'Ghana' }}</option>
-                                                            <option>Burkina Faso</option>
-                                                            <option>Ivory Coast</option>
-                                                            <option>Togo</option>
-                                                        </select>
+                                                        <label>Product Name</label>
+                                                        <input type="text" class="form-control" id="product-name"
+                                                               name="product-name" value="{{ product.name ?? '' }}"
+                                                               placeholder="Enter product name" required>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <label>Product Category</label>>
+                                                        <input type="text" class="form-control" id="product-category"
+                                                               name="product-category" value="{{ product.name ?? '' }}"
+                                                               placeholder="Enter product category" required>
                                                     </div>
                                                 </div>
 
@@ -75,15 +80,9 @@
                                                             <option>Ivory Coast</option>
                                                             <option>Togo</option>
                                                         </select>
-                                                    </div>
-                                                </div>
-
-                                                <div class="col-md-12">
-                                                    <div class="form-group">
-                                                        <label>Product Name</label>
-                                                        <input type="text" class="form-control" id="product-name"
-                                                               name="product-name" value="{{ product.name ?? '' }}"
-                                                               placeholder="Enter product name">
+                                                        <input type="text" class="form-control" id="product-type"
+                                                               name="product-type" value="{{ product.name ?? '' }}"
+                                                               placeholder="Enter product name" required>
                                                     </div>
                                                 </div>
 

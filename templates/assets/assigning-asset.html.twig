@@ -50,6 +50,22 @@
                                     <div class="row">
                                         <div class="col-md-3">
                                             <div class="form-group">
+                                                <label>Product</label>
+                                                <select class="form-control select2" name="product-name"
+                                                        id="product-name" style="width: 100%;" required>
+                                                    <option selected="selected"
+                                                            value="{{ assignedAsset.productId ?? '' }}">{{ assignedAsset.product ?? 'Select Product' }}</option>
+                                                    {% if products is defined %}
+                                                        {% for product in products %}
+                                                            <option value="{{ product.id }}">{{ product.name }}</option>
+                                                        {% endfor %}
+                                                    {% endif %}
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-3">
+                                            <div class="form-group">
                                                 <label>Product Category</label>
                                                 <select class="form-control select2" name="product-category"
                                                         id="product-category" style="width: 100%;">
@@ -82,25 +98,9 @@
 
                                         <div class="col-md-3">
                                             <div class="form-group">
-                                                <label>Product</label>
-                                                <select class="form-control select2" name="product-name"
-                                                        id="product-name" style="width: 100%;">
-                                                    <option selected="selected"
-                                                            value="{{ assignedAsset.productId ?? '' }}">{{ assignedAsset.product ?? 'Select Product' }}</option>
-                                                    {% if products is defined %}
-                                                        {% for product in products %}
-                                                            <option value="{{ product.id }}">{{ product.name }}</option>
-                                                        {% endfor %}
-                                                    {% endif %}
-                                                </select>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-3">
-                                            <div class="form-group">
                                                 <label>Vendor</label>
                                                 <select class="form-control select2" name="vendor" id="vendor"
-                                                        style="width: 100%;">
+                                                        style="width: 100%;" required>
                                                     <option selected="selected"
                                                             value="{{ assignedAsset.vendorId ?? '' }}">{{ assignedAsset.vendor ?? 'Select Vendor' }}</option>
                                                     {% if vendors is defined %}
@@ -124,7 +124,7 @@
                                                             value="{{ assignedAsset.locationId ?? '' }}">{{ assignedAsset.location ?? 'Select Location' }}</option>
                                                     {% if locations is defined %}
                                                         {% for location in locations %}
-                                                            <option value="{{ location.id }}">{{ location.officName }}</option>
+                                                            <option value="{{ location.id }}">{{ location.officeName }}</option>
                                                         {% endfor %}
                                                     {% endif %}
                                                 </select>
@@ -135,7 +135,7 @@
                                             <div class="form-group">
                                                 <label for="asset-name">Asset Name</label>
                                                 <select class="form-control select2" name="asset-name" id="asset-name"
-                                                        style="width: 100%;">
+                                                        style="width: 100%;" required>
                                                     <option selected="selected"
                                                             value="{{ assignedAsset.assetId ?? '' }}">{{ assignedAsset.assetName ?? 'Select Asset' }}</option>
                                                     {% if assets is defined %}
@@ -167,7 +167,7 @@
                                             <div class="form-group">
                                                 <label>Assign to</label>
                                                 <select class="form-control select2" name="assign-to" id="assign-to"
-                                                        style="width: 100%;">
+                                                        style="width: 100%;" required>
                                                     <option selected="selected"
                                                             value="{{ assignedAsset.assignedId ?? '' }}">{{ assignedAsset.assigned ?? 'Select User' }}</option>
                                                     {% if users is defined %}

@@ -66,7 +66,7 @@
                                                             <label>Vendor Email</label>
                                                             <input type="email" class="form-control" id="vendor-email"
                                                                    name="vendor-email" value="{{ vendor.email ?? "" }}"
-                                                                   placeholder="Enter email">
+                                                                   placeholder="Enter email" required>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -111,10 +111,8 @@
                                                             <select class="form-control select2" style="width: 100%;"
                                                                     id="country" name="country"
                                                             >
-                                                                <option selected="selected">{{ vendor.country ?? "Ghana" }}</option>
-                                                                <option>Burkina Faso</option>
-                                                                <option>Ivory Coast</option>
-                                                                <option>Togo</option>
+                                                                <option selected="selected">{{ vendor.country ?? "Select Country" }}</option>
+                                                                {% include 'countries.html.twig' %}
                                                             </select>
                                                         </div>
                                                     </div>
@@ -125,25 +123,19 @@
                                                     <div class="col-md-6">
                                                         <div class="form-group">
                                                             <label>State</label>
-                                                            <select class="form-control select2" style="width: 100%;"
-                                                                    id="state" name="state">
-                                                                <option selected="selected">{{ vendor.state ?? "Ghana" }}</option>
-                                                                <option>Burkina Faso</option>
-                                                                <option>Ivory Coast</option>
-                                                                <option>Togo</option>
-                                                            </select>
+                                                            <input type="text" class="form-control" id="state"
+                                                                   name="state"
+                                                                   value="{{ vendor.state ?? "" }}"
+                                                                   placeholder="Enter state">
                                                         </div>
                                                     </div>
                                                     <div class="col-md-6">
                                                         <div class="form-group">
                                                             <label>City</label>
-                                                            <select class="form-control select2" style="width: 100%;"
-                                                                    id="city" name="city">
-                                                                <option selected="selected">{{ vendor.city ?? "Ghana" }}</option>
-                                                                <option>Kumasi</option>
-                                                                <option>Tamale</option>
-                                                                <option>Sekondi-Takoradi</option>
-                                                            </select>
+                                                            <input type="text" class="form-control" id="city"
+                                                                   name="city"
+                                                                   value="{{ vendor.city ?? "" }}"
+                                                                   placeholder="Enter city">
                                                         </div>
                                                     </div>
                                                 </div>

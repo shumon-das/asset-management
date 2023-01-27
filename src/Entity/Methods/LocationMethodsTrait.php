@@ -15,7 +15,7 @@ trait LocationMethodsTrait
     public function locationMethods(Location $location, $request, bool $update = false): array
     {
         $location
-            ->setOfficName($request->get('office-name'))
+            ->setOfficeName($request->get('office-name'))
             ->setCountry($request->get('country'))
             ->setState($request->get('state'))
             ->setCity($request->get('city'))

@@ -7,10 +7,10 @@ use App\Common\CommonMethodsTrait\UserMethodsTraits\UserMethodsTrait;
 use App\Common\UuidMethodsTrait;
 use App\Repository\EmployeeRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Uid\Uuid;
+use Symfony\Component\Validator\Constraints as Assert;
 
 
 #[ORM\Entity(repositoryClass: EmployeeRepository::class)]
@@ -29,7 +29,8 @@ class Employee implements UserInterface, PasswordAuthenticatedUserInterface
     private Uuid $uuid;
 
     #[ORM\Column(length: 180, unique: true)]
-    private ?string $email = null;
+    #[Assert\NotBlank]
+    private string $email;
 
     #[ORM\Column]
     private array $roles = [];
@@ -38,10 +39,12 @@ class Employee implements UserInterface, PasswordAuthenticatedUserInterface
      * @var string The hashed password
      */
     #[ORM\Column]
+    #[Assert\NotBlank]
     private ?string $password = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $name = null;
+    #[Assert\NotBlank]
+    private string $name;
 
     #[ORM\Column(nullable: true)]
     private ?bool $isDeleted = null;
@@ -53,9 +56,11 @@ class Employee implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $location = null;
 
     #[ORM\Column(nullable: true)]
-    private ?int $reportingManager = null;
+    #[Assert\NotBlank]
+    private int $reportingManager;
 
     #[ORM\Column(nullable: true)]
+    #[Assert\NotBlank]
     private ?int $department = null;
 
     #[ORM\Column(nullable: true)]
@@ -81,7 +86,7 @@ class Employee implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->id;
     }
 
-    public function getEmail(): ?string
+    public function getEmail(): string
     {
         return $this->email;
     }
@@ -146,12 +151,12 @@ class Employee implements UserInterface, PasswordAuthenticatedUserInterface
         // $this->plainPassword = null;
     }
 
-    public function getName(): ?string
+    public function getName(): string
     {
         return $this->name;
     }
 
-    public function setName(?string $name): self
+    public function setName(string $name): self
     {
         $this->name = $name;
 
@@ -182,12 +187,12 @@ class Employee implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getReportingManager(): ?int
+    public function getReportingManager(): int
     {
         return $this->reportingManager;
     }
 
-    public function setReportingManager(?int $reportingManager): self
+    public function setReportingManager(int $reportingManager): self
     {
         $this->reportingManager = $reportingManager;
 

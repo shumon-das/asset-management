@@ -68,7 +68,7 @@ class LocationRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('l')
             ->select('l.id as id')
-            ->addSelect('l.officName as name')
+            ->addSelect('l.officeName as name')
             ->getQuery()
             ->getResult()
         ;
