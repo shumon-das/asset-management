@@ -35,9 +35,9 @@ class Vendors
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $contactPerson = null;
 
-    #[ORM\Column(length: 255, unique: true)]
+    #[ORM\Column(length: 255, unique: false)]
     #[Assert\NotBlank]
-    private ?string $email = null;
+    private string $email;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $gstinNo = null;
@@ -131,7 +131,7 @@ class Vendors
         return $this;
     }
 
-    public function getEmail(): ?string
+    public function getEmail(): string
     {
         return $this->email;
     }

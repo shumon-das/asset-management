@@ -24,17 +24,17 @@ class Products
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(length: 255, nullable: false)]
     #[Assert\NotBlank]
-    private ?string $category = null;
+    private string $category;
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Assert\NotBlank]
-    private ?string $type = null;
+    private string $type;
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Assert\NotBlank]
-    private ?string $name = null;
+    private string $name;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $manufacturer = null;

@@ -91,3 +91,4 @@ class AssetsRepository extends ServiceEntityRepository
 //->setParameter('monday', $monday->format('Y-m-d'))
 //->setParameter('sunday', $sunday->format('Y-m-d'));
 }
+

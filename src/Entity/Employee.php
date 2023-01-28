@@ -28,7 +28,7 @@ class Employee implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'uuid')]
     private Uuid $uuid;
 
-    #[ORM\Column(length: 180, unique: true)]
+    #[ORM\Column(length: 180, unique: false)]
     #[Assert\NotBlank]
     private string $email;
 
@@ -42,7 +42,7 @@ class Employee implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\NotBlank]
     private ?string $password = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(length: 255, nullable: false)]
     #[Assert\NotBlank]
     private string $name;
 
@@ -55,7 +55,7 @@ class Employee implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(nullable: true)]
     private ?int $location = null;
 
-    #[ORM\Column(nullable: true)]
+    #[ORM\Column(nullable: false)]
     #[Assert\NotBlank]
     private int $reportingManager;
 

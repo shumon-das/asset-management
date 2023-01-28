@@ -30,15 +30,15 @@ class Assets
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $productType = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(length: 255, nullable: false)]
     #[Assert\NotBlank]
     private string $product;
 
-    #[ORM\Column(nullable: true)]
+    #[ORM\Column(nullable: false)]
     #[Assert\NotBlank]
     private int $vendor;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(length: 255, nullable: false)]
     #[Assert\NotBlank]
     private string $assetName;
 
