@@ -7,6 +7,10 @@ use App\Common\Uploads\UploadAssignedAssetsTrait;
 use App\Common\Uploads\UploadEmployeesTrait;
 use App\Common\Uploads\UploadProductsTrait;
 use App\Common\Uploads\UploadVendorsTrait;
+use App\Entity\Employee;
+use App\Entity\Methods\EmployeeMethodsTrait;
+use Exception;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,6 +23,7 @@ class UploadsController extends AbstractApiController
     use UploadAssetsTrait;
     use UploadAssignedAssetsTrait;
     use UploadEmployeesTrait;
+    use EmployeeMethodsTrait;
 
     #[Route('/ams/upload-vendors-file', name: 'app_upload_vendors_file')]
     public function uploadVendorsFile(): Response
@@ -73,11 +78,15 @@ class UploadsController extends AbstractApiController
         ]);
     }
 
+    /**
+     * @throws Exception
+     */
     #[Route('/upload-employees', name: 'app_upload_employees')]
-    public function uploadEmployeesFiles(Request $request): RedirectResponse
+    public function uploadEmployeesFiles(Request $request): RedirectResponse|Response
     {
-        $this->importEmployees($request, $this->entityManager);
-        return new RedirectResponse('employees');
+         $this->importEmployees($request, $this->entityManager);
+//        $this->addFlash('message', $result);
+        return new RedirectResponse('upload-employees-file');
     }
 
     #[Route('/ams/upload-assigned-assets-file', name: 'app_upload_assigned_assets_files', methods: 'GET')]

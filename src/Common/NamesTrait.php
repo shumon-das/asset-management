@@ -16,6 +16,7 @@ trait NamesTrait
             'productTypeIds' => array_column($this->productsRepository->findTypeIds(), 'type','id'),
             'productCategoryIds' => array_column($this->productsRepository->findCategoryIds(), 'category','id'),
             'categories' => array_column($this->categoriesRepository->findIds(), 'name', 'id'),
+            'empEmailsAndIds' => array_column($this->employeeRepository->findEmailsIds(), 'email', 'id'),
         ];
     }
 }

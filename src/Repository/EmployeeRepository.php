@@ -90,4 +90,14 @@ class EmployeeRepository extends ServiceEntityRepository implements PasswordUpgr
             ->getResult()
         ;
     }
+
+    public function findEmailsIds(): ?array
+    {
+        return $this->createQueryBuilder('e')
+            ->select('e.id as id')
+            ->addSelect('e.email')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 }

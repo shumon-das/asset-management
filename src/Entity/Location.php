@@ -21,7 +21,7 @@ class Location
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255, nullable: false)]
+    #[ORM\Column(length: 255, unique: true, nullable: false)]
     #[Assert\NotBlank]
     private string $officeName;
 
