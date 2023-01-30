@@ -24,7 +24,7 @@ class InitUserCommand extends AbstractCommand
             ->setUuid(Uuid::v1())
             ->setName('shumon')
             ->setEmail('shumonsb@gmail.com')
-            ->setRoles(['ROLE_USER'])
+            ->setRoles(['ROLE_SUPER_ADMIN'])
             ->setPassword($this->hasher->hashPassword($employee, '123456'))
             ->setDepartment(1)
             ->setLocation(1)

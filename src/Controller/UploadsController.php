@@ -7,7 +7,6 @@ use App\Common\Uploads\UploadAssignedAssetsTrait;
 use App\Common\Uploads\UploadEmployeesTrait;
 use App\Common\Uploads\UploadProductsTrait;
 use App\Common\Uploads\UploadVendorsTrait;
-use App\Entity\Employee;
 use App\Entity\Methods\EmployeeMethodsTrait;
 use Exception;
 use PhpOffice\PhpSpreadsheet\IOFactory;
@@ -70,11 +69,28 @@ class UploadsController extends AbstractApiController
         return new RedirectResponse('assets');
     }
 
-    #[Route('/upload-employees-file', name: 'app_upload_employees_files', methods: 'GET')]
+    #[Route('/select-employees-file', name: 'app_select_employees_files', methods: 'GET')]
     public function uploadEmployees(): Response
     {
         return $this->render('uploads/upload-employees-file.html.twig', [
             'controller_name' => 'UploadsController',
+        ]);
+    }
+
+    #[Route('/ams/show-employees-file', name: 'app_show_employees_files', methods: [ 'POST'])]
+    public function uploadEmployeesFile(Request $request): Response|RedirectResponse
+    {
+        $employeesFile = $request->files->get('employees-csv');
+        if (null === $employeesFile) {
+            $this->addFlash('error', 'File not found. please choose an csv file before click upload');
+            return new RedirectResponse('upload-employees-file');
+        }
+        $spreadsheet = IOFactory::load($employeesFile);
+        $data = $spreadsheet->getActiveSheet()->toArray();
+        $this->validateData($data);
+
+        return $this->render('uploads/upload-employees-file.html.twig', [
+            'data' => $this->validateData($data),
         ]);
     }
 
@@ -84,9 +100,9 @@ class UploadsController extends AbstractApiController
     #[Route('/upload-employees', name: 'app_upload_employees')]
     public function uploadEmployeesFiles(Request $request): RedirectResponse|Response
     {
-         $this->importEmployees($request, $this->entityManager);
-//        $this->addFlash('message', $result);
-        return new RedirectResponse('upload-employees-file');
+        $result = $this->importEmployees($request, $this->entityManager);
+        $this->addFlash('message', $result);
+        return new RedirectResponse('select-employees-file');
     }
 
     #[Route('/ams/upload-assigned-assets-file', name: 'app_upload_assigned_assets_files', methods: 'GET')]

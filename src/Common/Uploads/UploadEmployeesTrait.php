@@ -7,9 +7,7 @@ use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use PhpOffice\PhpSpreadsheet\IOFactory;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Uid\Uuid;
 
 trait UploadEmployeesTrait
@@ -26,36 +24,31 @@ trait UploadEmployeesTrait
 
             $spreadsheet = IOFactory::load($employeesFile);
             $data = $spreadsheet->getActiveSheet()->toArray();
-            $validationError = $this->validateData($data);
 
-            if (count($validationError) > 0) {
-              return $validationError;
+            foreach ($data as $key => $row) {
+                if (0 !== $key) {
+                    $roles = "ROLE_" . strtoupper($row[1]);
+                    $employees = new Employee();
+                    $employees
+                        ->setUuid(Uuid::v1())
+                        ->setName($row[0])
+                        ->setRoles([$roles])
+                        ->setReportingManager($row[2])
+                        ->setDepartment($row[4])
+                        ->setContactNo($row[5])
+                        ->setLocation($row[6])
+                        ->setPassword($row[7])
+                        ->setEmail($row[8])
+                        ->setCreatedAt(new DateTimeImmutable())
+                        ->setCreatedBy(1);
+                    $entityManager->persist($employees);
+                }
             }
-
-//            foreach ($data as $key => $row) {
-//                if (0 !== $key) {
-//                    $roles = "ROLE_" . strtoupper($row[1]);
-//                    $employees = new Employee();
-//                    $employees
-//                        ->setUuid(Uuid::v1())
-//                        ->setName($row[0])
-//                        ->setRoles([$roles])
-//                        ->setReportingManager($employee->getId())
-//                        ->setDepartment('')
-//                        ->setContactNo($row[5])
-//                        ->setLocation('')
-//                        ->setPassword($row[7])
-//                        ->setEmail($row[8])
-//                        ->setCreatedAt(new DateTimeImmutable())
-//                        ->setCreatedBy(1);
-//                    $entityManager->persist($employees);
-//                }
-//            }
-//            $entityManager->flush();
+            $entityManager->flush();
         } catch (Exception $exception) {
             return ['error' => $exception->getMessage()];
         }
-
+//
         return [
             'success' => 'Employees imported successfully'
         ];
@@ -63,17 +56,20 @@ trait UploadEmployeesTrait
 
     public function validateData(array $data): array
     {
-        $employeeEmails = $this->allEntityIdsAndNames()['empEmailsAndIds'];
+        $names = $this->allEntityIdsAndNames();
         $missingData = [];
         foreach ($data as $key => $row) {
             if (0 !== $key) {
-                if (false === in_array($row[3], $employeeEmails)) {
-                    $missingData[] = [
-                        'row' => ++$key,
-                        'email' => $row[3],
-                        'con' => in_array($row[3], $employeeEmails),
-                    ];
-                }
+                $missingData[] = [
+                    'row' => ++$key,
+                    'reportingManager' => $row[2],
+                    'email' => $row[3],
+                    'department' => $row[4],
+                    'location' => $row[6],
+                    'depCondition' => in_array($row[3], $names['empEmailsAndIds']),
+                    'locCondition' => in_array($row[3], $names['locationsIds']),
+                    'reportingMCondition' => in_array($row[3], $names['empEmailsAndIds']),
+                ];
             }
         }
 
