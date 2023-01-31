@@ -85,7 +85,15 @@
   })
 
   $("#employees-csv").change(function (e) {
-      $("#file-label").text(e.target.name)
+      const extension = $(this).val().split('.').pop().toLowerCase();
+      if (extension === 'xlsx' || extension === 'csv') {
+          $("#file-extension-error").css('display', 'none')
+          $("#file-upload-submit-btn").css("opacity", "1")
+      } else {
+          $("#file-extension-error").css('display', 'block')
+          $("#file-upload-submit-btn").css("opacity", "0")
+      }
+      $("#file-label").text($('#employees-csv')[0].files[0].name)
   })
 
   });

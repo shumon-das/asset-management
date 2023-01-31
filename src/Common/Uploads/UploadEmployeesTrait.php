@@ -66,14 +66,35 @@ trait UploadEmployeesTrait
                     'email' => $row[3],
                     'department' => $row[4],
                     'location' => $row[6],
-                    'depCondition' => in_array($row[3], $names['empEmailsAndIds']),
+                    'depCondition' => in_array($row[3], $names['departmentsIds']),
                     'locCondition' => in_array($row[3], $names['locationsIds']),
                     'reportingMCondition' => in_array($row[3], $names['empEmailsAndIds']),
                 ];
             }
         }
 
-        return $missingData;
-    }
+        $error = [];
+        foreach ($missingData as $row) {
+            if (false === $row['depCondition']) {
+                $error[] = [
+                    'dep' => $row['department']
+                ];
+            }
+            if (false === $row['locCondition']) {
+                $error[] = [
+                    'loc' => $row['location']
+                ];
+            }
+            if (false === $row['reportingMCondition']) {
+                $error[] = [
+                    'rep' => $row['reportingManager']
+                ];
+            }
+        }
 
+        return [
+            'data' => $missingData,
+            'error' => $error
+        ];
+    }
 }
