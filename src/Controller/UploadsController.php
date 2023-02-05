@@ -94,15 +94,22 @@ class UploadsController extends AbstractApiController
         ]);
     }
 
+    #[Route('/ams/basic-table', name: 'app_basic_table', methods: 'GET')]
+    public function girdBase(): Response
+    {
+        return $this->render('uploads/gird-base.html.twig');
+    }
+
     /**
      * @throws Exception
      */
-    #[Route('/upload-employees', name: 'app_upload_employees')]
+    #[Route('/upload-employees', name: 'app_upload_employees', methods: ['POST'])]
     public function uploadEmployeesFiles(Request $request): RedirectResponse|Response
     {
+        dd($request->files->get('employees-csv'));
         $result = $this->importEmployees($request, $this->entityManager);
         $this->addFlash('message', $result);
-        return new RedirectResponse('select-employees-file');
+        return new RedirectResponse('basic-table');
     }
 
     #[Route('/ams/upload-assigned-assets-file', name: 'app_upload_assigned_assets_files', methods: 'GET')]
