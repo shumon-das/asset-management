@@ -57,10 +57,11 @@
                                                        style="width: 300px;height: 175px;line-height: 175px;border: 1px dashed;cursor: pointer"
                                                        id="file-label">Select CSV File</label>
                                                 <input type="file" name="employees-csv" id="employees-csv"
-                                                       style="display: none">
+                                                       style="display: none" required>
                                                 <button type="submit" class="btn btn-sm btn-primary ml-5"
-                                                        style="width: 300px">Select
+                                                        style="width: 300px; opacity: 0" id="file-upload-submit-btn">Select
                                                 </button>
+                                                <span class="alert alert-danger text-center mx-5" id="file-extension-error" style="display: none">Only Excel Sheet Acceptable</span>
                                             </form>
                                         </div>
                                         <div class="col-md-9 border-left px-3">
@@ -102,20 +103,12 @@
                                             </table>
                                             <div class="row py-3">
                                                 <div class="col-12 text-right">
-                                                    <small>creation new employee have 3 dependency (department, location, reporting manager) which you must have to provide correct information. otherwise you will be not able to upload data</small>
+                                                    <small><b>Note: </b> creation new employee have 3 dependency (Department, Location, Reporting manager) which you must have to provide correct information. otherwise you will be not able to upload data</small>
                                                     <br>
-                                                    {% if depCondition is defined%}
-                                                        <span>Some departments are not available in the database, either you create those departments before uploading or remove them from the CSV file.</span>
-                                                        <a href="{{ path('app_upload_employees') }}" class="btn btn-success disabled">Upload</a>
-                                                    {% elseif locCondition is defined %}
-                                                        <span>Some departments are not available in the database, either you create those departments before uploading or remove them from the CSV file.</span>
-
-                                                        <a href="{{ path('app_upload_employees') }}" class="btn btn-success disabled">Upload</a>
-                                                    {% elseif reportingMCondition is defined %}
-                                                        <span>Some departments are not available in the database, either you create those departments before uploading or remove them from the CSV file.</span>
-                                                        <a href="{{ path('app_upload_employees') }}" class="btn btn-success disabled">Upload</a>
+                                                    {% if errors is defined%}
+                                                        <button class="btn btn btn-success px-5"> Upload </button>
                                                     {% else %}
-                                                        <a href="{{ path('app_upload_employees') }}" class="btn btn-success">Upload</a>
+                                                        <a href="{{ path('app_upload_employees') }}" class="btn btn-success px-5">Upload</a>
                                                     {% endif %}
                                                 </div>
                                             </div>

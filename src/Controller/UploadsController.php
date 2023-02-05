@@ -87,10 +87,13 @@ class UploadsController extends AbstractApiController
         }
         $spreadsheet = IOFactory::load($employeesFile);
         $data = $spreadsheet->getActiveSheet()->toArray();
-        $this->validateData($data);
+        $dataAnalyse = $this->validateData($data);
 
         return $this->render('uploads/upload-employees-file.html.twig', [
-            'data' => $this->validateData($data),
+            'data' => $dataAnalyse['data'],
+            'errors' => count($dataAnalyse['error']) > 0,
+            'errorData' => $dataAnalyse['error'],
+            'errorCount' => count($dataAnalyse['error']),
         ]);
     }
 
