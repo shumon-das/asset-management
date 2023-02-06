@@ -11,6 +11,7 @@ use App\Repository\DepartmentRepository;
 use App\Repository\EmployeeRepository;
 use App\Repository\LocationRepository;
 use App\Repository\ProductsRepository;
+use App\Repository\UploadRepository;
 use App\Repository\VendorsRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
@@ -36,6 +37,7 @@ class AbstractApiController extends AbstractController
     public CategoriesRepository $categoriesRepository;
 
     public null|UserInterface $user;
+    public UploadRepository $uploadRepository;
     use NamesTrait;
 
     public function __construct(
@@ -50,6 +52,7 @@ class AbstractApiController extends AbstractController
         Security                  $security,
         UserPasswordHasherInterface $hasher,
         CategoriesRepository $categoriesRepository,
+        UploadRepository $uploadRepository,
     )
     {
         $this->assigningAssetsRepository = $assigningAssetsRepository;
@@ -64,6 +67,7 @@ class AbstractApiController extends AbstractController
         $this->hasher = $hasher;
         $this->categoriesRepository = $categoriesRepository;
         $this->user = $this->security->getUser();
+        $this->uploadRepository = $uploadRepository;
     }
 
     public function getRepositoriesData(): array

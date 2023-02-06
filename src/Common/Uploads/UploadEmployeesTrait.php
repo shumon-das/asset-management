@@ -3,6 +3,7 @@
 namespace App\Common\Uploads;
 
 use App\Entity\Employee;
+use App\Entity\Methods\CategoriesMethodsTrait;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
@@ -12,11 +13,12 @@ use Symfony\Component\Uid\Uuid;
 
 trait UploadEmployeesTrait
 {
+    use CategoriesMethodsTrait;
+
     public function importEmployees(Request $request, EntityManagerInterface $entityManager): array
     {
         try {
             $employeesFile = $request->files->get('employees-csv');
-            dd($employeesFile);
             if (null === $employeesFile) {
                 return [
                     'error' => "File not found. please choose an csv file before click upload"
@@ -25,19 +27,22 @@ trait UploadEmployeesTrait
 
             $spreadsheet = IOFactory::load($employeesFile);
             $data = $spreadsheet->getActiveSheet()->toArray();
-
+            $names = $this->allEntityIdsAndNames();
             foreach ($data as $key => $row) {
+                $reportingManagerId = array_flip($names['empEmailsAndIds'])[$row[3]] ?? 0;
+                $departmentId = array_flip($names['departmentsIds'])[$row[4]] ?? 0;
+                $locationId = array_flip($names['locationsIds'])[$row[6]] ?? 0;
+
                 if (0 !== $key) {
                     $roles = "ROLE_" . strtoupper($row[1]);
                     $employees = new Employee();
                     $employees
-                        ->setUuid(Uuid::v1())
-                        ->setName($row[0])
+                        ->setUuid(Uuid::v1())->setName($row[0])
                         ->setRoles([$roles])
-                        ->setReportingManager($row[2])
-                        ->setDepartment($row[4])
+                        ->setReportingManager($reportingManagerId)
+                        ->setDepartment($departmentId)
                         ->setContactNo($row[5])
-                        ->setLocation($row[6])
+                        ->setLocation($locationId)
                         ->setPassword($row[7])
                         ->setEmail($row[8])
                         ->setCreatedAt(new DateTimeImmutable())
@@ -49,7 +54,7 @@ trait UploadEmployeesTrait
         } catch (Exception $exception) {
             return ['error' => $exception->getMessage()];
         }
-//
+
         return [
             'success' => 'Employees imported successfully'
         ];
@@ -59,17 +64,23 @@ trait UploadEmployeesTrait
     {
         $names = $this->allEntityIdsAndNames();
         $missingData = [];
+        $employee = new Employee();
         foreach ($data as $key => $row) {
             if (0 !== $key) {
                 $missingData[] = [
                     'row' => ++$key,
-                    'reportingManager' => $row[2],
+                    'name' => $row[0],
+                    'roles' => $row[1],
+                    'reportingManager' => array_flip($names['empEmailsAndIds'])[$row[2]] ?? 0,
                     'email' => $row[3],
-                    'department' => $row[4],
-                    'location' => $row[6],
+                    'department' => array_flip($names['departmentsIds'])[$row[4]] ?? 0,
+                    'contactNo' => $row[5],
+                    'location' => array_flip($names['locationsIds'])[$row[6]] ?? 0,
+                    'password' => $this->hasher->hashPassword($employee, $row[7]),
                     'depCondition' => in_array($row[3], $names['departmentsIds']),
                     'locCondition' => in_array($row[3], $names['locationsIds']),
                     'reportingMCondition' => in_array($row[3], $names['empEmailsAndIds']),
+                    'employeeEmail' => $row[8],
                 ];
             }
         }

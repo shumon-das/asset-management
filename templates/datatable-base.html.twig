@@ -19,6 +19,18 @@
     <!-- Theme style -->
     <link rel="stylesheet" href="{{ asset('dist/css/adminlte.min.css') }}">
     {% include 'toast.html.twig' %}
+    <script>
+      function ajaxUpload() {
+          $.ajax({
+                url: 'http://localhost/asset-management/public/ams/upload-employees',
+                method: 'post',
+                data: {data: 'upload'},
+                success: function (response) {
+                    console.log(response)
+                }
+            })
+      }
+    </script>
 </head>
 <body class="hold-transition sidebar-mini">
 <div class="wrapper">

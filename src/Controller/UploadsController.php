@@ -7,13 +7,18 @@ use App\Common\Uploads\UploadAssignedAssetsTrait;
 use App\Common\Uploads\UploadEmployeesTrait;
 use App\Common\Uploads\UploadProductsTrait;
 use App\Common\Uploads\UploadVendorsTrait;
+use App\Entity\Employee;
 use App\Entity\Methods\EmployeeMethodsTrait;
+use App\Entity\Upload;
+use DateTimeImmutable;
 use Exception;
 use PhpOffice\PhpSpreadsheet\IOFactory;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Uid\Uuid;
 
 class UploadsController extends AbstractApiController
 {
@@ -88,6 +93,19 @@ class UploadsController extends AbstractApiController
         $spreadsheet = IOFactory::load($employeesFile);
         $data = $spreadsheet->getActiveSheet()->toArray();
         $dataAnalyse = $this->validateData($data);
+        $employeeInUpload = $this->uploadRepository->findOneBy(['entityName' => 'employee']);
+        $this->entityManager->remove($employeeInUpload);
+        $this->entityManager->flush();
+
+        $upload = new Upload();
+        $upload
+            ->setEntityName('employee')
+            ->setData($dataAnalyse['data'])
+            ->setIsDeleted(false)
+            ->setCreatedAt(new DateTimeImmutable())
+        ;
+        $this->entityManager->persist($upload);
+        $this->entityManager->flush();
 
         return $this->render('uploads/upload-employees-file.html.twig', [
             'data' => $dataAnalyse['data'],
@@ -97,22 +115,32 @@ class UploadsController extends AbstractApiController
         ]);
     }
 
-    #[Route('/ams/basic-table', name: 'app_basic_table', methods: 'GET')]
-    public function girdBase(): Response
-    {
-        return $this->render('uploads/gird-base.html.twig');
-    }
-
     /**
      * @throws Exception
      */
-    #[Route('/upload-employees', name: 'app_upload_employees', methods: ['POST'])]
-    public function uploadEmployeesFiles(Request $request): RedirectResponse|Response
+    #[Route('/ams/upload-employees', name: 'app_upload_employees', methods: ['POST'])]
+    public function uploadEmployeesFiles(): JsonResponse
     {
-        dd($request->files->get('employees-csv'));
-        $result = $this->importEmployees($request, $this->entityManager);
-        $this->addFlash('message', $result);
-        return new RedirectResponse('basic-table');
+        $employees = $this->uploadRepository->findOneBy(['entityName' => 'employee']);
+        $data = $employees->getData();
+        foreach ($data as $employee) {
+            $empl = new Employee();
+            $roles = "ROLE_" . strtoupper($employee['roles']);
+            $empl
+                ->setUuid(Uuid::v1())
+                ->setName($employee['name'])
+                ->setEmail($employee['employeeEmail'])
+                ->setLocation($employee['location'])
+                ->setContactNo($employee['contactNo'])
+                ->setDepartment($employee['department'])
+                ->setReportingManager($employee['reportingManager'])
+                ->setRoles([$roles])
+                ->setPassword($employee['password'])
+            ;
+            $this->commonMethods($empl, false);
+        }
+
+        return new JsonResponse(['success' => 'Employees saved successfully']);
     }
 
     #[Route('/ams/upload-assigned-assets-file', name: 'app_upload_assigned_assets_files', methods: 'GET')]
