@@ -22,11 +22,14 @@
     <script>
       function ajaxUpload() {
           $.ajax({
-                url: 'http://localhost/asset-management/public/ams/upload-employees',
+                url: 'http://localhost/assetManagement/public/ams/upload-employees',
                 method: 'post',
-                data: {data: 'upload'},
+                data: {data: 'anyway'},
                 success: function (response) {
-                    console.log(response)
+                    toastr.success(response.success);
+                    setTimeout(function () {
+                        window.location.href="http://localhost/assetManagement/public/select-employees-file"
+                    }, 3000)
                 }
             })
       }
@@ -83,6 +86,7 @@
   $(".assigned").attr('title', 'Re assign');
   $(".not-assign").attr('title', 'Assign now');
   $(".delete-impossible").attr('title', "Delete impossible,\nbecause it using somewhere");
+  $('.upload-table-td-title').attr('title', 'Red color information not exist in database');
 
   $('#licenceExpiry').change(function (){
       let date = '2023-01-21 16:32:06';

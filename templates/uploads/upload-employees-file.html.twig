@@ -50,26 +50,29 @@
                                                               download="">click here</a> to download your csv file
                                         Format to import</h5>
                                     <div class="row">
-                                        <div class="col-md-3">
+                                        <div class="col-md-2">
                                             <form action="{{ path('app_show_employees_files') }}" method="post"
                                                   enctype="multipart/form-data" class="pb-5">
-                                                <label for="employees-csv" class="ml-5 text-center d-block"
-                                                       style="width: 300px;height: 175px;line-height: 175px;border: 1px dashed;cursor: pointer"
+                                                <label for="employees-csv" class="ml-1 text-center d-block"
+                                                       style="height: 175px;line-height: 175px;border: 1px dashed;cursor: pointer"
                                                        id="file-label">Select CSV File</label>
                                                 <input type="file" name="employees-csv" id="employees-csv"
                                                        style="display: none" required>
-                                                <button type="submit" class="btn btn-sm btn-primary ml-5"
-                                                        style="width: 300px; opacity: 0" id="file-upload-submit-btn">Select
+                                                <button type="submit" class="btn btn-sm btn-primary btn-block"
+                                                        style="opacity: 0" id="file-upload-submit-btn">Select
                                                 </button>
-                                                <span class="alert alert-danger text-center mx-5" id="file-extension-error" style="display: none">Only Excel Sheet Acceptable</span>
+                                                <span class="alert alert-danger text-center" id="file-extension-error" style="display: none">Only Excel Sheet Acceptable</span>
                                             </form>
                                         </div>
-                                        <div class="col-md-9 border-left px-3">
+                                        <div class="col-md-10 border-left px-3">
                                             <table id="example1" class="table table-bordered table-striped">
                                                 <thead>
                                                     <tr>
-                                                        <th style="width: 10%">Row No</th>
-                                                        <th>Reporting Manager</th>
+                                                        <th style="width: 5%">Row No</th>
+                                                        <th>Name</th>
+                                                        <th>Employee Email</th>
+                                                        <th>Password</th>
+                                                        <th>Reporting Manager Name</th>
                                                         <th>Reporting Manager Email</th>
                                                         <th>Department Name</th>
                                                         <th>Location Office Name</th>
@@ -81,18 +84,49 @@
                                                         {% for file in data %}
                                                             <tr>
                                                                 <td>{{ file.row }}</td>
-                                                                <td>{{ file.reportingManager }}</td>
-                                                                <td>{{ file.email }}</td>
-                                                                <td>{{ file.department }}</td>
-                                                                <td>{{ file.location }}</td>
+                                                                <td>{{ file.name }} {{ file.uniqueEmailError }}</td>
+                                                                {% if file.uniqueEmailError %}
+                                                                    <td class="bg-danger text-white">{{ file.email }}</td>
+                                                                {% else %}
+                                                                    <td>{{ file.email }}</td>
+                                                                {% endif %}
+                                                                <td>hidden</td>
                                                                 <td>
                                                                     {% if file.reportingMCondition %}
-                                                                        <button class="btn btn-success">
-                                                                            <i class="fas fa-check"></i>
+                                                                        {{ file.showReportManager }}
+                                                                    {% else %}
+                                                                        <span class="text-danger">{{ file.showReportManager }}</span>
+                                                                    {% endif %}
+                                                                </td>
+                                                                <td>
+                                                                    {% if file.reportingMCondition %}
+                                                                       {{ file.email }}
+                                                                    {% else %}
+                                                                        <span class="text-danger">{{ file.email }}</span>
+                                                                    {% endif %}
+                                                                </td>
+                                                                <td>
+                                                                    {% if file.depCondition %}
+                                                                        {{ file.showDepartment }}
+                                                                    {% else %}
+                                                                        <span class="text-danger">{{ file.showDepartment }}</span>
+                                                                    {% endif %}
+                                                                </td>
+                                                                <td>
+                                                                    {% if file.locCondition %}
+                                                                        {{ file.showLocation }}
+                                                                    {% else %}
+                                                                        <span class="text-danger">{{ file.showLocation }}</span>
+                                                                    {% endif %}
+                                                                </td>
+                                                                <td>
+                                                                    {% if file.itemError %}
+                                                                        <button class="btn btn-danger upload-table-td-title">
+                                                                            <i class="fas fa-ban"></i>
                                                                         </button>
                                                                     {% else %}
-                                                                        <button class="btn btn-danger">
-                                                                            <i class="fas fa-ban"></i>
+                                                                        <button class="btn btn-success">
+                                                                            <i class="fas fa-check"></i>
                                                                         </button>
                                                                     {% endif %}
                                                                 </td>
@@ -101,20 +135,7 @@
                                                     {% endif %}
                                                 </tbody>
                                             </table>
-                                            <div class="row py-3">
-                                                <div class="col-12 text-right">
-                                                    <small><b>Note: </b> creation new employee have 3 dependency (Department, Location, Reporting manager) which you must have to provide correct information. otherwise you will be not able to upload data</small>
-                                                    <br>
-                                                    {% if errors is defined%}
-                                                        <button class="btn btn btn-success px-5"> Upload </button>
-                                                    {% else %}
-                                                        <a href="{{ path('app_upload_employees') }}" class="btn btn-success px-5">Upload</a>
-                                                    {% endif %}
-
-                                                    <button type="button" class="btn btn-sm btn-primary" onclick="ajaxUpload()">AJAX Upload</button>
-
-                                                </div>
-                                            </div>
+                                            {% include 'uploads/uploads-button.html.twig' %}
                                         </div>
                                     </div>
                                 </div>

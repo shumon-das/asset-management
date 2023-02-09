@@ -94,8 +94,10 @@ class UploadsController extends AbstractApiController
         $data = $spreadsheet->getActiveSheet()->toArray();
         $dataAnalyse = $this->validateData($data);
         $employeeInUpload = $this->uploadRepository->findOneBy(['entityName' => 'employee']);
-        $this->entityManager->remove($employeeInUpload);
-        $this->entityManager->flush();
+        if (null !== $employeeInUpload) {
+            $this->entityManager->remove($employeeInUpload);
+            $this->entityManager->flush();
+        }
 
         $upload = new Upload();
         $upload

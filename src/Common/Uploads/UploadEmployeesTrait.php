@@ -72,15 +72,20 @@ trait UploadEmployeesTrait
                     'name' => $row[0],
                     'roles' => $row[1],
                     'reportingManager' => array_flip($names['empEmailsAndIds'])[$row[2]] ?? 0,
+                    'showReportManager' => $row[2],
+                    'reportingMCondition' => in_array($row[3], $names['empEmailsAndIds']),
                     'email' => $row[3],
+                    'uniqueEmailError' => in_array($row[8], $names['empEmailsAndIds']),
                     'department' => array_flip($names['departmentsIds'])[$row[4]] ?? 0,
+                    'showDepartment' => $row[4],
+                    'depCondition' => in_array($row[4], $names['departmentsIds']),
                     'contactNo' => $row[5],
                     'location' => array_flip($names['locationsIds'])[$row[6]] ?? 0,
+                    'showLocation' => $row[6],
+                    'locCondition' => in_array($row[6], $names['locationsIds']),
                     'password' => $this->hasher->hashPassword($employee, $row[7]),
-                    'depCondition' => in_array($row[3], $names['departmentsIds']),
-                    'locCondition' => in_array($row[3], $names['locationsIds']),
-                    'reportingMCondition' => in_array($row[3], $names['empEmailsAndIds']),
                     'employeeEmail' => $row[8],
+                    'itemError' => $this->getItemError($row, $names),
                 ];
             }
         }
@@ -108,5 +113,18 @@ trait UploadEmployeesTrait
             'data' => $missingData,
             'error' => $error
         ];
+    }
+
+    private function getItemError(array $row, array $names): bool
+    {
+        $itemError = false;
+        if (false === in_array($row[3], $names['empEmailsAndIds'])) {
+            $itemError = true;
+        } elseif (false === in_array($row[4], $names['departmentsIds'])) {
+            $itemError = true;
+        } elseif (false === in_array($row[6], $names['locationsIds'])) {
+            $itemError = true;
+        }
+        return $itemError;
     }
 }
