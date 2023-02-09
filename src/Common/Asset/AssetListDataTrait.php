@@ -12,8 +12,6 @@ trait AssetListDataTrait
         $names = $this->allEntityIdsAndNames();
         return [
             'id' => $asset->getId(),
-            'productCategory' => $asset->getProductCategory(),
-            'productType' => $asset->getProductType(),
             'product' => $names['productsIds'][$asset->getProduct()],
             'vendor' => $names['vendorsIds'][$asset->getVendor()],
             'assetName' => $asset->getAssetName(),

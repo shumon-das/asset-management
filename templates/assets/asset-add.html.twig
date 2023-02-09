@@ -47,31 +47,31 @@
                             <div class="card-body">
                                 <form action="{{ path('app_save_assets') }}" method="post">
                                     <div class="row">
-                                        <div class="col-md-3">
-                                            <div class="form-group">
-                                                <label>Product Category</label>
-                                                <select class="form-control select2" name="product-category"
-                                                        id="product-category" style="width: 100%;">
-                                                    <option selected="selected">{{ data.asset.productCategory ?? 'Select Category' }}</option>
-                                                    {% for product in data.products %}
-                                                        <option value="{{ product.category }}">{{ product.category }}</option>
-                                                    {% endfor %}
-                                                </select>
-                                            </div>
-                                        </div>
+{#                                        <div class="col-md-3">#}
+{#                                            <div class="form-group">#}
+{#                                                <label>Product Category</label>#}
+{#                                                <select class="form-control select2" name="product-category"#}
+{#                                                        id="product-category" style="width: 100%;">#}
+{#                                                    <option selected="selected">{{ data.asset.productCategory ?? 'Select Category' }}</option>#}
+{#                                                    {% for product in data.products %}#}
+{#                                                        <option value="{{ product.category }}">{{ product.category }}</option>#}
+{#                                                    {% endfor %}#}
+{#                                                </select>#}
+{#                                            </div>#}
+{#                                        </div>#}
 
-                                        <div class="col-md-3">
-                                            <div class="form-group">
-                                                <label>Product Type</label>
-                                                <select class="form-control select2" name="product-type"
-                                                        id="product-type" style="width: 100%;" required>
-                                                    <option selected="selected">{{ data.asset.productType ?? 'Select Type' }}</option>
-                                                    {% for product in data.products %}
-                                                        <option value="{{ product.type }}">{{ product.type }}</option>
-                                                    {% endfor %}
-                                                </select>
-                                            </div>
-                                        </div>
+{#                                        <div class="col-md-3">#}
+{#                                            <div class="form-group">#}
+{#                                                <label>Product Type</label>#}
+{#                                                <select class="form-control select2" name="product-type"#}
+{#                                                        id="product-type" style="width: 100%;" required>#}
+{#                                                    <option selected="selected">{{ data.asset.productType ?? 'Select Type' }}</option>#}
+{#                                                    {% for product in data.products %}#}
+{#                                                        <option value="{{ product.type }}">{{ product.type }}</option>#}
+{#                                                    {% endfor %}#}
+{#                                                </select>#}
+{#                                            </div>#}
+{#                                        </div>#}
 
                                         <div class="col-md-3">
                                             <div class="form-group">
@@ -98,10 +98,7 @@
                                                 </select>
                                             </div>
                                         </div>
-                                    </div>
-                                    <!-- row end -->
 
-                                    <div class="row mt-3">
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="asset-name">Asset Name</label>
@@ -115,11 +112,14 @@
                                             <div class="form-group">
                                                 <label for="serial-number">Serial Number</label>
                                                 <input type="text" class="form-control" name="serial-number"
-                                                       value="{{ data.asset.seriulNumber ?? '' }}"
+                                                       value="{{ data.asset.serialNumber ?? '' }}"
                                                        id="serial-number" placeholder="Enter serial number">
                                             </div>
                                         </div>
+                                    </div>
+                                    <!-- row end -->
 
+                                    <div class="row mt-3">
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="price">Price</label>
@@ -131,35 +131,13 @@
 
                                         <div class="col-md-3">
                                             <div class="form-group">
-                                                <label>Depreciation Type</label>
-                                                <select class="form-control select2" name="description-type"
-                                                        id="description-type" style="width: 100%;">
-                                                    <option selected="selected">{{ data.asset.descriptionType ?? 'Alabama' }}</option>
-                                                    <option>Alaska</option>
-                                                    <option>California</option>
-                                                    <option>Delaware</option>
-                                                    <option>Tennessee</option>
-                                                    <option>Texas</option>
-                                                    <option>Washington</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- row end -->
-
-                                    <div class="row mt-3">
-                                        <div class="col-md-3">
-                                            <div class="form-group">
                                                 <label>Location</label>
                                                 <select class="form-control select2" name="location" id="location"
-                                                        style="width: 100%;">
-                                                    <option selected="selected">{{ data.asset.location ?? 'Alabama' }}</option>
-                                                    <option>Alaska</option>
-                                                    <option>California</option>
-                                                    <option>Delaware</option>
-                                                    <option>Tennessee</option>
-                                                    <option>Texas</option>
-                                                    <option>Washington</option>
+                                                        style="width: 100%;" required>
+                                                    <option selected="selected" value="{{ data.asset.locationId ?? '' }}">{{ data.asset.location ?? 'Select Location' }}</option>
+                                                    {% for location in data.locations %}
+                                                        <option value="{{ location.id }}">{{ location.officeName }}</option>
+                                                    {% endfor %}
                                                 </select>
                                             </div>
                                         </div>
@@ -181,34 +159,19 @@
                                                        id="warranty-expiry-date">
                                             </div>
                                         </div>
+                                    </div>
+                                    <!-- row end -->
 
+                                    <div class="row mt-3">
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label>Purchase Type</label>
-                                                <select class="form-control select2" name="purchase-type"
-                                                        id="purchase-type" style="width: 100%;">
-                                                    <option selected="selected">{{ data.asset.purchaseType ?? 'Alabama' }}</option>
-                                                    <option>Alaska</option>
-                                                    <option>California</option>
-                                                    <option>Delaware</option>
-                                                    <option>Tennessee</option>
-                                                    <option>Texas</option>
-                                                    <option>Washington</option>
-                                                </select>
+                                                <input type="text" class="form-control" name="purchase-type"
+                                                       value="{{ data.asset.purchaseType ?? '' }}"
+                                                       id="purchase-type" placeholder="Enter Purchase Type">
                                             </div>
                                         </div>
-                                    </div>
-                                    <!-- row end -->
-                                    <div class="row mt-3">
-                                        <div class="col-md-3" style="height: 250px">
-                                            <div class="form-group">
-                                                <label>Description</label>
-                                                <textarea name="description" id="description" class="w-100"
-                                                          style="height: 200px">
-                                                    {{ data.asset.description ?? '' }}
-                                                </textarea>
-                                            </div>
-                                        </div>
+
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="useful-life">Useful life</label>
@@ -232,11 +195,23 @@
                                                        value="{{ data.asset.rate ?? '' }}"
                                                        placeholder="Enter rate%">
                                             </div>
+                                        </div>
+                                    </div>
+                                    <!-- row end -->
+                                    <div class="row pb-5">
+                                        <div class="col-md-8"></div>
+                                        <div class="col-md-4" style="height: 250px">
+                                            <div class="form-group">
+                                                <label>Description</label>
+                                                <textarea name="description" id="description" class="w-100"
+                                                          style="height: 200px">
+                                                    {{ data.asset.description ?? '' }}
+                                                </textarea>
+                                                <button type="submit" class="btn btn-primary mt-1 w-100">Submit</button>
+                                            </div>
                                             <div>
                                                 <input type="hidden" name="id" id="" value="{{ data.asset.id ?? '' }}">
                                             </div>
-                                            <br>
-                                            <button type="submit" class="btn btn-primary mt-5">Submit</button>
                                         </div>
                                     </div>
                                     <!-- row end -->

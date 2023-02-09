@@ -39,11 +39,13 @@ class AssetsController extends AbstractApiController
     {
         $products = $this->productsRepository->findBy(['isDeleted' => 0]);
         $vendors = $this->vendorsRepository->findBy(['isDeleted' => 0]);
+        $locations = $this->locationRepository->findBy(['isDeleted' => 0]);
 
         return $this->render('assets/asset-add.html.twig', [
             'data' => [
                 'products' => $products,
                 'vendors' => $vendors,
+                'locations' => $locations,
             ],
         ]);
     }
@@ -112,16 +114,14 @@ class AssetsController extends AbstractApiController
         $names = $this->allEntityIdsAndNames();
         return [
             'id' => $asset->getId(),
-            'productCategory' => $asset->getProductCategory(),
-            'productType' => $asset->getProductType(),
             'product' => $names['productsIds'][$asset->getProduct()],
             'vendor' => $asset->getVendor() ? $names['vendorsIds'][$asset->getVendor()] : null,
             'vendorId' => $asset->getVendor(),
             'assetName' => $asset->getAssetName(),
             'serialNumber' => $asset->getSerialNumber(),
             'price' => $asset->getPrice(),
-            'descriptionType' => $asset->getDescriptionType(),
-            'location' => $asset->getLocation(),
+            'locationId' => $asset->getLocation(),
+            'location' => $names['locationsIds'][$asset->getLocation()],
             'purchaseDate' => $asset->getPurchaseDate()->format('d-m-Y'),
             'warrantyExpiryDate' => $asset->getWarrantyExpiryDate()->format('d-m-Y'),
             'purchaseType' => $asset->getPurchaseType(),

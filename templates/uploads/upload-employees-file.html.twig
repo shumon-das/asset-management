@@ -84,11 +84,11 @@
                                                         {% for file in data %}
                                                             <tr>
                                                                 <td>{{ file.row }}</td>
-                                                                <td>{{ file.name }} {{ file.uniqueEmailError }}</td>
+                                                                <td>{{ file.name }}</td>
                                                                 {% if file.uniqueEmailError %}
-                                                                    <td class="bg-danger text-white">{{ file.email }}</td>
+                                                                    <td class="bg-danger text-white">{{ file.employeeEmail }}</td>
                                                                 {% else %}
-                                                                    <td>{{ file.email }}</td>
+                                                                    <td>{{ file.employeeEmail }} {{ file.uniqueEmailError }}</td>
                                                                 {% endif %}
                                                                 <td>hidden</td>
                                                                 <td>

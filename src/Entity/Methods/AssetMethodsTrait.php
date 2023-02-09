@@ -16,14 +16,11 @@ trait AssetMethodsTrait
     public function assetMethods(Assets $asset, $request, bool $update = false): array
     {
         $asset
-            ->setProductCategory($request->get('product-category'))
-            ->setProductType($request->get('product-type'))
             ->setProduct($request->get('product'))
             ->setVendor($request->get('vendor'))
             ->setAssetName($request->get('asset-name'))
             ->setSerialNumber($request->get('serial-number'))
             ->setPrice($request->get('price'))
-            ->setDescriptionType($request->get('description-type'))
             ->setLocation($request->get('location'))
             ->setPurchaseDate(new DateTimeImmutable($request->get('purchase-date')))
             ->setWarrantyExpiryDate(new DateTimeImmutable($request->get('warranty-expiry-date')))

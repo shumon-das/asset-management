@@ -65,8 +65,12 @@ trait UploadEmployeesTrait
         $names = $this->allEntityIdsAndNames();
         $missingData = [];
         $employee = new Employee();
+        $uniquerEmailError = 0;
         foreach ($data as $key => $row) {
             if (0 !== $key) {
+                if (in_array($row[8], $names['empEmailsAndIds'])) {
+                    ++$uniquerEmailError;
+                }
                 $missingData[] = [
                     'row' => ++$key,
                     'name' => $row[0],
@@ -111,7 +115,8 @@ trait UploadEmployeesTrait
 
         return [
             'data' => $missingData,
-            'error' => $error
+            'error' => $error,
+            'uniquerEmailError' => $uniquerEmailError !== 0,
         ];
     }
 

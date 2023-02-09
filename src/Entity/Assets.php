@@ -24,12 +24,6 @@ class Assets
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $productCategory = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $productType = null;
-
     #[ORM\Column(length: 255, nullable: false)]
     #[Assert\NotBlank]
     private string $product;
@@ -47,9 +41,6 @@ class Assets
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $price = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $descriptionType = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $location = null;
@@ -102,30 +93,6 @@ class Assets
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getProductCategory(): ?string
-    {
-        return $this->productCategory;
-    }
-
-    public function setProductCategory(?string $productCategory): self
-    {
-        $this->productCategory = $productCategory;
-
-        return $this;
-    }
-
-    public function getProductType(): ?string
-    {
-        return $this->productType;
-    }
-
-    public function setProductType(?string $productType): self
-    {
-        $this->productType = $productType;
-
-        return $this;
     }
 
     public function getProduct(): string
@@ -184,18 +151,6 @@ class Assets
     public function setPrice(?string $price): self
     {
         $this->price = $price;
-
-        return $this;
-    }
-
-    public function getDescriptionType(): ?string
-    {
-        return $this->descriptionType;
-    }
-
-    public function setDescriptionType(?string $descriptionType): self
-    {
-        $this->descriptionType = $descriptionType;
 
         return $this;
     }

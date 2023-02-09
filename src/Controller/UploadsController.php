@@ -114,6 +114,7 @@ class UploadsController extends AbstractApiController
             'errors' => count($dataAnalyse['error']) > 0,
             'errorData' => $dataAnalyse['error'],
             'errorCount' => count($dataAnalyse['error']),
+            'uniqueEmailError' => $dataAnalyse['uniquerEmailError'],
         ]);
     }
 
