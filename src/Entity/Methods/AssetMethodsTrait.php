@@ -29,7 +29,6 @@ trait AssetMethodsTrait
             ->setUsefulLife($request->get('useful-life'))
             ->setResidualValue($request->get('residual-value'))
             ->setRate($request->get('rate'))
-            ->setIsDeleted(0)
             ->setStatus(true)
         ;
         return $this->commonMethods($asset, $update);

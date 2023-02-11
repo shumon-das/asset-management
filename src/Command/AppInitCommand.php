@@ -30,10 +30,19 @@ class AppInitCommand extends Command
         $initDepartment = $this->getApplication()->find('init:department');
         $initDepartment->run($input, $output);
 
-        $initLocation = $this->getApplication()->find('init:location');
+        $initProduct = $this->getApplication()->find('add:products');
+        $initProduct->run($input, $output);
+
+        $initVendor = $this->getApplication()->find('add:vendors');
+        $initVendor->run($input, $output);
+
+        $initLocation = $this->getApplication()->find('add:locations');
         $initLocation->run($input, $output);
 
-        $io->success('Created New Department, New Location and New User Successfully');
+        $initAsset = $this->getApplication()->find('add:assets');
+        $initAsset->run($input, $output);
+
+        $io->success('Initialized all entity data successfully');
 
         return Command::SUCCESS;
     }

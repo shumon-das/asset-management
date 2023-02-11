@@ -73,4 +73,14 @@ class LocationRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
+
+
+    public function findOnlyIds(): ?array
+    {
+        return $this->createQueryBuilder('l')
+            ->select('l.id as id')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 }
