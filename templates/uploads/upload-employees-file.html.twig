@@ -72,7 +72,6 @@
                                                         <th>Name</th>
                                                         <th>Employee Email</th>
                                                         <th>Password</th>
-                                                        <th>Reporting Manager Name</th>
                                                         <th>Reporting Manager Email</th>
                                                         <th>Department Name</th>
                                                         <th>Location Office Name</th>
@@ -88,16 +87,9 @@
                                                                 {% if file.uniqueEmailError %}
                                                                     <td class="bg-danger text-white">{{ file.employeeEmail }}</td>
                                                                 {% else %}
-                                                                    <td>{{ file.employeeEmail }} {{ file.uniqueEmailError }}</td>
+                                                                    <td>{{ file.employeeEmail }}</td>
                                                                 {% endif %}
                                                                 <td>hidden</td>
-                                                                <td>
-                                                                    {% if file.reportingMCondition %}
-                                                                        {{ file.showReportManager }}
-                                                                    {% else %}
-                                                                        <span class="text-danger">{{ file.showReportManager }}</span>
-                                                                    {% endif %}
-                                                                </td>
                                                                 <td>
                                                                     {% if file.reportingMCondition %}
                                                                        {{ file.email }}

@@ -15,7 +15,7 @@
         {% endif %}
         <div class="row">
             <div class="col-md-4 text-center">
-                {% if errors is defined %}
+                {% if uploadError is defined %}
                     <p>fix those, then try to upload again later</p>
                     <a href="{{ path('app_select_employees_files') }}" class="btn btn-secondary btn-sm">Cancel Upload</a>
                 {% endif %}
@@ -24,11 +24,11 @@
 
             </div>
             <div class="col-md-4 text-right">
-                {% if errors is defined %}
+                {% if uploadError is defined %}
                     <p>I will fix those later</p>
-                    <button type="button" class="btn btn-sm btn-outline-primary" {{ uniqueEmailError ? 'disabled' : ''}} onclick="ajaxUpload()">Upload Now Anyway</button>
+                    <button type="button" class="btn btn-sm btn-primary upload-submit-button" {{ uniqueEmailError ?? '' }} onclick="ajaxUpload()">Upload Now Anyway</button>
                 {% else %}
-                    <button type="button" class="btn btn-sm btn-outline-primary" {{ uniqueEmailError ? 'disabled' : ''}} onclick="ajaxUpload()">Upload</button>
+                    <button type="button" class="btn btn-sm btn-primary upload-submit-button" {{ uniqueEmailError ?? '' }} onclick="ajaxUpload()">Upload</button>
                 {% endif %}
             </div>
         </div>

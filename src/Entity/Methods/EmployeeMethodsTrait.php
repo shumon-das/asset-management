@@ -23,10 +23,10 @@ trait EmployeeMethodsTrait
             ->setUuid(Uuid::v4())
             ->setName($request->get('name'))
             ->setEmail($email)
-            ->setLocation($request->get('location'))
+            ->setLocation(ucfirst($request->get('location')))
             ->setContactNo($request->get('contact-no'))
-            ->setDepartment($request->get('department'))
-            ->setReportingManager($request->get('reporting-manager'))
+            ->setDepartment(ucfirst($request->get('department')))
+            ->setReportingManager(ucfirst($request->get('reporting-manager')))
             ->setRoles(['ROLE_USER'])
         ;
         return $this->commonMethods($employee, $update);

@@ -29,24 +29,27 @@ trait UploadEmployeesTrait
             $data = $spreadsheet->getActiveSheet()->toArray();
             $names = $this->allEntityIdsAndNames();
             foreach ($data as $key => $row) {
-                $reportingManagerId = array_flip($names['empEmailsAndIds'])[$row[3]] ?? 0;
-                $departmentId = array_flip($names['departmentsIds'])[$row[4]] ?? 0;
-                $locationId = array_flip($names['locationsIds'])[$row[6]] ?? 0;
+                $reportingManagerId = array_flip($names['empEmailsAndIds'])[$row[2]] ?? 0;
+                $departmentId = array_flip($names['departmentsIds'])[$row[3]] ?? 0;
+                $locationId = array_flip($names['locationsIds'])[$row[5]] ?? 0;
 
                 if (0 !== $key) {
                     $roles = "ROLE_" . strtoupper($row[1]);
+                    /** @var Employee $user **/
+                    $user = $this->security->getUser();
                     $employees = new Employee();
                     $employees
-                        ->setUuid(Uuid::v1())->setName($row[0])
+                        ->setUuid(Uuid::v1())
+                        ->setName($row[0])
                         ->setRoles([$roles])
                         ->setReportingManager($reportingManagerId)
                         ->setDepartment($departmentId)
-                        ->setContactNo($row[5])
+                        ->setContactNo($row[4])
                         ->setLocation($locationId)
-                        ->setPassword($row[7])
-                        ->setEmail($row[8])
+                        ->setPassword($row[6])
+                        ->setEmail($row[7])
                         ->setCreatedAt(new DateTimeImmutable())
-                        ->setCreatedBy(1);
+                        ->setCreatedBy($user->getId());
                     $entityManager->persist($employees);
                 }
             }
@@ -65,49 +68,49 @@ trait UploadEmployeesTrait
         $names = $this->allEntityIdsAndNames();
         $missingData = [];
         $employee = new Employee();
-        $uniquerEmailError = 0;
+        $uniqueEmailError = 0;
         foreach ($data as $key => $row) {
-            if (0 !== $key) {
-                if (in_array($row[8], $names['empEmailsAndIds'])) {
-                    ++$uniquerEmailError;
+            if (0 !== $key && false === empty($row[0]) && false === empty($row[7])) {
+                if (in_array($row[7], $names['empEmailsAndIds'])) {
+                    ++$uniqueEmailError;
                 }
+
                 $missingData[] = [
                     'row' => ++$key,
                     'name' => $row[0],
                     'roles' => $row[1],
                     'reportingManager' => array_flip($names['empEmailsAndIds'])[$row[2]] ?? 0,
-                    'showReportManager' => $row[2],
-                    'reportingMCondition' => in_array($row[3], $names['empEmailsAndIds']),
-                    'email' => $row[3],
-                    'uniqueEmailError' => in_array($row[8], $names['empEmailsAndIds']),
-                    'department' => array_flip($names['departmentsIds'])[$row[4]] ?? 0,
-                    'showDepartment' => $row[4],
-                    'depCondition' => in_array($row[4], $names['departmentsIds']),
-                    'contactNo' => $row[5],
-                    'location' => array_flip($names['locationsIds'])[$row[6]] ?? 0,
-                    'showLocation' => $row[6],
-                    'locCondition' => in_array($row[6], $names['locationsIds']),
-                    'password' => $this->hasher->hashPassword($employee, $row[7]),
-                    'employeeEmail' => $row[8],
+                    'reportingMCondition' => in_array($row[2], $names['empEmailsAndIds']),
+                    'email' => $row[2],
+                    'uniqueEmailError' => in_array($row[7], $names['empEmailsAndIds']),
+                    'department' => array_flip($names['departmentsIds'])[$row[3]] ?? 0,
+                    'showDepartment' => $row[3],
+                    'depCondition' => in_array(ucfirst($row[3]), $names['departmentsIds']),
+                    'contactNo' => $row[4],
+                    'location' => array_flip($names['locationsIds'])[$row[5]] ?? 0,
+                    'showLocation' => $row[5],
+                    'locCondition' => in_array(ucfirst($row[5]), $names['locationsIds']),
+                    'password' => $this->hasher->hashPassword($employee, $row[6]),
+                    'employeeEmail' => $row[7],
                     'itemError' => $this->getItemError($row, $names),
                 ];
             }
         }
 
-        $error = [];
+        $uploadError = [];
         foreach ($missingData as $row) {
             if (false === $row['depCondition']) {
-                $error[] = [
+                $uploadError[] = [
                     'dep' => $row['department']
                 ];
             }
             if (false === $row['locCondition']) {
-                $error[] = [
+                $uploadError[] = [
                     'loc' => $row['location']
                 ];
             }
             if (false === $row['reportingMCondition']) {
-                $error[] = [
+                $uploadError[] = [
                     'rep' => $row['reportingManager']
                 ];
             }
@@ -115,21 +118,23 @@ trait UploadEmployeesTrait
 
         return [
             'data' => $missingData,
-            'error' => $error,
-            'uniquerEmailError' => $uniquerEmailError !== 0,
+            'uploadError' => $uploadError,
+            'uniquerEmailError' => $uniqueEmailError,
         ];
     }
 
     private function getItemError(array $row, array $names): bool
     {
-        $itemError = false;
-        if (false === in_array($row[3], $names['empEmailsAndIds'])) {
-            $itemError = true;
-        } elseif (false === in_array($row[4], $names['departmentsIds'])) {
-            $itemError = true;
-        } elseif (false === in_array($row[6], $names['locationsIds'])) {
-            $itemError = true;
+        if (false === in_array($row[2], $names['empEmailsAndIds'])) {
+            return true;
         }
-        return $itemError;
+        if (false === in_array(ucfirst($row[3]), $names['departmentsIds'])) {
+            return true;
+        }
+        if (false === in_array(ucfirst($row[5]), $names['locationsIds'])) {
+            return true;
+        }
+
+        return false;
     }
 }

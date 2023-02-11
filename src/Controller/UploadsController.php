@@ -108,13 +108,13 @@ class UploadsController extends AbstractApiController
         ;
         $this->entityManager->persist($upload);
         $this->entityManager->flush();
-
+//dd($dataAnalyse['data']);
         return $this->render('uploads/upload-employees-file.html.twig', [
             'data' => $dataAnalyse['data'],
-            'errors' => count($dataAnalyse['error']) > 0,
-            'errorData' => $dataAnalyse['error'],
-            'errorCount' => count($dataAnalyse['error']),
-            'uniqueEmailError' => $dataAnalyse['uniquerEmailError'],
+            'uploadError' => count($dataAnalyse['uploadError']) > 0,
+            'errorData' => $dataAnalyse['uploadError'],
+            'errorCount' => count($dataAnalyse['uploadError']),
+            'uniqueEmailError' => $dataAnalyse['uniquerEmailError'] > 0 ? 'disabled' : '',
         ]);
     }
 
@@ -133,10 +133,10 @@ class UploadsController extends AbstractApiController
                 ->setUuid(Uuid::v1())
                 ->setName($employee['name'])
                 ->setEmail($employee['employeeEmail'])
-                ->setLocation($employee['location'])
+                ->setLocation(ucfirst($employee['location']))
                 ->setContactNo($employee['contactNo'])
-                ->setDepartment($employee['department'])
-                ->setReportingManager($employee['reportingManager'])
+                ->setDepartment(ucfirst($employee['department']))
+                ->setReportingManager(ucfirst($employee['reportingManager']))
                 ->setRoles([$roles])
                 ->setPassword($employee['password'])
             ;
