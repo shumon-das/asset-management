@@ -3,7 +3,7 @@
         <div class="row py-3">
             <small class="w-100 bg-info text-white text-left p-1"><b>Note: </b> creation new employee have 3 dependency (Department, Location, Reporting manager) which you must have to provide correct information. otherwise you will be not able to upload data</small>
         </div>
-        {% if errors is defined %}
+        {% if uploadError is defined %}
             <div class="row py-3 {{ uniqueEmailError ? 'text-white bg-red' : 'text-white bg-indigo'}}">
                 <b class="d-block m-auto">
                     {{ uniqueEmailError
@@ -26,9 +26,9 @@
             <div class="col-md-4 text-right">
                 {% if uploadError is defined %}
                     <p>I will fix those later</p>
-                    <button type="button" class="btn btn-sm btn-primary upload-submit-button" {{ uniqueEmailError ?? '' }} onclick="ajaxUpload()">Upload Now Anyway</button>
+                    <button type="button" class="btn btn-sm btn-primary upload-submit-button" {{ uniqueEmailError ?? '' }} onclick="ajaxUpload('{{ entity ?? "" }}')">Upload Now Anyway</button>
                 {% else %}
-                    <button type="button" class="btn btn-sm btn-primary upload-submit-button" {{ uniqueEmailError ?? '' }} onclick="ajaxUpload()">Upload</button>
+                    <button type="button" class="btn btn-sm btn-primary upload-submit-button" {{ uniqueEmailError ?? '' }} onclick="ajaxUpload('{{ entity ?? "" }}')">Upload</button>
                 {% endif %}
             </div>
         </div>

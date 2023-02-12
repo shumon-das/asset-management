@@ -15,54 +15,6 @@ trait UploadEmployeesTrait
 {
     use CategoriesMethodsTrait;
 
-    public function importEmployees(Request $request, EntityManagerInterface $entityManager): array
-    {
-        try {
-            $employeesFile = $request->files->get('employees-csv');
-            if (null === $employeesFile) {
-                return [
-                    'error' => "File not found. please choose an csv file before click upload"
-                ];
-            }
-
-            $spreadsheet = IOFactory::load($employeesFile);
-            $data = $spreadsheet->getActiveSheet()->toArray();
-            $names = $this->allEntityIdsAndNames();
-            foreach ($data as $key => $row) {
-                $reportingManagerId = array_flip($names['empEmailsAndIds'])[$row[2]] ?? 0;
-                $departmentId = array_flip($names['departmentsIds'])[$row[3]] ?? 0;
-                $locationId = array_flip($names['locationsIds'])[$row[5]] ?? 0;
-
-                if (0 !== $key) {
-                    $roles = "ROLE_" . strtoupper($row[1]);
-                    /** @var Employee $user **/
-                    $user = $this->security->getUser();
-                    $employees = new Employee();
-                    $employees
-                        ->setUuid(Uuid::v1())
-                        ->setName($row[0])
-                        ->setRoles([$roles])
-                        ->setReportingManager($reportingManagerId)
-                        ->setDepartment($departmentId)
-                        ->setContactNo($row[4])
-                        ->setLocation($locationId)
-                        ->setPassword($row[6])
-                        ->setEmail($row[7])
-                        ->setCreatedAt(new DateTimeImmutable())
-                        ->setCreatedBy($user->getId());
-                    $entityManager->persist($employees);
-                }
-            }
-            $entityManager->flush();
-        } catch (Exception $exception) {
-            return ['error' => $exception->getMessage()];
-        }
-
-        return [
-            'success' => 'Employees imported successfully'
-        ];
-    }
-
     public function validateData(array $data): array
     {
         $names = $this->allEntityIdsAndNames();

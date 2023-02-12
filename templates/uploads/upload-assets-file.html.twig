@@ -46,16 +46,105 @@
                             </div>
                             <div class="card-body">
                                 <div class="card">
-                                    <div class="card-header text-center bg-dark">
-                                        <h3 class="text-center">Import CSV File</h3>
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <form action="{{ path('app_show_assets_files') }}" method="post"
+                                                  enctype="multipart/form-data" class="">
+                                                <label for="assets-csv" class="ml-1 text-center d-block"
+                                                       style="height: 175px;line-height: 175px;border: 1px dashed;cursor: pointer"
+                                                       id="file-label">Select CSV File</label>
+                                                <input type="file" name="assets-csv" id="assets-csv"
+                                                       style="display: none" required>
+                                                <button type="submit" class="btn btn-sm btn-primary btn-block"
+                                                        style="opacity: 0" id="file-upload-submit-btn">Select
+                                                </button>
+                                                <span class="alert alert-danger text-center" id="file-extension-error"
+                                                      style="display: none">Only Excel Sheet Acceptable</span>
+                                            </form>
+                                        </div>
+                                        <div class="col-md-10">
+                                            <h5 class="p-3">Please
+                                                <a href="{{ asset('files/example-assets-csv.xlsx') }}" download="">click
+                                                    here</a>
+                                                to download your example csv file Format to import
+                                            </h5>
+                                        </div>
+                                        <div class="col-md-12 border-left px-3">
+                                            <table id="example1" class="table table-bordered table-striped">
+                                                <thead>
+                                                <tr>
+                                                    <th style="width: 5%">Row No</th>
+                                                    <th>Product</th>
+                                                    <th>Vendor</th>
+                                                    <th>Asset Name</th>
+                                                    <th>Serial Number</th>
+                                                    <th>Price</th>
+                                                    <th>Location</th>
+                                                    <th>Purchase Date</th>
+                                                    <th>Warranty Expire Date</th>
+                                                    <th>Purchase Type</th>
+                                                    <th>Useful Life</th>
+                                                    <th>Residual Value</th>
+                                                    <th>Rate</th>
+                                                    <th>Description</th>
+                                                    <th>In Database</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                {% if data is defined %}
+                                                    {% for file in data %}
+                                                        <tr>
+                                                            <td>{{ file.row }}</td>
+                                                            <td>
+                                                                {% if file.productCondition %}
+                                                                    {{ file.showProduct }}
+                                                                {% else %}
+                                                                    <span class="text-danger">{{ file.showProduct }}</span>
+                                                                {% endif %}
+                                                            </td>
+                                                            <td>
+                                                                {% if file.vendorCondition %}
+                                                                    {{ file.showVendor }}
+                                                                {% else %}
+                                                                    <span class="text-danger">{{ file.showVendor }}</span>
+                                                                {% endif %}
+                                                            </td>
+                                                            <td>{{ file.assetName }}</td>
+                                                            <td>{{ file.serialNumber }}</td>
+                                                            <td>{{ file.price }}</td>
+                                                            <td>
+                                                                {% if file.locationCondition %}
+                                                                    {{ file.showLocation }}
+                                                                {% else %}
+                                                                    <span class="text-danger">{{ file.showLocation }}</span>
+                                                                {% endif %}
+                                                            </td>
+                                                            <td>{{ file.purchaseDate }}</td>
+                                                            <td>{{ file.warrantyExpireDate }}</td>
+                                                            <td>{{ file.purchaseType }}</td>
+                                                            <td>{{ file.usefulLife }}</td>
+                                                            <td>{{ file.residualValue }}</td>
+                                                            <td>{{ file.rate }}</td>
+                                                            <td>{{ file.description }}</td>
+                                                            <td>
+                                                                {% if file.itemError %}
+                                                                    <button class="btn btn-danger upload-table-td-title">
+                                                                        <i class="fas fa-ban"></i>
+                                                                    </button>
+                                                                {% else %}
+                                                                    <button class="btn btn-success">
+                                                                        <i class="fas fa-check"></i>
+                                                                    </button>
+                                                                {% endif %}
+                                                            </td>
+                                                        </tr>
+                                                    {% endfor %}
+                                                {% endif %}
+                                                </tbody>
+                                            </table>
+                                            {% include 'uploads/uploads-button.html.twig' %}
+                                        </div>
                                     </div>
-
-                                    <h5 class="p-3">Please <a href="files/example-assets-csv.xlsx" download="">click here</a> to download your csv file Format to import</h5>
-                                    <form action="{{ path('app_upload_assets') }}" method="post" enctype="multipart/form-data" class="pb-5">
-                                        <label for="assets-csv" class="ml-5 text-center d-block" style="width: 300px;height: 175px;line-height: 175px;border: 1px dashed;cursor: pointer">Upload Your CSV File</label>
-                                        <input type="file" name="assets-csv" id="assets-csv" style="display: none">
-                                        <button type="submit" class="btn btn-sm btn-success ml-5" style="width: 300px">Upload</button>
-                                    </form>
                                 </div>
                             </div>
                             <!-- /.card-body -->

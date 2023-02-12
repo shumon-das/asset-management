@@ -18,21 +18,36 @@
     <link rel="stylesheet" href="{{ asset('plugins/toastr/toastr.min.css') }}">
     <!-- Theme style -->
     <link rel="stylesheet" href="{{ asset('dist/css/adminlte.min.css') }}">
+    <style>
+        #example1_wrapper > div:nth-child(1){
+            display: none;
+        }
+    </style>
     {% include 'toast.html.twig' %}
     <script>
-      function ajaxUpload() {
-          $.ajax({
-                url: 'http://localhost/asset-management/public/ams/upload-employees',
-                method: 'post',
-                data: {data: 'anyway'},
-                success: function (response) {
-                    toastr.success(response.success);
-                    $(".upload-submit-button").prop('disabled', true);
-                    setTimeout(function () {
-                        window.location.href="http://localhost/asset-management/public/select-employees-file"
-                    }, 3000)
-                }
-            })
+      function ajaxUpload(entity) {
+
+              const url = entity === 'employee'
+                  ? 'http://localhost/asset-management/public/ams/upload-employees'
+                  : 'http://localhost/asset-management/public/ams/upload-assets';
+
+              const redirectUrl = entity === 'employee'
+                  ? "http://localhost/asset-management/public/ams/select-employees-file"
+                  : "http://localhost/asset-management/public/ams/select-assets-file";
+
+              $.ajax({
+                    url: url,
+                    method: 'post',
+                    data: {data: 'anyway'},
+                    success: function (response) {
+                        toastr.success(response.success);
+                        $(".upload-submit-button").prop('disabled', true);
+                        setTimeout(function () {
+                            window.location.href=redirectUrl
+                        }, 3000)
+                    }
+              })
+
       }
     </script>
 </head>
@@ -111,6 +126,18 @@
           $("#file-upload-submit-btn").css("opacity", "0")
       }
       $("#file-label").text($('#employees-csv')[0].files[0].name)
+  })
+
+ $("#assets-csv").change(function (e) {
+      const extension = $(this).val().split('.').pop().toLowerCase();
+      if (extension === 'xlsx' || extension === 'csv') {
+          $("#file-extension-error").css('display', 'none')
+          $("#file-upload-submit-btn").css("opacity", "1")
+      } else {
+          $("#file-extension-error").css('display', 'block')
+          $("#file-upload-submit-btn").css("opacity", "0")
+      }
+      $("#file-label").text($('#assets-csv')[0].files[0].name)
   })
 
   });
